@@ -1,0 +1,10 @@
+LICENSE.txt
+pyproject.toml
+src/waylay/services/queries/api/__init__.py
+src/waylay/services/queries/api/execute_api.py
+src/waylay/services/queries/api/manage_api.py
+src/waylay/services/queries/api/py.typed
+src/waylay/services/queries/api/status_api.py
+src/waylay/services/queries/service/__init__.py
+src/waylay/services/queries/service/py.typed
+src/waylay/services/queries/service/service.py
