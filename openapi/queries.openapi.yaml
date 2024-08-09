@@ -9,7 +9,7 @@ info:
     Protocol version: v1.'
   version: 0.5.0
 paths:
-  /queries/v1/queries/v1:
+  /queries/v1:
     get:
       tags:
       - Status
@@ -28,7 +28,7 @@ paths:
                 title: Response Get Version And Health Queries V1 Get
       security: &id001
       - waylayApiKeySecret: []
-  /queries/v1/queries/v1/data:
+  /queries/v1/data:
     post:
       tags:
       - Execute
@@ -1674,7 +1674,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
       security: *id001
-  /queries/v1/queries/v1/data/{query_name}:
+  /queries/v1/data/{query_name}:
     get:
       tags:
       - Execute
@@ -3320,7 +3320,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
       security: *id001
-  /queries/v1/queries/v1/query:
+  /queries/v1/query:
     get:
       tags:
       - Manage
@@ -3429,7 +3429,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
       security: *id001
-  /queries/v1/queries/v1/query/{query_name}:
+  /queries/v1/query/{query_name}:
     get:
       tags:
       - Manage

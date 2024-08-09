@@ -47,7 +47,7 @@ def _get_set_mock_response(httpx_mock: HTTPXMock, gateway_url: str):
     mock_response = {"key": ""}
     httpx_mock_kwargs = {
         "method": "GET",
-        "url": re.compile(f"^{gateway_url}/queries/v1/queries/v1(\\?.*)?"),
+        "url": re.compile(f"^{gateway_url}/queries/v1(\\?.*)?"),
         "content": json.dumps(mock_response, default=str),
         "status_code": 200,
     }

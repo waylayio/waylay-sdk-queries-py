@@ -44,7 +44,7 @@ from waylay.services.queries.models.query_input import QueryInput
 from waylay.services.queries.models.query_result import QueryResult
 try:
     # Execute Query
-    # calls `POST /queries/v1/queries/v1/data`
+    # calls `POST /queries/v1/data`
     api_response = await waylay_client.queries.execute.execute(
         # query parameters:
         query = {
@@ -72,14 +72,14 @@ All URIs are relative to *https://api.waylay.io*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
-*ExecuteApi* | [**execute_by_name**](docs/ExecuteApi.md#execute_by_name) | **GET** /queries/v1/queries/v1/data/{query_name} | Execute Named Query
-*ExecuteApi* | [**execute**](docs/ExecuteApi.md#execute) | **POST** /queries/v1/queries/v1/data | Execute Query
-*ManageApi* | [**create**](docs/ManageApi.md#create) | **POST** /queries/v1/queries/v1/query | Post Query
-*ManageApi* | [**get**](docs/ManageApi.md#get) | **GET** /queries/v1/queries/v1/query/{query_name} | Get Query
-*ManageApi* | [**list**](docs/ManageApi.md#list) | **GET** /queries/v1/queries/v1/query | List Queries
-*ManageApi* | [**remove**](docs/ManageApi.md#remove) | **DELETE** /queries/v1/queries/v1/query/{query_name} | Remove Query
-*ManageApi* | [**update**](docs/ManageApi.md#update) | **PUT** /queries/v1/queries/v1/query/{query_name} | Update Query
-*StatusApi* | [**get**](docs/StatusApi.md#get) | **GET** /queries/v1/queries/v1 | Get Version And Health
+*ExecuteApi* | [**execute_by_name**](docs/ExecuteApi.md#execute_by_name) | **GET** /queries/v1/data/{query_name} | Execute Named Query
+*ExecuteApi* | [**execute**](docs/ExecuteApi.md#execute) | **POST** /queries/v1/data | Execute Query
+*ManageApi* | [**create**](docs/ManageApi.md#create) | **POST** /queries/v1/query | Post Query
+*ManageApi* | [**get**](docs/ManageApi.md#get) | **GET** /queries/v1/query/{query_name} | Get Query
+*ManageApi* | [**list**](docs/ManageApi.md#list) | **GET** /queries/v1/query | List Queries
+*ManageApi* | [**remove**](docs/ManageApi.md#remove) | **DELETE** /queries/v1/query/{query_name} | Remove Query
+*ManageApi* | [**update**](docs/ManageApi.md#update) | **PUT** /queries/v1/query/{query_name} | Update Query
+*StatusApi* | [**get**](docs/StatusApi.md#get) | **GET** /queries/v1 | Get Version And Health
 
 
 ## Documentation For Models

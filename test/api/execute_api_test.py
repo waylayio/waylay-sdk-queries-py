@@ -63,9 +63,7 @@ def _execute_by_name_set_mock_response(
     mock_response = QueryResultStub.create_json()
     httpx_mock_kwargs = {
         "method": "GET",
-        "url": re.compile(
-            f"^{gateway_url}/queries/v1/queries/v1/data/{query_name}(\\?.*)?"
-        ),
+        "url": re.compile(f"^{gateway_url}/queries/v1/data/{query_name}(\\?.*)?"),
         "content": json.dumps(mock_response, default=str),
         "status_code": 200,
     }
@@ -137,7 +135,7 @@ def _execute_set_mock_response(httpx_mock: HTTPXMock, gateway_url: str):
     mock_response = QueryResultStub.create_json()
     httpx_mock_kwargs = {
         "method": "POST",
-        "url": re.compile(f"^{gateway_url}/queries/v1/queries/v1/data(\\?.*)?"),
+        "url": re.compile(f"^{gateway_url}/queries/v1/data(\\?.*)?"),
         "content": json.dumps(mock_response, default=str),
         "status_code": 200,
     }

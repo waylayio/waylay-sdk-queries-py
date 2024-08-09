@@ -4,7 +4,7 @@ All URIs are relative to *https://api.waylay.io*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**get**](StatusApi.md#get) | **GET** /queries/v1/queries/v1 | Get Version And Health
+[**get**](StatusApi.md#get) | **GET** /queries/v1 | Get Version And Health
 
 # **get**
 > get(
@@ -30,7 +30,7 @@ waylay_client = WaylayClient.from_profile()
 # Note that the typed model classes for responses/parameters/... are only available when `waylay-sdk-queries-types` is installed
 try:
     # Get Version And Health
-    # calls `GET /queries/v1/queries/v1`
+    # calls `GET /queries/v1`
     api_response = await waylay_client.queries.status.get(
     )
     print("The response of queries.status.get:\n")
@@ -41,7 +41,7 @@ except ApiError as e:
 
 ### Endpoint
 ```
-GET /queries/v1/queries/v1
+GET /queries/v1
 ```
 ### Parameters
 

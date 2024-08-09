@@ -4,11 +4,11 @@ All URIs are relative to *https://api.waylay.io*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**create**](ManageApi.md#create) | **POST** /queries/v1/queries/v1/query | Post Query
-[**get**](ManageApi.md#get) | **GET** /queries/v1/queries/v1/query/{query_name} | Get Query
-[**list**](ManageApi.md#list) | **GET** /queries/v1/queries/v1/query | List Queries
-[**remove**](ManageApi.md#remove) | **DELETE** /queries/v1/queries/v1/query/{query_name} | Remove Query
-[**update**](ManageApi.md#update) | **PUT** /queries/v1/queries/v1/query/{query_name} | Update Query
+[**create**](ManageApi.md#create) | **POST** /queries/v1/query | Post Query
+[**get**](ManageApi.md#get) | **GET** /queries/v1/query/{query_name} | Get Query
+[**list**](ManageApi.md#list) | **GET** /queries/v1/query | List Queries
+[**remove**](ManageApi.md#remove) | **DELETE** /queries/v1/query/{query_name} | Remove Query
+[**update**](ManageApi.md#update) | **PUT** /queries/v1/query/{query_name} | Update Query
 
 # **create**
 > create(
@@ -36,7 +36,7 @@ from waylay.services.queries.models.query_entity_input import QueryEntityInput
 from waylay.services.queries.models.query_response import QueryResponse
 try:
     # Post Query
-    # calls `POST /queries/v1/queries/v1/query`
+    # calls `POST /queries/v1/query`
     api_response = await waylay_client.queries.manage.create(
         # json data: use a generated model or a json-serializable python data structure (dict, list)
         json = waylay.services.queries.QueryEntityInput() # QueryEntityInput | 
@@ -49,7 +49,7 @@ except ApiError as e:
 
 ### Endpoint
 ```
-POST /queries/v1/queries/v1/query
+POST /queries/v1/query
 ```
 ### Parameters
 
@@ -106,7 +106,7 @@ waylay_client = WaylayClient.from_profile()
 from waylay.services.queries.models.query_response import QueryResponse
 try:
     # Get Query
-    # calls `GET /queries/v1/queries/v1/query/{query_name}`
+    # calls `GET /queries/v1/query/{query_name}`
     api_response = await waylay_client.queries.manage.get(
         'query_name_example', # query_name | path param "query_name"
     )
@@ -118,7 +118,7 @@ except ApiError as e:
 
 ### Endpoint
 ```
-GET /queries/v1/queries/v1/query/{query_name}
+GET /queries/v1/query/{query_name}
 ```
 ### Parameters
 
@@ -175,7 +175,7 @@ waylay_client = WaylayClient.from_profile()
 from waylay.services.queries.models.queries_list_response import QueriesListResponse
 try:
     # List Queries
-    # calls `GET /queries/v1/queries/v1/query`
+    # calls `GET /queries/v1/query`
     api_response = await waylay_client.queries.manage.list(
         # query parameters:
         query = {
@@ -192,7 +192,7 @@ except ApiError as e:
 
 ### Endpoint
 ```
-GET /queries/v1/queries/v1/query
+GET /queries/v1/query
 ```
 ### Parameters
 
@@ -252,7 +252,7 @@ waylay_client = WaylayClient.from_profile()
 from waylay.services.queries.models.delete_response import DeleteResponse
 try:
     # Remove Query
-    # calls `DELETE /queries/v1/queries/v1/query/{query_name}`
+    # calls `DELETE /queries/v1/query/{query_name}`
     api_response = await waylay_client.queries.manage.remove(
         'query_name_example', # query_name | path param "query_name"
     )
@@ -264,7 +264,7 @@ except ApiError as e:
 
 ### Endpoint
 ```
-DELETE /queries/v1/queries/v1/query/{query_name}
+DELETE /queries/v1/query/{query_name}
 ```
 ### Parameters
 
@@ -322,7 +322,7 @@ from waylay.services.queries.models.query_definition import QueryDefinition
 from waylay.services.queries.models.query_response import QueryResponse
 try:
     # Update Query
-    # calls `PUT /queries/v1/queries/v1/query/{query_name}`
+    # calls `PUT /queries/v1/query/{query_name}`
     api_response = await waylay_client.queries.manage.update(
         'query_name_example', # query_name | path param "query_name"
         # json data: use a generated model or a json-serializable python data structure (dict, list)
@@ -336,7 +336,7 @@ except ApiError as e:
 
 ### Endpoint
 ```
-PUT /queries/v1/queries/v1/query/{query_name}
+PUT /queries/v1/query/{query_name}
 ```
 ### Parameters
 

@@ -244,7 +244,7 @@ class ExecuteApi(WithApiClient):
         ## peform request
         return await self.api_client.request(
             method="GET",
-            resource_path="/queries/v1/queries/v1/data/{query_name}",
+            resource_path="/queries/v1/data/{query_name}",
             path_params=path_params,
             params=query,
             **body_args,
@@ -416,7 +416,7 @@ class ExecuteApi(WithApiClient):
         ## peform request
         return await self.api_client.request(
             method="POST",
-            resource_path="/queries/v1/queries/v1/data",
+            resource_path="/queries/v1/data",
             path_params=path_params,
             params=query,
             **body_args,

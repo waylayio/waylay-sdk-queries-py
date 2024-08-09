@@ -8,7 +8,7 @@ info:
     Protocol version: v1.
   version: 0.5.0
 paths:
-  /queries/v1/queries/v1:
+  /queries/v1:
     get:
       tags:
         - Status
@@ -32,7 +32,7 @@ paths:
       x-consumes-urlencoded: false
       x-consumes-json: false
       x-consumes-other: false
-  /queries/v1/queries/v1/data:
+  /queries/v1/data:
     post:
       tags:
         - Execute
@@ -1740,7 +1740,7 @@ paths:
       x-consumes-urlencoded: false
       x-consumes-json: true
       x-consumes-other: false
-  /queries/v1/queries/v1/data/{query_name}:
+  /queries/v1/data/{query_name}:
     get:
       tags:
         - Execute
@@ -3449,7 +3449,7 @@ paths:
       x-consumes-urlencoded: false
       x-consumes-json: false
       x-consumes-other: false
-  /queries/v1/queries/v1/query:
+  /queries/v1/query:
     get:
       tags:
         - Manage
@@ -3577,7 +3577,7 @@ paths:
       x-consumes-urlencoded: false
       x-consumes-json: true
       x-consumes-other: false
-  /queries/v1/queries/v1/query/{query_name}:
+  /queries/v1/query/{query_name}:
     get:
       tags:
         - Manage

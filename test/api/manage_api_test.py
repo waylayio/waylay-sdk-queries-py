@@ -59,7 +59,7 @@ def _create_set_mock_response(httpx_mock: HTTPXMock, gateway_url: str):
     mock_response = QueryResponseStub.create_json()
     httpx_mock_kwargs = {
         "method": "POST",
-        "url": re.compile(f"^{gateway_url}/queries/v1/queries/v1/query(\\?.*)?"),
+        "url": re.compile(f"^{gateway_url}/queries/v1/query(\\?.*)?"),
         "content": json.dumps(mock_response, default=str),
         "status_code": 200,
     }
@@ -102,9 +102,7 @@ def _get_set_mock_response(httpx_mock: HTTPXMock, gateway_url: str, query_name: 
     mock_response = QueryResponseStub.create_json()
     httpx_mock_kwargs = {
         "method": "GET",
-        "url": re.compile(
-            f"^{gateway_url}/queries/v1/queries/v1/query/{query_name}(\\?.*)?"
-        ),
+        "url": re.compile(f"^{gateway_url}/queries/v1/query/{query_name}(\\?.*)?"),
         "content": json.dumps(mock_response, default=str),
         "status_code": 200,
     }
@@ -147,7 +145,7 @@ def _list_set_mock_response(httpx_mock: HTTPXMock, gateway_url: str):
     mock_response = QueriesListResponseStub.create_json()
     httpx_mock_kwargs = {
         "method": "GET",
-        "url": re.compile(f"^{gateway_url}/queries/v1/queries/v1/query(\\?.*)?"),
+        "url": re.compile(f"^{gateway_url}/queries/v1/query(\\?.*)?"),
         "content": json.dumps(mock_response, default=str),
         "status_code": 200,
     }
@@ -199,9 +197,7 @@ def _remove_set_mock_response(httpx_mock: HTTPXMock, gateway_url: str, query_nam
     mock_response = DeleteResponseStub.create_json()
     httpx_mock_kwargs = {
         "method": "DELETE",
-        "url": re.compile(
-            f"^{gateway_url}/queries/v1/queries/v1/query/{query_name}(\\?.*)?"
-        ),
+        "url": re.compile(f"^{gateway_url}/queries/v1/query/{query_name}(\\?.*)?"),
         "content": json.dumps(mock_response, default=str),
         "status_code": 200,
     }
@@ -244,9 +240,7 @@ def _update_set_mock_response(httpx_mock: HTTPXMock, gateway_url: str, query_nam
     mock_response = QueryResponseStub.create_json()
     httpx_mock_kwargs = {
         "method": "PUT",
-        "url": re.compile(
-            f"^{gateway_url}/queries/v1/queries/v1/query/{query_name}(\\?.*)?"
-        ),
+        "url": re.compile(f"^{gateway_url}/queries/v1/query/{query_name}(\\?.*)?"),
         "content": json.dumps(mock_response, default=str),
         "status_code": 200,
     }

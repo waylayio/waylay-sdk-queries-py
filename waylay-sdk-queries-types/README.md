@@ -42,7 +42,7 @@ from waylay.services.queries.models.query_input import QueryInput
 from waylay.services.queries.models.query_result import QueryResult
 try:
     # Execute Query
-    # calls `POST /queries/v1/queries/v1/data`
+    # calls `POST /queries/v1/data`
     api_response = await waylay_client.queries.execute.execute(
         # query parameters:
         query = {
