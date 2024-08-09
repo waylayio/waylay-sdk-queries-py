@@ -259,7 +259,7 @@ class ManageApi(WithApiClient):
         ## peform request
         return await self.api_client.request(
             method="POST",
-            resource_path="/queries/v1/queries/v1/query",
+            resource_path="/queries/v1/query",
             path_params=path_params,
             params=query,
             **body_args,
@@ -421,7 +421,7 @@ class ManageApi(WithApiClient):
         ## peform request
         return await self.api_client.request(
             method="GET",
-            resource_path="/queries/v1/queries/v1/query/{query_name}",
+            resource_path="/queries/v1/query/{query_name}",
             path_params=path_params,
             params=query,
             **body_args,
@@ -567,7 +567,7 @@ class ManageApi(WithApiClient):
         ## peform request
         return await self.api_client.request(
             method="GET",
-            resource_path="/queries/v1/queries/v1/query",
+            resource_path="/queries/v1/query",
             path_params=path_params,
             params=query,
             **body_args,
@@ -729,7 +729,7 @@ class ManageApi(WithApiClient):
         ## peform request
         return await self.api_client.request(
             method="DELETE",
-            resource_path="/queries/v1/queries/v1/query/{query_name}",
+            resource_path="/queries/v1/query/{query_name}",
             path_params=path_params,
             params=query,
             **body_args,
@@ -903,7 +903,7 @@ class ManageApi(WithApiClient):
         ## peform request
         return await self.api_client.request(
             method="PUT",
-            resource_path="/queries/v1/queries/v1/query/{query_name}",
+            resource_path="/queries/v1/query/{query_name}",
             path_params=path_params,
             params=query,
             **body_args,

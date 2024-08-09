@@ -185,7 +185,7 @@ class StatusApi(WithApiClient):
         ## peform request
         return await self.api_client.request(
             method="GET",
-            resource_path="/queries/v1/queries/v1",
+            resource_path="/queries/v1",
             path_params=path_params,
             params=query,
             **body_args,

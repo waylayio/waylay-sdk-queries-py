@@ -4,8 +4,8 @@ All URIs are relative to *https://api.waylay.io*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**execute_by_name**](ExecuteApi.md#execute_by_name) | **GET** /queries/v1/queries/v1/data/{query_name} | Execute Named Query
-[**execute**](ExecuteApi.md#execute) | **POST** /queries/v1/queries/v1/data | Execute Query
+[**execute_by_name**](ExecuteApi.md#execute_by_name) | **GET** /queries/v1/data/{query_name} | Execute Named Query
+[**execute**](ExecuteApi.md#execute) | **POST** /queries/v1/data | Execute Query
 
 # **execute_by_name**
 > execute_by_name(
@@ -34,7 +34,7 @@ waylay_client = WaylayClient.from_profile()
 from waylay.services.queries.models.query_result import QueryResult
 try:
     # Execute Named Query
-    # calls `GET /queries/v1/queries/v1/data/{query_name}`
+    # calls `GET /queries/v1/data/{query_name}`
     api_response = await waylay_client.queries.execute.execute_by_name(
         'query_name_example', # query_name | path param "query_name"
         # query parameters:
@@ -54,7 +54,7 @@ except ApiError as e:
 
 ### Endpoint
 ```
-GET /queries/v1/queries/v1/data/{query_name}
+GET /queries/v1/data/{query_name}
 ```
 ### Parameters
 
@@ -124,7 +124,7 @@ from waylay.services.queries.models.query_input import QueryInput
 from waylay.services.queries.models.query_result import QueryResult
 try:
     # Execute Query
-    # calls `POST /queries/v1/queries/v1/data`
+    # calls `POST /queries/v1/data`
     api_response = await waylay_client.queries.execute.execute(
         # query parameters:
         query = {
@@ -145,7 +145,7 @@ except ApiError as e:
 
 ### Endpoint
 ```
-POST /queries/v1/queries/v1/data
+POST /queries/v1/data
 ```
 ### Parameters
 
