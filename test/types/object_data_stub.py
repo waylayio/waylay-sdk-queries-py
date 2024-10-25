@@ -63,7 +63,7 @@ object_data_model_schema = json.loads(
     }
   },
   "additionalProperties" : {
-    "$ref" : "#/components/schemas/ObjectData_value"
+    "$ref" : "#/components/schemas/Data_"
   },
   "description" : "Result data for a timestamp in object format."
 }
@@ -89,7 +89,7 @@ class ObjectDataStub:
         if not MODELS_AVAILABLE:
             raise ImportError("Models must be installed to create class stubs")
         json = cls.create_json()
-        if not json:
+        if json is None:
             # use backup example based on the pydantic model schema
             backup_faker = JSF(ObjectDataAdapter.json_schema(), allow_none_optionals=1)
             json = backup_faker.generate(use_defaults=True, use_examples=True)

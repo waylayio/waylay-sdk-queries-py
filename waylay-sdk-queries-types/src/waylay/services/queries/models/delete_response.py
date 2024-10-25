@@ -17,10 +17,11 @@ from pydantic import (
     ConfigDict,
     Field,
 )
+
 from waylay.sdk.api._models import BaseModel as WaylayBaseModel
 
-from ..models.embeddings import Embeddings
-from ..models.links import Links
+from ..models.embeddings_value import EmbeddingsValue
+from ..models.links_value import LinksValue
 from ..models.message import Message
 
 
@@ -28,10 +29,10 @@ class DeleteResponse(WaylayBaseModel):
     """Confirmation of a delete request.."""
 
     messages: List[Message] | None = None
-    links: Dict[str, Links] | None = Field(
+    links: Dict[str, LinksValue] | None = Field(
         default=None, description="HAL links, indexed by link relation.", alias="_links"
     )
-    embeddings: Dict[str, Embeddings] | None = Field(
+    embeddings: Dict[str, EmbeddingsValue] | None = Field(
         default=None,
         description="Hal embeddings, indexed by relation.",
         alias="_embeddings",

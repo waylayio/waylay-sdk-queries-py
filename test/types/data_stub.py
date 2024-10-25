@@ -16,49 +16,48 @@ from pydantic import TypeAdapter
 from ..openapi import MODEL_DEFINITIONS, with_example_provider
 
 try:
-    from waylay.services.queries.models.links import Links
+    from waylay.services.queries.models.data import Data
 
-    LinksAdapter = TypeAdapter(Links)
+    DataAdapter = TypeAdapter(Data)
     MODELS_AVAILABLE = True
 except ImportError as exc:
     MODELS_AVAILABLE = False
 
-links_model_schema = json.loads(
+data__model_schema = json.loads(
     r"""{
-  "title" : "_Links",
-  "anyOf" : [ {
-    "$ref" : "#/components/schemas/HALLink"
+  "title" : "Data ",
+  "oneOf" : [ {
+    "title" : "Hierarchical Data",
+    "type" : "object",
+    "description" : "Values for the series whose attributes corresponds with the key. Keyed by sub-levels."
   }, {
-    "type" : "array",
-    "items" : {
-      "$ref" : "#/components/schemas/HALLink"
-    }
+    "$ref" : "#/components/schemas/Datum"
   } ]
 }
 """,
     object_hook=with_example_provider,
 )
-links_model_schema.update({"definitions": MODEL_DEFINITIONS})
+data__model_schema.update({"definitions": MODEL_DEFINITIONS})
 
-links_faker = JSF(links_model_schema, allow_none_optionals=1)
+data__faker = JSF(data__model_schema, allow_none_optionals=1)
 
 
-class LinksStub:
-    """Links unit test stubs."""
+class DataStub:
+    """Data unit test stubs."""
 
     @classmethod
     def create_json(cls):
         """Create a dict stub instance."""
-        return links_faker.generate(use_defaults=True, use_examples=True)
+        return data__faker.generate(use_defaults=True, use_examples=True)
 
     @classmethod
-    def create_instance(cls) -> "Links":
-        """Create Links stub instance."""
+    def create_instance(cls) -> "Data":
+        """Create Data stub instance."""
         if not MODELS_AVAILABLE:
             raise ImportError("Models must be installed to create class stubs")
         json = cls.create_json()
-        if not json:
+        if json is None:
             # use backup example based on the pydantic model schema
-            backup_faker = JSF(LinksAdapter.json_schema(), allow_none_optionals=1)
+            backup_faker = JSF(DataAdapter.json_schema(), allow_none_optionals=1)
             json = backup_faker.generate(use_defaults=True, use_examples=True)
-        return LinksAdapter.validate_python(json, context={"skip_validation": True})
+        return DataAdapter.validate_python(json, context={"skip_validation": True})
