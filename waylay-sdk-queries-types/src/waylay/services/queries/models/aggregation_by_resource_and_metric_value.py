@@ -13,7 +13,6 @@ from __future__ import annotations
 
 from typing import (
     Dict,
-    List,
     Union,
 )
 
@@ -21,8 +20,14 @@ from typing_extensions import (
     Annotated,  # >=3.9
 )
 
-Embeddings = Union[
-    Annotated[Dict[str, object], "Any embedded representation in a HAL response."],
-    Annotated[List[Dict[str, object]], ""],
+from ..models.aggregation_by_resource_or_metric_value import (
+    AggregationByResourceOrMetricValue,
+)
+
+AggregationByResourceAndMetricValue = Union[
+    Annotated[
+        Dict[str, AggregationByResourceOrMetricValue],
+        "Aggregation methods specified per resource or metric.",
+    ]
 ]
-"""Embeddings."""
+"""AggregationByResourceAndMetricValue."""

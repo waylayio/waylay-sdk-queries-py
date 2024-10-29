@@ -29,13 +29,13 @@ with open("openapi/queries.transformed.openapi.yaml", "r") as file:
 
 MODEL_DEFINITIONS = OPENAPI_SPEC["components"]["schemas"]
 
-_aggregation_by_resource_and_metric_model_schema = json.loads(
+_aggregation_by_resource_and_metric_value_model_schema = json.loads(
     r"""{
   "anyOf" : [ {
     "title" : "Aggregation by Resource or Metric",
     "type" : "object",
     "additionalProperties" : {
-      "$ref" : "#/components/schemas/Aggregation_by_Resource_or_Metric"
+      "$ref" : "#/components/schemas/Aggregation_by_Resource_or_Metric_value"
     },
     "description" : "Aggregation methods specified per resource or metric.",
     "nullable" : true
@@ -45,10 +45,10 @@ _aggregation_by_resource_and_metric_model_schema = json.loads(
     object_hook=with_example_provider,
 )
 MODEL_DEFINITIONS.update({
-    "Aggregation_by_Resource_and_Metric": _aggregation_by_resource_and_metric_model_schema
+    "Aggregation_by_Resource_and_Metric_value": _aggregation_by_resource_and_metric_value_model_schema
 })
 
-_aggregation_by_resource_or_metric_model_schema = json.loads(
+_aggregation_by_resource_or_metric_value_model_schema = json.loads(
     r"""{
   "anyOf" : [ {
     "$ref" : "#/components/schemas/AggregationMethod"
@@ -66,7 +66,7 @@ _aggregation_by_resource_or_metric_model_schema = json.loads(
     object_hook=with_example_provider,
 )
 MODEL_DEFINITIONS.update({
-    "Aggregation_by_Resource_or_Metric": _aggregation_by_resource_or_metric_model_schema
+    "Aggregation_by_Resource_or_Metric_value": _aggregation_by_resource_or_metric_value_model_schema
 })
 
 _aggregation_method_model_schema = json.loads(
@@ -451,6 +451,22 @@ _column_headers_inner_model_schema = json.loads(
 )
 MODEL_DEFINITIONS.update({"Column_Headers_inner": _column_headers_inner_model_schema})
 
+_data__model_schema = json.loads(
+    r"""{
+  "title" : "Data ",
+  "oneOf" : [ {
+    "title" : "Hierarchical Data",
+    "type" : "object",
+    "description" : "Values for the series whose attributes corresponds with the key. Keyed by sub-levels."
+  }, {
+    "$ref" : "#/components/schemas/Datum"
+  } ]
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({"Data_": _data__model_schema})
+
 _data_axis_option_model_schema = json.loads(
     r"""{
   "type" : "string",
@@ -549,7 +565,7 @@ _default_aggregation_model_schema = json.loads(
     "title" : "Aggregation by Resource or Metric",
     "type" : "object",
     "additionalProperties" : {
-      "$ref" : "#/components/schemas/Aggregation_by_Resource_or_Metric"
+      "$ref" : "#/components/schemas/Aggregation_by_Resource_or_Metric_value"
     },
     "description" : "Aggregation methods specified per resource or metric.",
     "nullable" : true
@@ -557,7 +573,7 @@ _default_aggregation_model_schema = json.loads(
     "title" : "Aggregation by Resource and Metric",
     "type" : "object",
     "additionalProperties" : {
-      "$ref" : "#/components/schemas/Aggregation_by_Resource_and_Metric"
+      "$ref" : "#/components/schemas/Aggregation_by_Resource_and_Metric_value"
     },
     "description" : "Aggregation methods specified per resource and metric.",
     "nullable" : true
@@ -598,7 +614,7 @@ _delete_response_model_schema = json.loads(
       "title" : " Links",
       "type" : "object",
       "additionalProperties" : {
-        "$ref" : "#/components/schemas/_Links"
+        "$ref" : "#/components/schemas/_Links_value"
       },
       "description" : "HAL links, indexed by link relation."
     },
@@ -606,7 +622,7 @@ _delete_response_model_schema = json.loads(
       "title" : " Embeddings",
       "type" : "object",
       "additionalProperties" : {
-        "$ref" : "#/components/schemas/_Embeddings"
+        "$ref" : "#/components/schemas/_Embeddings_value"
       },
       "description" : "Hal embeddings, indexed by relation."
     }
@@ -619,9 +635,9 @@ _delete_response_model_schema = json.loads(
 )
 MODEL_DEFINITIONS.update({"DeleteResponse": _delete_response_model_schema})
 
-_embeddings_model_schema = json.loads(
+_embeddings_value_model_schema = json.loads(
     r"""{
-  "title" : "_Embeddings",
+  "title" : "_Embeddings_value",
   "anyOf" : [ {
     "$ref" : "#/components/schemas/HALEmbedding"
   }, {
@@ -634,7 +650,7 @@ _embeddings_model_schema = json.loads(
 """,
     object_hook=with_example_provider,
 )
-MODEL_DEFINITIONS.update({"_Embeddings": _embeddings_model_schema})
+MODEL_DEFINITIONS.update({"_Embeddings_value": _embeddings_value_model_schema})
 
 _from_override__model_schema = json.loads(
     r"""{
@@ -1083,9 +1099,9 @@ _interpolation_spec_model_schema = json.loads(
 )
 MODEL_DEFINITIONS.update({"InterpolationSpec": _interpolation_spec_model_schema})
 
-_links_model_schema = json.loads(
+_links_value_model_schema = json.loads(
     r"""{
-  "title" : "_Links",
+  "title" : "_Links_value",
   "anyOf" : [ {
     "$ref" : "#/components/schemas/HALLink"
   }, {
@@ -1098,7 +1114,7 @@ _links_model_schema = json.loads(
 """,
     object_hook=with_example_provider,
 )
-MODEL_DEFINITIONS.update({"_Links": _links_model_schema})
+MODEL_DEFINITIONS.update({"_Links_value": _links_value_model_schema})
 
 _location_inner_model_schema = json.loads(
     r"""{
@@ -1232,7 +1248,7 @@ _object_data_model_schema = json.loads(
     }
   },
   "additionalProperties" : {
-    "$ref" : "#/components/schemas/ObjectData_value"
+    "$ref" : "#/components/schemas/Data_"
   },
   "description" : "Result data for a timestamp in object format."
 }
@@ -1267,22 +1283,6 @@ _object_data_set_model_schema = json.loads(
     object_hook=with_example_provider,
 )
 MODEL_DEFINITIONS.update({"ObjectDataSet": _object_data_set_model_schema})
-
-_object_data_value_model_schema = json.loads(
-    r"""{
-  "title" : "Data ",
-  "oneOf" : [ {
-    "title" : "Hierarchical Data",
-    "type" : "object",
-    "description" : "Values for the series whose attributes corresponds with the key. Keyed by sub-levels."
-  }, {
-    "$ref" : "#/components/schemas/Datum"
-  } ]
-}
-""",
-    object_hook=with_example_provider,
-)
-MODEL_DEFINITIONS.update({"ObjectData_value": _object_data_value_model_schema})
 
 _queries_list_response_model_schema = json.loads(
     r"""{

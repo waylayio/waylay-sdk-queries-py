@@ -21,11 +21,11 @@ from typing_extensions import (
 
 from ..models.datum import Datum
 
-ObjectDataValue = Union[
+Data = Union[
     Annotated[
         object,
         "Values for the series whose attributes corresponds with the key. Keyed by sub-levels.",
     ],
     Annotated[Datum, ""],
 ]
-"""ObjectDataValue."""
+"""Data."""

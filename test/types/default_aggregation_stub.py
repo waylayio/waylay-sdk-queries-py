@@ -41,7 +41,7 @@ default_aggregation_model_schema = json.loads(
     "title" : "Aggregation by Resource or Metric",
     "type" : "object",
     "additionalProperties" : {
-      "$ref" : "#/components/schemas/Aggregation_by_Resource_or_Metric"
+      "$ref" : "#/components/schemas/Aggregation_by_Resource_or_Metric_value"
     },
     "description" : "Aggregation methods specified per resource or metric.",
     "nullable" : true
@@ -49,7 +49,7 @@ default_aggregation_model_schema = json.loads(
     "title" : "Aggregation by Resource and Metric",
     "type" : "object",
     "additionalProperties" : {
-      "$ref" : "#/components/schemas/Aggregation_by_Resource_and_Metric"
+      "$ref" : "#/components/schemas/Aggregation_by_Resource_and_Metric_value"
     },
     "description" : "Aggregation methods specified per resource and metric.",
     "nullable" : true
@@ -79,7 +79,7 @@ class DefaultAggregationStub:
         if not MODELS_AVAILABLE:
             raise ImportError("Models must be installed to create class stubs")
         json = cls.create_json()
-        if not json:
+        if json is None:
             # use backup example based on the pydantic model schema
             backup_faker = JSF(
                 DefaultAggregationAdapter.json_schema(), allow_none_optionals=1

@@ -38,7 +38,7 @@ delete_response_model_schema = json.loads(
       "title" : " Links",
       "type" : "object",
       "additionalProperties" : {
-        "$ref" : "#/components/schemas/_Links"
+        "$ref" : "#/components/schemas/_Links_value"
       },
       "description" : "HAL links, indexed by link relation."
     },
@@ -46,7 +46,7 @@ delete_response_model_schema = json.loads(
       "title" : " Embeddings",
       "type" : "object",
       "additionalProperties" : {
-        "$ref" : "#/components/schemas/_Embeddings"
+        "$ref" : "#/components/schemas/_Embeddings_value"
       },
       "description" : "Hal embeddings, indexed by relation."
     }
@@ -76,7 +76,7 @@ class DeleteResponseStub:
         if not MODELS_AVAILABLE:
             raise ImportError("Models must be installed to create class stubs")
         json = cls.create_json()
-        if not json:
+        if json is None:
             # use backup example based on the pydantic model schema
             backup_faker = JSF(
                 DeleteResponseAdapter.json_schema(), allow_none_optionals=1

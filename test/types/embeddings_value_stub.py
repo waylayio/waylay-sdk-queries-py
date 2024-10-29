@@ -16,52 +16,53 @@ from pydantic import TypeAdapter
 from ..openapi import MODEL_DEFINITIONS, with_example_provider
 
 try:
-    from waylay.services.queries.models.object_data_value import ObjectDataValue
+    from waylay.services.queries.models.embeddings_value import EmbeddingsValue
 
-    ObjectDataValueAdapter = TypeAdapter(ObjectDataValue)
+    EmbeddingsValueAdapter = TypeAdapter(EmbeddingsValue)
     MODELS_AVAILABLE = True
 except ImportError as exc:
     MODELS_AVAILABLE = False
 
-object_data_value_model_schema = json.loads(
+embeddings_value_model_schema = json.loads(
     r"""{
-  "title" : "Data ",
-  "oneOf" : [ {
-    "title" : "Hierarchical Data",
-    "type" : "object",
-    "description" : "Values for the series whose attributes corresponds with the key. Keyed by sub-levels."
+  "title" : "_Embeddings_value",
+  "anyOf" : [ {
+    "$ref" : "#/components/schemas/HALEmbedding"
   }, {
-    "$ref" : "#/components/schemas/Datum"
+    "type" : "array",
+    "items" : {
+      "$ref" : "#/components/schemas/HALEmbedding"
+    }
   } ]
 }
 """,
     object_hook=with_example_provider,
 )
-object_data_value_model_schema.update({"definitions": MODEL_DEFINITIONS})
+embeddings_value_model_schema.update({"definitions": MODEL_DEFINITIONS})
 
-object_data_value_faker = JSF(object_data_value_model_schema, allow_none_optionals=1)
+embeddings_value_faker = JSF(embeddings_value_model_schema, allow_none_optionals=1)
 
 
-class ObjectDataValueStub:
-    """ObjectDataValue unit test stubs."""
+class EmbeddingsValueStub:
+    """EmbeddingsValue unit test stubs."""
 
     @classmethod
     def create_json(cls):
         """Create a dict stub instance."""
-        return object_data_value_faker.generate(use_defaults=True, use_examples=True)
+        return embeddings_value_faker.generate(use_defaults=True, use_examples=True)
 
     @classmethod
-    def create_instance(cls) -> "ObjectDataValue":
-        """Create ObjectDataValue stub instance."""
+    def create_instance(cls) -> "EmbeddingsValue":
+        """Create EmbeddingsValue stub instance."""
         if not MODELS_AVAILABLE:
             raise ImportError("Models must be installed to create class stubs")
         json = cls.create_json()
-        if not json:
+        if json is None:
             # use backup example based on the pydantic model schema
             backup_faker = JSF(
-                ObjectDataValueAdapter.json_schema(), allow_none_optionals=1
+                EmbeddingsValueAdapter.json_schema(), allow_none_optionals=1
             )
             json = backup_faker.generate(use_defaults=True, use_examples=True)
-        return ObjectDataValueAdapter.validate_python(
+        return EmbeddingsValueAdapter.validate_python(
             json, context={"skip_validation": True}
         )

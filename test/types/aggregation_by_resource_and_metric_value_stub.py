@@ -16,22 +16,24 @@ from pydantic import TypeAdapter
 from ..openapi import MODEL_DEFINITIONS, with_example_provider
 
 try:
-    from waylay.services.queries.models.aggregation_by_resource_and_metric import (
-        AggregationByResourceAndMetric,
+    from waylay.services.queries.models.aggregation_by_resource_and_metric_value import (
+        AggregationByResourceAndMetricValue,
     )
 
-    AggregationByResourceAndMetricAdapter = TypeAdapter(AggregationByResourceAndMetric)
+    AggregationByResourceAndMetricValueAdapter = TypeAdapter(
+        AggregationByResourceAndMetricValue
+    )
     MODELS_AVAILABLE = True
 except ImportError as exc:
     MODELS_AVAILABLE = False
 
-aggregation_by_resource_and_metric_model_schema = json.loads(
+aggregation_by_resource_and_metric_value_model_schema = json.loads(
     r"""{
   "anyOf" : [ {
     "title" : "Aggregation by Resource or Metric",
     "type" : "object",
     "additionalProperties" : {
-      "$ref" : "#/components/schemas/Aggregation_by_Resource_or_Metric"
+      "$ref" : "#/components/schemas/Aggregation_by_Resource_or_Metric_value"
     },
     "description" : "Aggregation methods specified per resource or metric.",
     "nullable" : true
@@ -40,38 +42,38 @@ aggregation_by_resource_and_metric_model_schema = json.loads(
 """,
     object_hook=with_example_provider,
 )
-aggregation_by_resource_and_metric_model_schema.update({
+aggregation_by_resource_and_metric_value_model_schema.update({
     "definitions": MODEL_DEFINITIONS
 })
 
-aggregation_by_resource_and_metric_faker = JSF(
-    aggregation_by_resource_and_metric_model_schema, allow_none_optionals=1
+aggregation_by_resource_and_metric_value_faker = JSF(
+    aggregation_by_resource_and_metric_value_model_schema, allow_none_optionals=1
 )
 
 
-class AggregationByResourceAndMetricStub:
-    """AggregationByResourceAndMetric unit test stubs."""
+class AggregationByResourceAndMetricValueStub:
+    """AggregationByResourceAndMetricValue unit test stubs."""
 
     @classmethod
     def create_json(cls):
         """Create a dict stub instance."""
-        return aggregation_by_resource_and_metric_faker.generate(
+        return aggregation_by_resource_and_metric_value_faker.generate(
             use_defaults=True, use_examples=True
         )
 
     @classmethod
-    def create_instance(cls) -> "AggregationByResourceAndMetric":
-        """Create AggregationByResourceAndMetric stub instance."""
+    def create_instance(cls) -> "AggregationByResourceAndMetricValue":
+        """Create AggregationByResourceAndMetricValue stub instance."""
         if not MODELS_AVAILABLE:
             raise ImportError("Models must be installed to create class stubs")
         json = cls.create_json()
-        if not json:
+        if json is None:
             # use backup example based on the pydantic model schema
             backup_faker = JSF(
-                AggregationByResourceAndMetricAdapter.json_schema(),
+                AggregationByResourceAndMetricValueAdapter.json_schema(),
                 allow_none_optionals=1,
             )
             json = backup_faker.generate(use_defaults=True, use_examples=True)
-        return AggregationByResourceAndMetricAdapter.validate_python(
+        return AggregationByResourceAndMetricValueAdapter.validate_python(
             json, context={"skip_validation": True}
         )

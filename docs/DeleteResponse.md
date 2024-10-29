@@ -7,8 +7,8 @@ Confirmation of a delete request.
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **messages** | [**List[Message]**](Message.md) |  | [optional] 
-**links** | [**Dict[str, Links]**](Links.md) | HAL links, indexed by link relation. | [optional] 
-**embeddings** | [**Dict[str, Embeddings]**](Embeddings.md) | Hal embeddings, indexed by relation. | [optional] 
+**links** | [**Dict[str, LinksValue]**](LinksValue.md) | HAL links, indexed by link relation. | [optional] 
+**embeddings** | [**Dict[str, EmbeddingsValue]**](EmbeddingsValue.md) | Hal embeddings, indexed by relation. | [optional] 
 
 ## Example
 

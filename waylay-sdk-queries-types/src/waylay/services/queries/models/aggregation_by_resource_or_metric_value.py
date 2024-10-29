@@ -23,10 +23,10 @@ from typing_extensions import (
 from ..models.aggregation_method import AggregationMethod
 from ..models.aggregations_inner import AggregationsInner
 
-AggregationByResourceOrMetric = Union[
+AggregationByResourceOrMetricValue = Union[
     Annotated[AggregationMethod, ""],
     Annotated[
         List[AggregationsInner], "Aggregation methods, leading to sepearate series."
     ],
 ]
-"""AggregationByResourceOrMetric."""
+"""AggregationByResourceOrMetricValue."""

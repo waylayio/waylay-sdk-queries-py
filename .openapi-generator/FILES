@@ -3,8 +3,8 @@
 LICENSE.txt
 Makefile
 README.md
-docs/AggregationByResourceAndMetric.md
-docs/AggregationByResourceOrMetric.md
+docs/AggregationByResourceAndMetricValue.md
+docs/AggregationByResourceOrMetricValue.md
 docs/AggregationMethod.md
 docs/AggregationMethodOneOf.md
 docs/AggregationMethodOneOf1.md
@@ -26,6 +26,7 @@ docs/ColumnDataSet.md
 docs/ColumnDataSetDataAxis.md
 docs/ColumnHeader.md
 docs/ColumnHeadersInner.md
+docs/Data.md
 docs/DataAxisOption.md
 docs/DataSetAttributes.md
 docs/DataSetWindow.md
@@ -33,7 +34,7 @@ docs/Datum.md
 docs/DefaultAggregation.md
 docs/DefaultInterpolation.md
 docs/DeleteResponse.md
-docs/Embeddings.md
+docs/EmbeddingsValue.md
 docs/ExecuteApi.md
 docs/FromOverride.md
 docs/GroupingInterval.md
@@ -62,7 +63,7 @@ docs/InterpolationMethodOneOf7.md
 docs/InterpolationMethodOneOf8.md
 docs/InterpolationMethodOneOf9.md
 docs/InterpolationSpec.md
-docs/Links.md
+docs/LinksValue.md
 docs/LocationInner.md
 docs/ManageApi.md
 docs/Message.md
@@ -71,7 +72,6 @@ docs/MessageLevel.md
 docs/MessageProperties.md
 docs/ObjectData.md
 docs/ObjectDataSet.md
-docs/ObjectDataValue.md
 docs/Operation.md
 docs/QueriesListResponse.md
 docs/QueryDefinition.md
@@ -122,8 +122,8 @@ test/api/status_api_test.py
 test/conftest.py
 test/openapi.py
 test/types/__init__.py
-test/types/aggregation_by_resource_and_metric_stub.py
-test/types/aggregation_by_resource_or_metric_stub.py
+test/types/aggregation_by_resource_and_metric_value_stub.py
+test/types/aggregation_by_resource_or_metric_value_stub.py
 test/types/aggregation_method_one_of1_stub.py
 test/types/aggregation_method_one_of2_stub.py
 test/types/aggregation_method_one_of3_stub.py
@@ -148,11 +148,12 @@ test/types/column_headers_inner_stub.py
 test/types/data_axis_option_stub.py
 test/types/data_set_attributes_stub.py
 test/types/data_set_window_stub.py
+test/types/data_stub.py
 test/types/datum_stub.py
 test/types/default_aggregation_stub.py
 test/types/default_interpolation_stub.py
 test/types/delete_response_stub.py
-test/types/embeddings_stub.py
+test/types/embeddings_value_stub.py
 test/types/from_override_stub.py
 test/types/grouping_interval_override_one_of_stub.py
 test/types/grouping_interval_override_stub.py
@@ -180,7 +181,7 @@ test/types/interpolation_method_one_of_stub.py
 test/types/interpolation_method_stub.py
 test/types/interpolation_spec_stub.py
 test/types/interpolation_stub.py
-test/types/links_stub.py
+test/types/links_value_stub.py
 test/types/location_inner_stub.py
 test/types/message_arguments_stub.py
 test/types/message_level_stub.py
@@ -188,7 +189,6 @@ test/types/message_properties_stub.py
 test/types/message_stub.py
 test/types/object_data_set_stub.py
 test/types/object_data_stub.py
-test/types/object_data_value_stub.py
 test/types/queries_list_response_stub.py
 test/types/query_definition_stub.py
 test/types/query_entity_input_stub.py
