@@ -6,7 +6,7 @@ Configures the representation of data sets returned by the query API.
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**mode** | [**RenderMode**](RenderMode.md) |  | [optional] 
+**mode** | [**Render1AnyOf**](Render1AnyOf.md) |  | [optional] 
 **roll_up** | **bool** | move up attributes on rows (or columns) that are the same for             all rows (or columns) to a table attribute.             Levels enumerated in &#39;hierarchical&#39; are excluded. | [optional] 
 **hierarchical** | [**Hierarchical**](Hierarchical.md) |  | [optional] 
 **value_key** | **str** | if set, use this key in the value object to report data values | [optional] 

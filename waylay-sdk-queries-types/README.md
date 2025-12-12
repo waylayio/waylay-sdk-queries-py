@@ -5,7 +5,7 @@ Execute and store queries on the Waylay timeseries.
 Protocol version: v1.
 
 This Python package is automatically generated based on the 
-Waylay Queries OpenAPI specification (API version: 0.5.0)
+Waylay Queries OpenAPI specification (API version: 0.6.5)
 For more information, please visit [the openapi specification](https://docs.waylay.io/openapi/public/redocly/queries.html).
 
 It is considered an extension of the waylay-sdk-queries package, and it consists of the typed model classes for all path params, query params, body params and responses for each of the api methods in `waylay-sdk-queries`.
@@ -43,7 +43,7 @@ from waylay.services.queries.models.query_result import QueryResult
 try:
     # Execute Query
     # calls `POST /queries/v1/data`
-    api_response = await waylay_client.queries.execute.execute(
+    api_response = await waylay_client.queries.execute_queries.execute(
         # query parameters:
         query = {
             'resource': '13efb488-75ac-4dac-828a-d49c5c2ebbfc'
@@ -55,10 +55,10 @@ try:
             'accept': 'accept_example',
         },
     )
-    print("The response of queries.execute.execute:\n")
+    print("The response of queries.execute_queries.execute:\n")
     pprint(api_response)
 except ApiError as e:
-    print("Exception when calling queries.execute.execute: %s\n" % e)
+    print("Exception when calling queries.execute_queries.execute: %s\n" % e)
 ```
 
 

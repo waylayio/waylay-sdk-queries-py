@@ -28,7 +28,7 @@ default_aggregation_model_schema = json.loads(
   "title" : "Default Aggregation",
   "description" : "Default aggregation method(s) for the series in the query.",
   "anyOf" : [ {
-    "$ref" : "#/components/schemas/AggregationMethod"
+    "$ref" : "#/components/schemas/Aggregation"
   }, {
     "title" : "Aggregations",
     "type" : "array",

@@ -21,17 +21,17 @@ from typing_extensions import (
     Annotated,  # >=3.9
 )
 
+from ..models.aggregation import Aggregation
 from ..models.aggregation_by_resource_and_metric_value import (
     AggregationByResourceAndMetricValue,
 )
 from ..models.aggregation_by_resource_or_metric_value import (
     AggregationByResourceOrMetricValue,
 )
-from ..models.aggregation_method import AggregationMethod
 from ..models.aggregations_inner import AggregationsInner
 
 DefaultAggregation = Union[
-    Annotated[AggregationMethod, ""],
+    Annotated[Aggregation, ""],
     Annotated[
         List[AggregationsInner], "Aggregation methods, leading to sepearate series."
     ],

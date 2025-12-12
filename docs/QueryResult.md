@@ -7,7 +7,7 @@ A json data response.  Uses the format as specified by the `render` options of t
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **data** | [**List[ResponseDataSet]**](ResponseDataSet.md) | A list of data sets, each with their own time axis. There will be one dataset for each &#x60;role&#x60; specified in the query (by default a single &#x60;input&#x60; role).  The data is represented according to the &#x60;render&#x60;  options in the query (default &#x60;COMPACT_WS&#x60;). | 
-**query** | [**QueryInput**](QueryInput.md) |  | 
+**query** | [**QueryOutput**](QueryOutput.md) |  | 
 **messages** | [**List[QueryExecutionMessage]**](QueryExecutionMessage.md) |  | 
 
 ## Example

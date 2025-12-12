@@ -2,8 +2,8 @@
 
 from waylay.sdk import ApiClient, WaylayService
 
-from ..api.execute_api import ExecuteApi
-from ..api.manage_api import ManageApi
+from ..api.execute_queries_api import ExecuteQueriesApi
+from ..api.named_queries_api import NamedQueriesApi
 from ..api.status_api import StatusApi
 
 
@@ -13,14 +13,14 @@ class QueriesService(WaylayService):
     name = "queries"
     title = "Queries Service"
 
-    execute: ExecuteApi
-    manage: ManageApi
+    execute_queries: ExecuteQueriesApi
+    named_queries: NamedQueriesApi
     status: StatusApi
 
     def __init__(self, api_client: ApiClient):
         """Create the queries service."""
 
         super().__init__(api_client)
-        self.execute = ExecuteApi(api_client)
-        self.manage = ManageApi(api_client)
+        self.execute_queries = ExecuteQueriesApi(api_client)
+        self.named_queries = NamedQueriesApi(api_client)
         self.status = StatusApi(api_client)

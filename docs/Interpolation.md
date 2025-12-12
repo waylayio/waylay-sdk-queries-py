@@ -6,7 +6,7 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **method** | [**InterpolationMethod**](InterpolationMethod.md) |  | 
-**value** | **int** | Optional parameter value for the interpolation method (see method description). | [optional] 
+**value** | [**InterpolationParameter**](InterpolationParameter.md) |  | [optional] 
 **order** | **int** | Optional order parameter for the interpolation method (see method description). | [optional] 
 
 ## Example

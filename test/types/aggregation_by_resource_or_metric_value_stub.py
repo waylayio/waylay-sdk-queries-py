@@ -30,7 +30,7 @@ except ImportError as exc:
 aggregation_by_resource_or_metric_value_model_schema = json.loads(
     r"""{
   "anyOf" : [ {
-    "$ref" : "#/components/schemas/AggregationMethod"
+    "$ref" : "#/components/schemas/Aggregation"
   }, {
     "title" : "Aggregations",
     "type" : "array",

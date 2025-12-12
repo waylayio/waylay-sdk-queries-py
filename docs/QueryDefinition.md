@@ -5,7 +5,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**meta** | **object** | User metadata for the query definition. | [optional] 
+**meta** | **Dict[str, object]** | User metadata for the query definition. | [optional] 
 **query** | [**QueryInput**](QueryInput.md) |  | [optional] 
 **resource** | **str** | Default resource for the series in the query. | [optional] 
 **metric** | **str** | Default metric for the series in the query. | [optional] 

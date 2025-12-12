@@ -16,10 +16,9 @@ from pydantic import (
     Field,
     StrictStr,
 )
-
 from waylay.sdk.api._models import BaseModel as WaylayBaseModel
 
-from ..models.aggregation_method import AggregationMethod
+from ..models.aggregration import Aggregration
 from ..models.interpolation import Interpolation
 
 
@@ -38,7 +37,7 @@ class SeriesSpec(WaylayBaseModel):
         default=None,
         description="Metric name for the series, required unless it is specified as a query default.",
     )
-    aggregration: AggregationMethod | None = None
+    aggregration: Aggregration | None = None
     interpolation: Interpolation | None = None
 
     model_config = ConfigDict(

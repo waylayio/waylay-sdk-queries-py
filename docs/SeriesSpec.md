@@ -9,7 +9,7 @@ Name | Type | Description | Notes
 **name** | **str** | Optional alias name for the series. This name is used when exporting the dataset to CSV format. | [optional] 
 **resource** | **str** | Resource id for the series, required unless it is specified as a query default. | [optional] 
 **metric** | **str** | Metric name for the series, required unless it is specified as a query default. | [optional] 
-**aggregration** | [**AggregationMethod**](AggregationMethod.md) |  | [optional] 
+**aggregration** | [**Aggregration**](Aggregration.md) |  | [optional] 
 **interpolation** | [**Interpolation**](Interpolation.md) |  | [optional] 
 
 ## Example

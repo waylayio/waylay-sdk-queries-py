@@ -37,7 +37,7 @@ query_result_model_schema = json.loads(
       }
     },
     "query" : {
-      "$ref" : "#/components/schemas/Query-Input"
+      "$ref" : "#/components/schemas/Query-Output"
     },
     "messages" : {
       "title" : "Messages and Warnings",
@@ -49,14 +49,7 @@ query_result_model_schema = json.loads(
   },
   "additionalProperties" : true,
   "description" : "A json data response.\n\nUses the format as specified by the\n`render` options of the request (defaults to `COMPACT_WS`).\n'",
-  "example" : {
-    "data" : [ ],
-    "query" : {
-      "resource" : "R",
-      "metric" : "temperature"
-    },
-    "messages" : [ ]
-  }
+  "example" : { }
 }
 """,
     object_hook=with_example_provider,

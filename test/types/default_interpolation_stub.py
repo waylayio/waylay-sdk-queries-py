@@ -30,7 +30,7 @@ default_interpolation_model_schema = json.loads(
   "title" : "Default Interpolation",
   "description" : "Default Interpolation method for the series (if aggregated).",
   "anyOf" : [ {
-    "$ref" : "#/components/schemas/InterpolationMethod"
+    "$ref" : "#/components/schemas/Interpolation_anyOf"
   }, {
     "$ref" : "#/components/schemas/InterpolationSpec"
   } ]

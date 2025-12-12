@@ -6,8 +6,8 @@ Aggregation Alignment Options.  Specifies how the aggregation grid is aligned.
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**at** | [**AlignAt**](AlignAt.md) |  | [optional] 
-**shift** | [**AlignShift**](AlignShift.md) |  | [optional] 
+**at** | [**AlignmentAt**](AlignmentAt.md) |  | [optional] 
+**shift** | [**AlignmentShift**](AlignmentShift.md) |  | [optional] 
 **freq** | [**AlignmentGridInterval**](AlignmentGridInterval.md) |  | [optional] 
 **timezone** | [**AlignmentTimezone**](AlignmentTimezone.md) |  | [optional] 
 

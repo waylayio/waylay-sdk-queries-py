@@ -19,10 +19,10 @@ from typing_extensions import (
     Annotated,  # >=3.9
 )
 
-from ..models.interpolation_method import InterpolationMethod
+from ..models.interpolation_any_of import InterpolationAnyOf
 from ..models.interpolation_spec import InterpolationSpec
 
 Interpolation = Union[
-    Annotated[InterpolationMethod, ""], Annotated[InterpolationSpec, ""]
+    Annotated[InterpolationAnyOf, ""], Annotated[InterpolationSpec, ""]
 ]
 """Interpolation."""

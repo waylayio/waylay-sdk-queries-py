@@ -19,7 +19,7 @@ from typing_extensions import (
     Annotated,  # >=3.9
 )
 
-from ..models.aggregation_method import AggregationMethod
+from ..models.aggregation import Aggregation
 
-AggregationsInner = Union[Annotated[AggregationMethod, ""]]
+AggregationsInner = Union[Annotated[Aggregation, ""]]
 """AggregationsInner."""

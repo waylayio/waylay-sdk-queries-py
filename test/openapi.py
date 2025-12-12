@@ -29,6 +29,37 @@ with open("openapi/queries.transformed.openapi.yaml", "r") as file:
 
 MODEL_DEFINITIONS = OPENAPI_SPEC["components"]["schemas"]
 
+_aggregation_model_schema = json.loads(
+    r"""{
+  "title" : "Aggregation",
+  "type" : "string",
+  "description" : "Aggregation method for a series in the query.",
+  "nullable" : true,
+  "oneOf" : [ {
+    "$ref" : "#/components/schemas/Aggregation_Override__oneOf"
+  }, {
+    "$ref" : "#/components/schemas/Aggregation_Override__oneOf_1"
+  }, {
+    "$ref" : "#/components/schemas/Aggregation_Override__oneOf_2"
+  }, {
+    "$ref" : "#/components/schemas/Aggregation_Override__oneOf_3"
+  }, {
+    "$ref" : "#/components/schemas/Aggregation_Override__oneOf_4"
+  }, {
+    "$ref" : "#/components/schemas/Aggregation_Override__oneOf_5"
+  }, {
+    "$ref" : "#/components/schemas/Aggregation_Override__oneOf_6"
+  }, {
+    "$ref" : "#/components/schemas/Aggregation_Override__oneOf_7"
+  }, {
+    "$ref" : "#/components/schemas/Aggregation_Override__oneOf_8"
+  } ]
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({"Aggregation": _aggregation_model_schema})
+
 _aggregation_by_resource_and_metric_value_model_schema = json.loads(
     r"""{
   "anyOf" : [ {
@@ -51,7 +82,7 @@ MODEL_DEFINITIONS.update({
 _aggregation_by_resource_or_metric_value_model_schema = json.loads(
     r"""{
   "anyOf" : [ {
-    "$ref" : "#/components/schemas/AggregationMethod"
+    "$ref" : "#/components/schemas/Aggregation"
   }, {
     "title" : "Aggregations",
     "type" : "array",
@@ -69,38 +100,38 @@ MODEL_DEFINITIONS.update({
     "Aggregation_by_Resource_or_Metric_value": _aggregation_by_resource_or_metric_value_model_schema
 })
 
-_aggregation_method_model_schema = json.loads(
+_aggregation_override__model_schema = json.loads(
     r"""{
+  "title" : "Aggregation Override.",
   "type" : "string",
   "nullable" : true,
   "oneOf" : [ {
-    "$ref" : "#/components/schemas/AggregationMethod_oneOf"
+    "$ref" : "#/components/schemas/Aggregation_Override__oneOf"
   }, {
-    "$ref" : "#/components/schemas/AggregationMethod_oneOf_1"
+    "$ref" : "#/components/schemas/Aggregation_Override__oneOf_1"
   }, {
-    "$ref" : "#/components/schemas/AggregationMethod_oneOf_2"
+    "$ref" : "#/components/schemas/Aggregation_Override__oneOf_2"
   }, {
-    "$ref" : "#/components/schemas/AggregationMethod_oneOf_3"
+    "$ref" : "#/components/schemas/Aggregation_Override__oneOf_3"
   }, {
-    "$ref" : "#/components/schemas/AggregationMethod_oneOf_4"
+    "$ref" : "#/components/schemas/Aggregation_Override__oneOf_4"
   }, {
-    "$ref" : "#/components/schemas/AggregationMethod_oneOf_5"
+    "$ref" : "#/components/schemas/Aggregation_Override__oneOf_5"
   }, {
-    "$ref" : "#/components/schemas/AggregationMethod_oneOf_6"
+    "$ref" : "#/components/schemas/Aggregation_Override__oneOf_6"
   }, {
-    "$ref" : "#/components/schemas/AggregationMethod_oneOf_7"
+    "$ref" : "#/components/schemas/Aggregation_Override__oneOf_7"
   }, {
-    "$ref" : "#/components/schemas/AggregationMethod_oneOf_8"
+    "$ref" : "#/components/schemas/Aggregation_Override__oneOf_8"
   } ]
 }
 """,
     object_hook=with_example_provider,
 )
-MODEL_DEFINITIONS.update({"AggregationMethod": _aggregation_method_model_schema})
+MODEL_DEFINITIONS.update({"Aggregation_Override_": _aggregation_override__model_schema})
 
-_aggregation_method_one_of_model_schema = json.loads(
+_aggregation_override__one_of_model_schema = json.loads(
     r"""{
-  "title" : "AggregationMethod_oneOf",
   "type" : "string",
   "description" : "Use the first value (in time) to represent all data for the sample interval.",
   "enum" : [ "first" ]
@@ -109,12 +140,11 @@ _aggregation_method_one_of_model_schema = json.loads(
     object_hook=with_example_provider,
 )
 MODEL_DEFINITIONS.update({
-    "AggregationMethod_oneOf": _aggregation_method_one_of_model_schema
+    "Aggregation_Override__oneOf": _aggregation_override__one_of_model_schema
 })
 
-_aggregation_method_one_of_1_model_schema = json.loads(
+_aggregation_override__one_of_1_model_schema = json.loads(
     r"""{
-  "title" : "AggregationMethod_oneOf_1",
   "type" : "string",
   "description" : "Use the last value (in time) to represent all data for the sample interval.",
   "enum" : [ "last" ]
@@ -123,12 +153,11 @@ _aggregation_method_one_of_1_model_schema = json.loads(
     object_hook=with_example_provider,
 )
 MODEL_DEFINITIONS.update({
-    "AggregationMethod_oneOf_1": _aggregation_method_one_of_1_model_schema
+    "Aggregation_Override__oneOf_1": _aggregation_override__one_of_1_model_schema
 })
 
-_aggregation_method_one_of_2_model_schema = json.loads(
+_aggregation_override__one_of_2_model_schema = json.loads(
     r"""{
-  "title" : "AggregationMethod_oneOf_2",
   "type" : "string",
   "description" : "Aggregate data by the mean value: The sum of values divided by number of observations.",
   "enum" : [ "mean" ]
@@ -137,12 +166,11 @@ _aggregation_method_one_of_2_model_schema = json.loads(
     object_hook=with_example_provider,
 )
 MODEL_DEFINITIONS.update({
-    "AggregationMethod_oneOf_2": _aggregation_method_one_of_2_model_schema
+    "Aggregation_Override__oneOf_2": _aggregation_override__one_of_2_model_schema
 })
 
-_aggregation_method_one_of_3_model_schema = json.loads(
+_aggregation_override__one_of_3_model_schema = json.loads(
     r"""{
-  "title" : "AggregationMethod_oneOf_3",
   "type" : "string",
   "description" : "Aggregate data by the median value: The n/2-th value when ordered, the average of the (n-1)/2-th and (n+1)/2-th value when n is uneven.",
   "enum" : [ "median" ]
@@ -151,12 +179,11 @@ _aggregation_method_one_of_3_model_schema = json.loads(
     object_hook=with_example_provider,
 )
 MODEL_DEFINITIONS.update({
-    "AggregationMethod_oneOf_3": _aggregation_method_one_of_3_model_schema
+    "Aggregation_Override__oneOf_3": _aggregation_override__one_of_3_model_schema
 })
 
-_aggregation_method_one_of_4_model_schema = json.loads(
+_aggregation_override__one_of_4_model_schema = json.loads(
     r"""{
-  "title" : "AggregationMethod_oneOf_4",
   "type" : "string",
   "description" : "The sum of all values summarizes the data for the sample interval.",
   "enum" : [ "sum" ]
@@ -165,12 +192,11 @@ _aggregation_method_one_of_4_model_schema = json.loads(
     object_hook=with_example_provider,
 )
 MODEL_DEFINITIONS.update({
-    "AggregationMethod_oneOf_4": _aggregation_method_one_of_4_model_schema
+    "Aggregation_Override__oneOf_4": _aggregation_override__one_of_4_model_schema
 })
 
-_aggregation_method_one_of_5_model_schema = json.loads(
+_aggregation_override__one_of_5_model_schema = json.loads(
     r"""{
-  "title" : "AggregationMethod_oneOf_5",
   "type" : "string",
   "description" : "Use the count of observations in the sample interval.",
   "enum" : [ "count" ]
@@ -179,12 +205,11 @@ _aggregation_method_one_of_5_model_schema = json.loads(
     object_hook=with_example_provider,
 )
 MODEL_DEFINITIONS.update({
-    "AggregationMethod_oneOf_5": _aggregation_method_one_of_5_model_schema
+    "Aggregation_Override__oneOf_5": _aggregation_override__one_of_5_model_schema
 })
 
-_aggregation_method_one_of_6_model_schema = json.loads(
+_aggregation_override__one_of_6_model_schema = json.loads(
     r"""{
-  "title" : "AggregationMethod_oneOf_6",
   "type" : "string",
   "description" : "Use the standard deviation of all observations in the sample interval.",
   "enum" : [ "std" ]
@@ -193,12 +218,11 @@ _aggregation_method_one_of_6_model_schema = json.loads(
     object_hook=with_example_provider,
 )
 MODEL_DEFINITIONS.update({
-    "AggregationMethod_oneOf_6": _aggregation_method_one_of_6_model_schema
+    "Aggregation_Override__oneOf_6": _aggregation_override__one_of_6_model_schema
 })
 
-_aggregation_method_one_of_7_model_schema = json.loads(
+_aggregation_override__one_of_7_model_schema = json.loads(
     r"""{
-  "title" : "AggregationMethod_oneOf_7",
   "type" : "string",
   "description" : "Use the maximum of all values in the sample interval.",
   "enum" : [ "max" ]
@@ -207,12 +231,11 @@ _aggregation_method_one_of_7_model_schema = json.loads(
     object_hook=with_example_provider,
 )
 MODEL_DEFINITIONS.update({
-    "AggregationMethod_oneOf_7": _aggregation_method_one_of_7_model_schema
+    "Aggregation_Override__oneOf_7": _aggregation_override__one_of_7_model_schema
 })
 
-_aggregation_method_one_of_8_model_schema = json.loads(
+_aggregation_override__one_of_8_model_schema = json.loads(
     r"""{
-  "title" : "AggregationMethod_oneOf_8",
   "type" : "string",
   "description" : "Use the minimum of all values in the sample interval.",
   "enum" : [ "min" ]
@@ -221,19 +244,50 @@ _aggregation_method_one_of_8_model_schema = json.loads(
     object_hook=with_example_provider,
 )
 MODEL_DEFINITIONS.update({
-    "AggregationMethod_oneOf_8": _aggregation_method_one_of_8_model_schema
+    "Aggregation_Override__oneOf_8": _aggregation_override__one_of_8_model_schema
 })
 
 _aggregations_inner_model_schema = json.loads(
     r"""{
   "anyOf" : [ {
-    "$ref" : "#/components/schemas/AggregationMethod"
+    "$ref" : "#/components/schemas/Aggregation"
   } ]
 }
 """,
     object_hook=with_example_provider,
 )
 MODEL_DEFINITIONS.update({"Aggregations_inner": _aggregations_inner_model_schema})
+
+_aggregration_model_schema = json.loads(
+    r"""{
+  "title" : "Aggregration",
+  "type" : "string",
+  "description" : "Aggregation method for the series (if aggregated). If missing, the query default is used.",
+  "nullable" : true,
+  "oneOf" : [ {
+    "$ref" : "#/components/schemas/Aggregation_Override__oneOf"
+  }, {
+    "$ref" : "#/components/schemas/Aggregation_Override__oneOf_1"
+  }, {
+    "$ref" : "#/components/schemas/Aggregation_Override__oneOf_2"
+  }, {
+    "$ref" : "#/components/schemas/Aggregation_Override__oneOf_3"
+  }, {
+    "$ref" : "#/components/schemas/Aggregation_Override__oneOf_4"
+  }, {
+    "$ref" : "#/components/schemas/Aggregation_Override__oneOf_5"
+  }, {
+    "$ref" : "#/components/schemas/Aggregation_Override__oneOf_6"
+  }, {
+    "$ref" : "#/components/schemas/Aggregation_Override__oneOf_7"
+  }, {
+    "$ref" : "#/components/schemas/Aggregation_Override__oneOf_8"
+  } ]
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({"Aggregration": _aggregration_model_schema})
 
 _align_at_model_schema = json.loads(
     r"""{
@@ -262,10 +316,10 @@ _alignment_model_schema = json.loads(
   "type" : "object",
   "properties" : {
     "at" : {
-      "$ref" : "#/components/schemas/AlignAt"
+      "$ref" : "#/components/schemas/Alignment_at"
     },
     "shift" : {
-      "$ref" : "#/components/schemas/AlignShift"
+      "$ref" : "#/components/schemas/Alignment_shift"
     },
     "freq" : {
       "$ref" : "#/components/schemas/Alignment_Grid_interval_"
@@ -281,6 +335,15 @@ _alignment_model_schema = json.loads(
     object_hook=with_example_provider,
 )
 MODEL_DEFINITIONS.update({"Alignment": _alignment_model_schema})
+
+_alignment_at_model_schema = json.loads(
+    r"""{
+  "$ref" : "#/components/schemas/AlignAt"
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({"Alignment_at": _alignment_at_model_schema})
 
 _alignment_grid_interval__model_schema = json.loads(
     r"""{
@@ -304,6 +367,15 @@ _alignment_grid_interval__model_schema = json.loads(
 MODEL_DEFINITIONS.update({
     "Alignment_Grid_interval_": _alignment_grid_interval__model_schema
 })
+
+_alignment_shift_model_schema = json.loads(
+    r"""{
+  "$ref" : "#/components/schemas/AlignShift"
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({"Alignment_shift": _alignment_shift_model_schema})
 
 _alignment_timezone__model_schema = json.loads(
     r"""{
@@ -552,7 +624,7 @@ _default_aggregation_model_schema = json.loads(
   "title" : "Default Aggregation",
   "description" : "Default aggregation method(s) for the series in the query.",
   "anyOf" : [ {
-    "$ref" : "#/components/schemas/AggregationMethod"
+    "$ref" : "#/components/schemas/Aggregation"
   }, {
     "title" : "Aggregations",
     "type" : "array",
@@ -589,7 +661,7 @@ _default_interpolation_model_schema = json.loads(
   "title" : "Default Interpolation",
   "description" : "Default Interpolation method for the series (if aggregated).",
   "anyOf" : [ {
-    "$ref" : "#/components/schemas/InterpolationMethod"
+    "$ref" : "#/components/schemas/Interpolation_anyOf"
   }, {
     "$ref" : "#/components/schemas/InterpolationSpec"
   } ]
@@ -611,20 +683,26 @@ _delete_response_model_schema = json.loads(
       }
     },
     "_links" : {
-      "title" : " Links",
+      "title" : "Links",
       "type" : "object",
       "additionalProperties" : {
-        "$ref" : "#/components/schemas/_Links_value"
+        "$ref" : "#/components/schemas/Links_value"
       },
-      "description" : "HAL links, indexed by link relation."
+      "description" : "HAL links, indexed by link relation.",
+      "x-propertyNames" : {
+        "$ref" : "#/components/schemas/HALLinkRole"
+      }
     },
     "_embeddings" : {
-      "title" : " Embeddings",
+      "title" : "Embeddings",
       "type" : "object",
       "additionalProperties" : {
-        "$ref" : "#/components/schemas/_Embeddings_value"
+        "$ref" : "#/components/schemas/Embeddings_value"
       },
-      "description" : "Hal embeddings, indexed by relation."
+      "description" : "Hal embeddings, indexed by relation.",
+      "x-propertyNames" : {
+        "$ref" : "#/components/schemas/HALLinkRole"
+      }
     }
   },
   "additionalProperties" : true,
@@ -637,7 +715,7 @@ MODEL_DEFINITIONS.update({"DeleteResponse": _delete_response_model_schema})
 
 _embeddings_value_model_schema = json.loads(
     r"""{
-  "title" : "_Embeddings_value",
+  "title" : "Embeddings_value",
   "anyOf" : [ {
     "$ref" : "#/components/schemas/HALEmbedding"
   }, {
@@ -650,7 +728,7 @@ _embeddings_value_model_schema = json.loads(
 """,
     object_hook=with_example_provider,
 )
-MODEL_DEFINITIONS.update({"_Embeddings_value": _embeddings_value_model_schema})
+MODEL_DEFINITIONS.update({"Embeddings_value": _embeddings_value_model_schema})
 
 _from_override__model_schema = json.loads(
     r"""{
@@ -841,7 +919,7 @@ _interpolation_model_schema = json.loads(
     r"""{
   "title" : "Interpolation",
   "anyOf" : [ {
-    "$ref" : "#/components/schemas/InterpolationMethod"
+    "$ref" : "#/components/schemas/Interpolation_anyOf"
   }, {
     "$ref" : "#/components/schemas/InterpolationSpec"
   } ]
@@ -850,6 +928,15 @@ _interpolation_model_schema = json.loads(
     object_hook=with_example_provider,
 )
 MODEL_DEFINITIONS.update({"Interpolation": _interpolation_model_schema})
+
+_interpolation_any_of_model_schema = json.loads(
+    r"""{
+  "$ref" : "#/components/schemas/InterpolationMethod"
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({"Interpolation_anyOf": _interpolation_any_of_model_schema})
 
 _interpolation_method_model_schema = json.loads(
     r"""{
@@ -1072,6 +1159,23 @@ MODEL_DEFINITIONS.update({
     "Interpolation_method_oneOf_9": _interpolation_method_one_of_9_model_schema
 })
 
+_interpolation_parameter_model_schema = json.loads(
+    r"""{
+  "title" : "Interpolation parameter",
+  "description" : "Optional parameter value for the interpolation method (see method description).",
+  "anyOf" : [ {
+    "type" : "number"
+  }, {
+    "type" : "integer"
+  } ]
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({
+    "Interpolation_parameter": _interpolation_parameter_model_schema
+})
+
 _interpolation_spec_model_schema = json.loads(
     r"""{
   "required" : [ "method" ],
@@ -1081,9 +1185,7 @@ _interpolation_spec_model_schema = json.loads(
       "$ref" : "#/components/schemas/Interpolation_method"
     },
     "value" : {
-      "title" : "Interpolation parameter",
-      "type" : "integer",
-      "description" : "Optional parameter value for the interpolation method (see method description)."
+      "$ref" : "#/components/schemas/Interpolation_parameter"
     },
     "order" : {
       "title" : "Interpolation order",
@@ -1101,7 +1203,7 @@ MODEL_DEFINITIONS.update({"InterpolationSpec": _interpolation_spec_model_schema}
 
 _links_value_model_schema = json.loads(
     r"""{
-  "title" : "_Links_value",
+  "title" : "Links_value",
   "anyOf" : [ {
     "$ref" : "#/components/schemas/HALLink"
   }, {
@@ -1114,7 +1216,7 @@ _links_value_model_schema = json.loads(
 """,
     object_hook=with_example_provider,
 )
-MODEL_DEFINITIONS.update({"_Links_value": _links_value_model_schema})
+MODEL_DEFINITIONS.update({"Links_value": _links_value_model_schema})
 
 _location_inner_model_schema = json.loads(
     r"""{
@@ -1151,6 +1253,7 @@ _message_model_schema = json.loads(
     "args" : {
       "title" : "args",
       "type" : "object",
+      "additionalProperties" : true,
       "nullable" : true
     }
   },
@@ -1363,6 +1466,7 @@ _query_entity_input_model_schema = json.loads(
     "meta" : {
       "title" : "Query metadata",
       "type" : "object",
+      "additionalProperties" : true,
       "description" : "User metadata for the query definition."
     },
     "query" : {
@@ -1558,6 +1662,7 @@ _query_list_item_model_schema = json.loads(
     "attrs" : {
       "title" : "Query attributes",
       "type" : "object",
+      "additionalProperties" : true,
       "description" : "System provided metadata for the query definition."
     },
     "name" : {
@@ -1568,6 +1673,7 @@ _query_list_item_model_schema = json.loads(
     "meta" : {
       "title" : "Query metadata",
       "type" : "object",
+      "additionalProperties" : true,
       "description" : "User metadata for the query definition."
     }
   },
@@ -1650,6 +1756,7 @@ _query_response_model_schema = json.loads(
     "attrs" : {
       "title" : "Query attributes",
       "type" : "object",
+      "additionalProperties" : true,
       "description" : "System provided metadata for the query definition."
     },
     "name" : {
@@ -1660,6 +1767,7 @@ _query_response_model_schema = json.loads(
     "meta" : {
       "title" : "Query metadata",
       "type" : "object",
+      "additionalProperties" : true,
       "description" : "User metadata for the query definition."
     },
     "query" : {
@@ -1695,7 +1803,7 @@ _query_result_model_schema = json.loads(
       }
     },
     "query" : {
-      "$ref" : "#/components/schemas/Query-Input"
+      "$ref" : "#/components/schemas/Query-Output"
     },
     "messages" : {
       "title" : "Messages and Warnings",
@@ -1707,14 +1815,7 @@ _query_result_model_schema = json.loads(
   },
   "additionalProperties" : true,
   "description" : "A json data response.\n\nUses the format as specified by the\n`render` options of the request (defaults to `COMPACT_WS`).\n'",
-  "example" : {
-    "data" : [ ],
-    "query" : {
-      "resource" : "R",
-      "metric" : "temperature"
-    },
-    "messages" : [ ]
-  }
+  "example" : { }
 }
 """,
     object_hook=with_example_provider,
@@ -1728,6 +1829,7 @@ _query_update_input_model_schema = json.loads(
     "meta" : {
       "title" : "Query metadata",
       "type" : "object",
+      "additionalProperties" : true,
       "description" : "User metadata for the query definition."
     },
     "query" : {
@@ -1748,7 +1850,7 @@ _render_model_schema = json.loads(
   "type" : "object",
   "properties" : {
     "mode" : {
-      "$ref" : "#/components/schemas/_RenderMode"
+      "$ref" : "#/components/schemas/Render_1_anyOf"
     },
     "roll_up" : {
       "title" : "Roll Up",
@@ -1817,7 +1919,7 @@ _render_1_model_schema = json.loads(
     r"""{
   "title" : "Render",
   "anyOf" : [ {
-    "$ref" : "#/components/schemas/_RenderMode"
+    "$ref" : "#/components/schemas/Render_1_anyOf"
   }, {
     "$ref" : "#/components/schemas/Render"
   } ]
@@ -1827,157 +1929,26 @@ _render_1_model_schema = json.loads(
 )
 MODEL_DEFINITIONS.update({"Render_1": _render_1_model_schema})
 
+_render_1_any_of_model_schema = json.loads(
+    r"""{
+  "$ref" : "#/components/schemas/_RenderMode"
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({"Render_1_anyOf": _render_1_any_of_model_schema})
+
 _render_mode_model_schema = json.loads(
     r"""{
   "title" : "_RenderMode",
   "type" : "string",
   "description" : "Render mode configuration keys.",
-  "oneOf" : [ {
-    "$ref" : "#/components/schemas/_RenderMode_oneOf"
-  }, {
-    "$ref" : "#/components/schemas/_RenderMode_oneOf_1"
-  }, {
-    "$ref" : "#/components/schemas/_RenderMode_oneOf_2"
-  }, {
-    "$ref" : "#/components/schemas/_RenderMode_oneOf_3"
-  }, {
-    "$ref" : "#/components/schemas/_RenderMode_oneOf_4"
-  }, {
-    "$ref" : "#/components/schemas/_RenderMode_oneOf_5"
-  }, {
-    "$ref" : "#/components/schemas/_RenderMode_oneOf_6"
-  }, {
-    "$ref" : "#/components/schemas/_RenderMode_oneOf_7"
-  }, {
-    "$ref" : "#/components/schemas/_RenderMode_oneOf_8"
-  }, {
-    "$ref" : "#/components/schemas/_RenderMode_oneOf_9"
-  } ]
+  "enum" : [ "HEADER_ROW", "COMPACT", "SERIES", "HEADER_COLUMN", "FLAT_DICT", "HIER_DICT", "METRIC_FLAT_DICT", "UPLOAD", "COMPACT_WS", "CSV" ]
 }
 """,
     object_hook=with_example_provider,
 )
 MODEL_DEFINITIONS.update({"_RenderMode": _render_mode_model_schema})
-
-_render_mode_one_of_model_schema = json.loads(
-    r"""{
-  "title" : "_RenderMode_oneOf",
-  "type" : "string",
-  "description" : "Render rows of timestamp and values. Show column headers. Includes an iso timestamp.\n\n###### options\n- `iso_timestamp`: `True`\n- `header_array`: `row`\n- `roll_up`: `False`\n- `data_axis`: `column`",
-  "enum" : [ "HEADER_ROW" ]
-}
-""",
-    object_hook=with_example_provider,
-)
-MODEL_DEFINITIONS.update({"_RenderMode_oneOf": _render_mode_one_of_model_schema})
-
-_render_mode_one_of_1_model_schema = json.loads(
-    r"""{
-  "title" : "_RenderMode_oneOf_1",
-  "type" : "string",
-  "description" : "Render rows of timestamp and values. Show column headers.\n\n###### options\n- `iso_timestamp`: `False`\n- `header_array`: `row`\n- `roll_up`: `False`\n- `data_axis`: `column`",
-  "enum" : [ "COMPACT" ]
-}
-""",
-    object_hook=with_example_provider,
-)
-MODEL_DEFINITIONS.update({"_RenderMode_oneOf_1": _render_mode_one_of_1_model_schema})
-
-_render_mode_one_of_2_model_schema = json.loads(
-    r"""{
-  "title" : "_RenderMode_oneOf_2",
-  "type" : "string",
-  "description" : "Render rows of timestamp and values. Show column headers. Show the time window attributes.\n\n###### options\n- `iso_timestamp`: `False`\n- `header_array`: `row`\n- `roll_up`: `False`\n- `data_axis`: `column`\n- `include_window_spec`: `True`",
-  "enum" : [ "COMPACT_WS" ]
-}
-""",
-    object_hook=with_example_provider,
-)
-MODEL_DEFINITIONS.update({"_RenderMode_oneOf_2": _render_mode_one_of_2_model_schema})
-
-_render_mode_one_of_3_model_schema = json.loads(
-    r"""{
-  "title" : "_RenderMode_oneOf_3",
-  "type" : "string",
-  "description" : "Render timestamps and each series (column) as a values array. Show column headers.\n\n###### options\n- `iso_timestamp`: `False`\n- `header_array`: `row`\n- `data_axis`: `row`\n- `roll_up`: `True`\n- `include_window_spec`: `True`",
-  "enum" : [ "SERIES" ]
-}
-""",
-    object_hook=with_example_provider,
-)
-MODEL_DEFINITIONS.update({"_RenderMode_oneOf_3": _render_mode_one_of_3_model_schema})
-
-_render_mode_one_of_4_model_schema = json.loads(
-    r"""{
-  "title" : "_RenderMode_oneOf_4",
-  "type" : "string",
-  "description" : "Renders row index in `rows`, and each series as a values array.\n\nThe series are prefixed by their series attributes.The `rows` index is prefixed by the labels for these attributes.\n\n###### options\n- `iso_timestamp`: `True`\n- `header_array`: `column`\n- `roll_up`: `False`\n- `data_axis`: `row`",
-  "enum" : [ "HEADER_COLUMN" ]
-}
-""",
-    object_hook=with_example_provider,
-)
-MODEL_DEFINITIONS.update({"_RenderMode_oneOf_4": _render_mode_one_of_4_model_schema})
-
-_render_mode_one_of_5_model_schema = json.loads(
-    r"""{
-  "title" : "_RenderMode_oneOf_5",
-  "type" : "string",
-  "description" : "Render an object for each observation. Uses flattened keys.\n\n###### options\n- `iso_timestamp`: `True`\n- `hierarchical`: `False`\n- `show_levels`: `True`\n- `roll_up`: `False`",
-  "enum" : [ "FLAT_DICT" ]
-}
-""",
-    object_hook=with_example_provider,
-)
-MODEL_DEFINITIONS.update({"_RenderMode_oneOf_5": _render_mode_one_of_5_model_schema})
-
-_render_mode_one_of_6_model_schema = json.loads(
-    r"""{
-  "title" : "_RenderMode_oneOf_6",
-  "type" : "string",
-  "description" : "Render an hierarchical object for each observation. Shows an iso timestamp.\n\n###### options\n- `iso_timestamp`: `True`\n- `hierarchical`: `True`\n- `show_levels`: `True`\n- `roll_up`: `True`",
-  "enum" : [ "HIER_DICT" ]
-}
-""",
-    object_hook=with_example_provider,
-)
-MODEL_DEFINITIONS.update({"_RenderMode_oneOf_6": _render_mode_one_of_6_model_schema})
-
-_render_mode_one_of_7_model_schema = json.loads(
-    r"""{
-  "title" : "_RenderMode_oneOf_7",
-  "type" : "string",
-  "description" : "Render an object with metric keys for each observation. Shows an iso timestamp.\n\n###### options\n- `iso_timestamp`: `True`\n- `hierarchical`: `['metric']`\n- `show_levels`: `False`\n- `roll_up`: `True`\n- `key_skip_empty`: `True`",
-  "enum" : [ "METRIC_FLAT_DICT" ]
-}
-""",
-    object_hook=with_example_provider,
-)
-MODEL_DEFINITIONS.update({"_RenderMode_oneOf_7": _render_mode_one_of_7_model_schema})
-
-_render_mode_one_of_8_model_schema = json.loads(
-    r"""{
-  "title" : "_RenderMode_oneOf_8",
-  "type" : "string",
-  "description" : "Render in an object format compatible with the `/data/v1/events` upload.\n\n###### options\n- `iso_timestamp`: `False`\n- `hierarchical`: `False`\n- `show_levels`: `False`\n- `roll_up`: `True`",
-  "enum" : [ "UPLOAD" ]
-}
-""",
-    object_hook=with_example_provider,
-)
-MODEL_DEFINITIONS.update({"_RenderMode_oneOf_8": _render_mode_one_of_8_model_schema})
-
-_render_mode_one_of_9_model_schema = json.loads(
-    r"""{
-  "title" : "_RenderMode_oneOf_9",
-  "type" : "string",
-  "description" : "Render in csv format with row headers.\n\n###### options\n- `iso_timestamp`: `False`",
-  "enum" : [ "CSV" ]
-}
-""",
-    object_hook=with_example_provider,
-)
-MODEL_DEFINITIONS.update({"_RenderMode_oneOf_9": _render_mode_one_of_9_model_schema})
 
 _response_data_set_model_schema = json.loads(
     r"""{
@@ -2173,7 +2144,7 @@ _series_spec_model_schema = json.loads(
       "example" : "temperature"
     },
     "aggregration" : {
-      "$ref" : "#/components/schemas/AggregationMethod"
+      "$ref" : "#/components/schemas/Aggregration"
     },
     "interpolation" : {
       "$ref" : "#/components/schemas/Interpolation"
