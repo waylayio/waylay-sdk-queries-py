@@ -6345,7 +6345,6 @@ components:
         Uses the format as specified by the
         `render` options of the request (defaults to `COMPACT_WS`).
         '
-      example: {}
     QueryUpdateInput:
       properties:
         meta:

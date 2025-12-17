@@ -5868,8 +5868,6 @@ components:
         `render` options of the request (defaults to `COMPACT_WS`).
 
         '''
-      examples:
-      - {}
     QueryUpdateInput:
       properties:
         meta:

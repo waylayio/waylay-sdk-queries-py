@@ -48,8 +48,7 @@ query_result_model_schema = json.loads(
     }
   },
   "additionalProperties" : true,
-  "description" : "A json data response.\n\nUses the format as specified by the\n`render` options of the request (defaults to `COMPACT_WS`).\n'",
-  "example" : { }
+  "description" : "A json data response.\n\nUses the format as specified by the\n`render` options of the request (defaults to `COMPACT_WS`).\n'"
 }
 """,
     object_hook=with_example_provider,
@@ -65,47 +64,7 @@ class QueryResultStub:
     @classmethod
     def create_json(cls):
         """Create a dict stub instance."""
-        # WORKAROUND:
-        return {
-            "data": [
-                {
-                    "columns": [
-                        "timestamp",
-                        {
-                            "resource": "06e267b9-8714-4c58-ac53-df6a291b59dc",
-                            "metric": "temperature",
-                            "aggregation": "max",
-                        },
-                    ],
-                    "data": [
-                        [1717977600000, 12.67, 80, 12.78, 83.125],
-                    ],
-                    "data_axis": "column",
-                    "attributes": {"role": "input"},
-                    "window_spec": {
-                        "from": 1717977600000,
-                        "until": 1718582400000,
-                        "window": "P7D",
-                        "freq": "PT8H",
-                    },
-                }
-            ],
-            "messages": [],
-            "query": {
-                "freq": "PT8H",
-                "from_": "2024-06-16 12:00 AM",
-                "until": "2024-06-17 12:00 AM",
-                "data": [
-                    {
-                        "metric": "temperature",
-                        "resource": "06e267b9-8714-4c58-ac53-df6a291b59dc",
-                        "seriesId": "97de31f5-7b69-4a56-87e0-6b5c8a6b1872",
-                        "aggregation": "max",
-                    },
-                ],
-            },
-        }
-        # return query_result_faker.generate(use_defaults=True, use_examples=True)
+        return query_result_faker.generate(use_defaults=True, use_examples=True)
 
     @classmethod
     def create_instance(cls) -> "QueryResult":
