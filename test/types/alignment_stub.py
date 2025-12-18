@@ -28,10 +28,10 @@ alignment_model_schema = json.loads(
   "type" : "object",
   "properties" : {
     "at" : {
-      "$ref" : "#/components/schemas/AlignAt"
+      "$ref" : "#/components/schemas/Alignment_at"
     },
     "shift" : {
-      "$ref" : "#/components/schemas/AlignShift"
+      "$ref" : "#/components/schemas/Alignment_shift"
     },
     "freq" : {
       "$ref" : "#/components/schemas/Alignment_Grid_interval_"

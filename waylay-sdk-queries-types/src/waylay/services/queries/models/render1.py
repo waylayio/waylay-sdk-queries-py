@@ -11,16 +11,12 @@ Do not edit the class manually.
 
 from __future__ import annotations
 
-from typing import (
-    Union,
-)
+from typing import Union
 
-from typing_extensions import (
-    Annotated,  # >=3.9
-)
+from typing_extensions import Annotated
 
 from ..models.render import Render
-from ..models.render_mode import RenderMode
+from ..models.render1_any_of import Render1AnyOf
 
-Render1 = Union[Annotated[RenderMode, ""], Annotated[Render, ""]]
+Render1 = Union[Annotated[Render1AnyOf, ""], Annotated[Render, ""]]
 """Render1."""

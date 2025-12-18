@@ -15,9 +15,7 @@ from typing import (
     Union,
 )
 
-from typing_extensions import (
-    Annotated,  # >=3.9
-)
+from typing_extensions import Annotated
 
 from ..models.interpolation_method_one_of import InterpolationMethodOneOf
 from ..models.interpolation_method_one_of1 import InterpolationMethodOneOf1

@@ -9,7 +9,7 @@ Name | Type | Description | Notes
 **code** | **str** |  | [optional] 
 **message** | **str** |  | 
 **level** | [**MessageLevel**](MessageLevel.md) |  | [optional] [default to MessageLevel.INFO]
-**args** | **object** |  | [optional] 
+**args** | **Dict[str, object]** |  | [optional] 
 
 ## Example
 

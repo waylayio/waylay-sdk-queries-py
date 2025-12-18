@@ -27,7 +27,7 @@ interpolation_model_schema = json.loads(
     r"""{
   "title" : "Interpolation",
   "anyOf" : [ {
-    "$ref" : "#/components/schemas/InterpolationMethod"
+    "$ref" : "#/components/schemas/Interpolation_anyOf"
   }, {
     "$ref" : "#/components/schemas/InterpolationSpec"
   } ]

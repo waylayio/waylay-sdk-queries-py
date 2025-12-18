@@ -11,14 +11,9 @@ Do not edit the class manually.
 
 from __future__ import annotations
 
-from typing import (
-    Dict,
-    Union,
-)
+from typing import Dict, Union
 
-from typing_extensions import (
-    Annotated,  # >=3.9
-)
+from typing_extensions import Annotated
 
 from ..models.aggregation_by_resource_or_metric_value import (
     AggregationByResourceOrMetricValue,

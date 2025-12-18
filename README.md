@@ -5,7 +5,7 @@ Execute and store queries on the Waylay timeseries.
 Protocol version: v1.
 
 This Python package is automatically generated based on the 
-Waylay Queries OpenAPI specification (API version: 0.5.0)
+Waylay Queries OpenAPI specification (API version: 0.6.5)
 For more information, please visit [the openapi specification](https://docs.waylay.io/openapi/public/redocly/queries.html).
 
 It consists of two sub-packages that are both plugins for the waylay-sdk-core package.
@@ -13,7 +13,7 @@ It consists of two sub-packages that are both plugins for the waylay-sdk-core pa
 - The `waylay-sdk-queries-types` sub-package is an extension that contains the typed model classes for all path params, query params, body params and responses for each of the api methods in `waylay-sdk-queries`.
 
 ## Requirements.
-This package requires Python 3.9+.
+This package requires Python 3.10+.
 
 ## Installation
 
@@ -45,7 +45,7 @@ from waylay.services.queries.models.query_result import QueryResult
 try:
     # Execute Query
     # calls `POST /queries/v1/data`
-    api_response = await waylay_client.queries.execute.execute(
+    api_response = await waylay_client.queries.execute_queries.execute(
         # query parameters:
         query = {
             'resource': '13efb488-75ac-4dac-828a-d49c5c2ebbfc'
@@ -57,10 +57,10 @@ try:
             'accept': 'accept_example',
         },
     )
-    print("The response of queries.execute.execute:\n")
+    print("The response of queries.execute_queries.execute:\n")
     pprint(api_response)
 except ApiError as e:
-    print("Exception when calling queries.execute.execute: %s\n" % e)
+    print("Exception when calling queries.execute_queries.execute: %s\n" % e)
 ```
 
 
@@ -72,35 +72,39 @@ All URIs are relative to *https://api.waylay.io*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
-*ExecuteApi* | [**execute_by_name**](docs/ExecuteApi.md#execute_by_name) | **GET** /queries/v1/data/{query_name} | Execute Named Query
-*ExecuteApi* | [**execute**](docs/ExecuteApi.md#execute) | **POST** /queries/v1/data | Execute Query
-*ManageApi* | [**create**](docs/ManageApi.md#create) | **POST** /queries/v1/query | Post Query
-*ManageApi* | [**get**](docs/ManageApi.md#get) | **GET** /queries/v1/query/{query_name} | Get Query
-*ManageApi* | [**list**](docs/ManageApi.md#list) | **GET** /queries/v1/query | List Queries
-*ManageApi* | [**remove**](docs/ManageApi.md#remove) | **DELETE** /queries/v1/query/{query_name} | Remove Query
-*ManageApi* | [**update**](docs/ManageApi.md#update) | **PUT** /queries/v1/query/{query_name} | Update Query
+*ExecuteQueriesApi* | [**execute_by_name**](docs/ExecuteQueriesApi.md#execute_by_name) | **GET** /queries/v1/data/{query_name} | Execute Named Query
+*ExecuteQueriesApi* | [**execute**](docs/ExecuteQueriesApi.md#execute) | **POST** /queries/v1/data | Execute Query
+*NamedQueriesApi* | [**create**](docs/NamedQueriesApi.md#create) | **POST** /queries/v1/query | Create Query
+*NamedQueriesApi* | [**get**](docs/NamedQueriesApi.md#get) | **GET** /queries/v1/query/{query_name} | Get Query
+*NamedQueriesApi* | [**list**](docs/NamedQueriesApi.md#list) | **GET** /queries/v1/query | List Queries
+*NamedQueriesApi* | [**remove**](docs/NamedQueriesApi.md#remove) | **DELETE** /queries/v1/query/{query_name} | Remove Query
+*NamedQueriesApi* | [**update**](docs/NamedQueriesApi.md#update) | **PUT** /queries/v1/query/{query_name} | Update Query
 *StatusApi* | [**get**](docs/StatusApi.md#get) | **GET** /queries/v1 | Get Version And Health
 
 
 ## Documentation For Models
 
+ - [Aggregation](docs/Aggregation.md)
  - [AggregationByResourceAndMetricValue](docs/AggregationByResourceAndMetricValue.md)
  - [AggregationByResourceOrMetricValue](docs/AggregationByResourceOrMetricValue.md)
- - [AggregationMethod](docs/AggregationMethod.md)
- - [AggregationMethodOneOf](docs/AggregationMethodOneOf.md)
- - [AggregationMethodOneOf1](docs/AggregationMethodOneOf1.md)
- - [AggregationMethodOneOf2](docs/AggregationMethodOneOf2.md)
- - [AggregationMethodOneOf3](docs/AggregationMethodOneOf3.md)
- - [AggregationMethodOneOf4](docs/AggregationMethodOneOf4.md)
- - [AggregationMethodOneOf5](docs/AggregationMethodOneOf5.md)
- - [AggregationMethodOneOf6](docs/AggregationMethodOneOf6.md)
- - [AggregationMethodOneOf7](docs/AggregationMethodOneOf7.md)
- - [AggregationMethodOneOf8](docs/AggregationMethodOneOf8.md)
+ - [AggregationOverride](docs/AggregationOverride.md)
+ - [AggregationOverrideOneOf](docs/AggregationOverrideOneOf.md)
+ - [AggregationOverrideOneOf1](docs/AggregationOverrideOneOf1.md)
+ - [AggregationOverrideOneOf2](docs/AggregationOverrideOneOf2.md)
+ - [AggregationOverrideOneOf3](docs/AggregationOverrideOneOf3.md)
+ - [AggregationOverrideOneOf4](docs/AggregationOverrideOneOf4.md)
+ - [AggregationOverrideOneOf5](docs/AggregationOverrideOneOf5.md)
+ - [AggregationOverrideOneOf6](docs/AggregationOverrideOneOf6.md)
+ - [AggregationOverrideOneOf7](docs/AggregationOverrideOneOf7.md)
+ - [AggregationOverrideOneOf8](docs/AggregationOverrideOneOf8.md)
  - [AggregationsInner](docs/AggregationsInner.md)
+ - [Aggregration](docs/Aggregration.md)
  - [AlignAt](docs/AlignAt.md)
  - [AlignShift](docs/AlignShift.md)
  - [Alignment](docs/Alignment.md)
+ - [AlignmentAt](docs/AlignmentAt.md)
  - [AlignmentGridInterval](docs/AlignmentGridInterval.md)
+ - [AlignmentShift](docs/AlignmentShift.md)
  - [AlignmentTimezone](docs/AlignmentTimezone.md)
  - [CauseException](docs/CauseException.md)
  - [ColumnDataSet](docs/ColumnDataSet.md)
@@ -127,6 +131,7 @@ Class | Method | HTTP request | Description
  - [HeaderArrayOption](docs/HeaderArrayOption.md)
  - [Hierarchical](docs/Hierarchical.md)
  - [Interpolation](docs/Interpolation.md)
+ - [InterpolationAnyOf](docs/InterpolationAnyOf.md)
  - [InterpolationMethod](docs/InterpolationMethod.md)
  - [InterpolationMethodOneOf](docs/InterpolationMethodOneOf.md)
  - [InterpolationMethodOneOf1](docs/InterpolationMethodOneOf1.md)
@@ -142,6 +147,7 @@ Class | Method | HTTP request | Description
  - [InterpolationMethodOneOf7](docs/InterpolationMethodOneOf7.md)
  - [InterpolationMethodOneOf8](docs/InterpolationMethodOneOf8.md)
  - [InterpolationMethodOneOf9](docs/InterpolationMethodOneOf9.md)
+ - [InterpolationParameter](docs/InterpolationParameter.md)
  - [InterpolationSpec](docs/InterpolationSpec.md)
  - [LinksValue](docs/LinksValue.md)
  - [LocationInner](docs/LocationInner.md)
@@ -166,17 +172,8 @@ Class | Method | HTTP request | Description
  - [QueryUpdateInput](docs/QueryUpdateInput.md)
  - [Render](docs/Render.md)
  - [Render1](docs/Render1.md)
+ - [Render1AnyOf](docs/Render1AnyOf.md)
  - [RenderMode](docs/RenderMode.md)
- - [RenderModeOneOf](docs/RenderModeOneOf.md)
- - [RenderModeOneOf1](docs/RenderModeOneOf1.md)
- - [RenderModeOneOf2](docs/RenderModeOneOf2.md)
- - [RenderModeOneOf3](docs/RenderModeOneOf3.md)
- - [RenderModeOneOf4](docs/RenderModeOneOf4.md)
- - [RenderModeOneOf5](docs/RenderModeOneOf5.md)
- - [RenderModeOneOf6](docs/RenderModeOneOf6.md)
- - [RenderModeOneOf7](docs/RenderModeOneOf7.md)
- - [RenderModeOneOf8](docs/RenderModeOneOf8.md)
- - [RenderModeOneOf9](docs/RenderModeOneOf9.md)
  - [ResponseDataSet](docs/ResponseDataSet.md)
  - [RowDataSet](docs/RowDataSet.md)
  - [RowDataSetDataAxis](docs/RowDataSetDataAxis.md)

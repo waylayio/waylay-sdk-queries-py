@@ -30,6 +30,7 @@ query_update_input_model_schema = json.loads(
     "meta" : {
       "title" : "Query metadata",
       "type" : "object",
+      "additionalProperties" : true,
       "description" : "User metadata for the query definition."
     },
     "query" : {

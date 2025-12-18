@@ -27,7 +27,7 @@ render_1_model_schema = json.loads(
     r"""{
   "title" : "Render",
   "anyOf" : [ {
-    "$ref" : "#/components/schemas/_RenderMode"
+    "$ref" : "#/components/schemas/Render_1_anyOf"
   }, {
     "$ref" : "#/components/schemas/Render"
   } ]

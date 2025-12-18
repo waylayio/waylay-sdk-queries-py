@@ -7,7 +7,7 @@ info:
 
 
     Protocol version: v1.'
-  version: 0.5.0
+  version: 0.6.5
 paths:
   /queries/v1:
     get:
@@ -31,7 +31,7 @@ paths:
   /queries/v1/data:
     post:
       tags:
-      - Execute
+      - Execute Queries
       summary: Execute Query
       description: 'Execute a timeseries query.
 
@@ -66,8 +66,48 @@ paths:
         in: query
         required: false
         schema:
+          type: string
           title: Aggregation Override.
-          $ref: '#/components/schemas/AggregationMethod'
+          oneOf:
+          - const: first
+            title: First
+            description: Use the first value (in time) to represent all data for the
+              sample interval.
+          - const: last
+            title: Last
+            description: Use the last value (in time) to represent all data for the
+              sample interval.
+          - const: mean
+            title: Mean
+            description: 'Aggregate data by the mean value: The sum of values divided
+              by number of observations.'
+          - const: median
+            title: Median
+            description: 'Aggregate data by the median value: The n/2-th value when
+              ordered, the average of the (n-1)/2-th and (n+1)/2-th value when n is
+              uneven.'
+          - const: sum
+            title: Sum
+            description: The sum of all values summarizes the data for the sample
+              interval.
+          - const: count
+            title: Count
+            description: Use the count of observations in the sample interval.
+          - const: std
+            title: Standard Deviation
+            description: Use the standard deviation of all observations in the sample
+              interval.
+          - const: max
+            title: Maximum
+            description: Use the maximum of all values in the sample interval.
+          - const: min
+            title: Minimum
+            description: Use the minimum of all values in the sample interval.
+          - title: Precentile
+            description: Aggregate data by the p-th percentile, where p is a number
+              between 0 and 1.
+            pattern: ^percentile\((1(\.0*)?)|(0\.[0-9]*)\)$
+            example: percentile(0.02)
       - name: interpolation
         in: query
         required: false
@@ -75,6 +115,60 @@ paths:
           anyOf:
           - $ref: '#/components/schemas/InterpolationMethod'
             title: Interpolation Override.
+            oneOf:
+            - const: pad
+              title: pad
+              description: Interpolate with the value of the first observed point.
+                This method also extrapolates.
+            - const: fixed
+              title: fixed
+              description: Interpolate with a fixed, user-specified value. This method
+                also extrapolates.
+            - const: backfill
+              title: backfill
+              description: Same as pad, but using the last observed value. This method
+                also extrapolates
+            - const: linear
+              title: linear
+              description: Linearly go from the first observed value of the gap to
+                the last observed oneThis method also extrapolates
+            - const: nearest
+              title: nearest
+              description: Use the value that is closest in time.
+            - const: zero
+              title: zero
+              description: Interpolate with a spline function of order 0, which is
+                a piecewise polynomial.
+            - const: slinear
+              title: slinear
+              description: Interpolate with a spline function of order 1, which is
+                a piecewise polynomial.
+            - const: quadratic
+              title: quadratic
+              description: Interpolate with a spline function of order 2, which is
+                a piecewise polynomial.
+            - const: cubic
+              title: cubic
+              description: Interpolate with a spline function of order 3, which is
+                a piecewise polynomial.
+            - const: polynomial
+              title: polynomial
+              description: Interpolate with a polynomial of the lowest possible degree
+                passing trough the data points.
+            - const: spline
+              title: spline
+              description: Interpolate with a spline function of a user-specified
+                order.
+            - const: from_derivatives
+              title: from_derivatives
+              description: Interpolate with the derivative of order 1.
+            - const: pchip
+              title: pchip
+              description: Interpolate with a piecewise cubic spline function.
+            - const: akima
+              title: akima
+              description: Interpolate with a non-smoothing spline of order 2, called
+                Akima interpolation.
           - $ref: '#/components/schemas/InterpolationSpec'
             title: Interpolation Override.
           title: Interpolation
@@ -179,6 +273,159 @@ paths:
           anyOf:
           - $ref: '#/components/schemas/_RenderMode'
             title: Render Mode
+            oneOf:
+            - const: HEADER_ROW
+              description: 'Render rows of timestamp and values. Show column headers.
+                Includes an iso timestamp.
+
+
+                ###### options
+
+                - `iso_timestamp`: `True`
+
+                - `header_array`: `row`
+
+                - `roll_up`: `False`
+
+                - `data_axis`: `column`'
+              type: string
+            - const: COMPACT
+              description: 'Render rows of timestamp and values. Show column headers.
+
+
+                ###### options
+
+                - `iso_timestamp`: `False`
+
+                - `header_array`: `row`
+
+                - `roll_up`: `False`
+
+                - `data_axis`: `column`'
+              type: string
+            - const: COMPACT_WS
+              description: 'Render rows of timestamp and values. Show column headers.
+                Show the time window attributes.
+
+
+                ###### options
+
+                - `iso_timestamp`: `False`
+
+                - `header_array`: `row`
+
+                - `roll_up`: `False`
+
+                - `data_axis`: `column`
+
+                - `include_window_spec`: `True`'
+              type: string
+            - const: SERIES
+              description: 'Render timestamps and each series (column) as a values
+                array. Show column headers.
+
+
+                ###### options
+
+                - `iso_timestamp`: `False`
+
+                - `header_array`: `row`
+
+                - `data_axis`: `row`
+
+                - `roll_up`: `True`
+
+                - `include_window_spec`: `True`'
+              type: string
+            - const: HEADER_COLUMN
+              description: 'Renders row index in `rows`, and each series as a values
+                array.
+
+
+                The series are prefixed by their series attributes.The `rows` index
+                is prefixed by the labels for these attributes.
+
+
+                ###### options
+
+                - `iso_timestamp`: `True`
+
+                - `header_array`: `column`
+
+                - `roll_up`: `False`
+
+                - `data_axis`: `row`'
+              type: string
+            - const: FLAT_DICT
+              description: 'Render an object for each observation. Uses flattened
+                keys.
+
+
+                ###### options
+
+                - `iso_timestamp`: `True`
+
+                - `hierarchical`: `False`
+
+                - `show_levels`: `True`
+
+                - `roll_up`: `False`'
+              type: string
+            - const: HIER_DICT
+              description: 'Render an hierarchical object for each observation. Shows
+                an iso timestamp.
+
+
+                ###### options
+
+                - `iso_timestamp`: `True`
+
+                - `hierarchical`: `True`
+
+                - `show_levels`: `True`
+
+                - `roll_up`: `True`'
+              type: string
+            - const: METRIC_FLAT_DICT
+              description: 'Render an object with metric keys for each observation.
+                Shows an iso timestamp.
+
+
+                ###### options
+
+                - `iso_timestamp`: `True`
+
+                - `hierarchical`: `[''metric'']`
+
+                - `show_levels`: `False`
+
+                - `roll_up`: `True`
+
+                - `key_skip_empty`: `True`'
+              type: string
+            - const: UPLOAD
+              description: 'Render in an object format compatible with the `/data/v1/events`
+                upload.
+
+
+                ###### options
+
+                - `iso_timestamp`: `False`
+
+                - `hierarchical`: `False`
+
+                - `show_levels`: `False`
+
+                - `roll_up`: `True`'
+              type: string
+            - const: CSV
+              description: 'Render in csv format with row headers.
+
+
+                ###### options
+
+                - `iso_timestamp`: `False`'
+              type: string
           - $ref: '#/components/schemas/Render'
             title: Render Override.
           title: Render
@@ -1677,7 +1924,7 @@ paths:
   /queries/v1/data/{query_name}:
     get:
       tags:
-      - Execute
+      - Execute Queries
       summary: Execute Named Query
       description: 'Execute a named timeseries query.
 
@@ -1685,7 +1932,7 @@ paths:
         Retrieves a stored query definition by name,
 
         applies overrides from the url parameters, and executes it.'
-      operationId: executeByName_query_queries_v1_data__query_name__get
+      operationId: executeByName_queries_v1_data__query_name__get
       parameters:
       - name: query_name
         in: path
@@ -1718,8 +1965,48 @@ paths:
         in: query
         required: false
         schema:
+          type: string
           title: Aggregation Override.
-          $ref: '#/components/schemas/AggregationMethod'
+          oneOf:
+          - const: first
+            title: First
+            description: Use the first value (in time) to represent all data for the
+              sample interval.
+          - const: last
+            title: Last
+            description: Use the last value (in time) to represent all data for the
+              sample interval.
+          - const: mean
+            title: Mean
+            description: 'Aggregate data by the mean value: The sum of values divided
+              by number of observations.'
+          - const: median
+            title: Median
+            description: 'Aggregate data by the median value: The n/2-th value when
+              ordered, the average of the (n-1)/2-th and (n+1)/2-th value when n is
+              uneven.'
+          - const: sum
+            title: Sum
+            description: The sum of all values summarizes the data for the sample
+              interval.
+          - const: count
+            title: Count
+            description: Use the count of observations in the sample interval.
+          - const: std
+            title: Standard Deviation
+            description: Use the standard deviation of all observations in the sample
+              interval.
+          - const: max
+            title: Maximum
+            description: Use the maximum of all values in the sample interval.
+          - const: min
+            title: Minimum
+            description: Use the minimum of all values in the sample interval.
+          - title: Precentile
+            description: Aggregate data by the p-th percentile, where p is a number
+              between 0 and 1.
+            pattern: ^percentile\((1(\.0*)?)|(0\.[0-9]*)\)$
+            example: percentile(0.02)
       - name: interpolation
         in: query
         required: false
@@ -1727,6 +2014,60 @@ paths:
           anyOf:
           - $ref: '#/components/schemas/InterpolationMethod'
             title: Interpolation Override.
+            oneOf:
+            - const: pad
+              title: pad
+              description: Interpolate with the value of the first observed point.
+                This method also extrapolates.
+            - const: fixed
+              title: fixed
+              description: Interpolate with a fixed, user-specified value. This method
+                also extrapolates.
+            - const: backfill
+              title: backfill
+              description: Same as pad, but using the last observed value. This method
+                also extrapolates
+            - const: linear
+              title: linear
+              description: Linearly go from the first observed value of the gap to
+                the last observed oneThis method also extrapolates
+            - const: nearest
+              title: nearest
+              description: Use the value that is closest in time.
+            - const: zero
+              title: zero
+              description: Interpolate with a spline function of order 0, which is
+                a piecewise polynomial.
+            - const: slinear
+              title: slinear
+              description: Interpolate with a spline function of order 1, which is
+                a piecewise polynomial.
+            - const: quadratic
+              title: quadratic
+              description: Interpolate with a spline function of order 2, which is
+                a piecewise polynomial.
+            - const: cubic
+              title: cubic
+              description: Interpolate with a spline function of order 3, which is
+                a piecewise polynomial.
+            - const: polynomial
+              title: polynomial
+              description: Interpolate with a polynomial of the lowest possible degree
+                passing trough the data points.
+            - const: spline
+              title: spline
+              description: Interpolate with a spline function of a user-specified
+                order.
+            - const: from_derivatives
+              title: from_derivatives
+              description: Interpolate with the derivative of order 1.
+            - const: pchip
+              title: pchip
+              description: Interpolate with a piecewise cubic spline function.
+            - const: akima
+              title: akima
+              description: Interpolate with a non-smoothing spline of order 2, called
+                Akima interpolation.
           - $ref: '#/components/schemas/InterpolationSpec'
             title: Interpolation Override.
           title: Interpolation
@@ -1831,6 +2172,159 @@ paths:
           anyOf:
           - $ref: '#/components/schemas/_RenderMode'
             title: Render Mode
+            oneOf:
+            - const: HEADER_ROW
+              description: 'Render rows of timestamp and values. Show column headers.
+                Includes an iso timestamp.
+
+
+                ###### options
+
+                - `iso_timestamp`: `True`
+
+                - `header_array`: `row`
+
+                - `roll_up`: `False`
+
+                - `data_axis`: `column`'
+              type: string
+            - const: COMPACT
+              description: 'Render rows of timestamp and values. Show column headers.
+
+
+                ###### options
+
+                - `iso_timestamp`: `False`
+
+                - `header_array`: `row`
+
+                - `roll_up`: `False`
+
+                - `data_axis`: `column`'
+              type: string
+            - const: COMPACT_WS
+              description: 'Render rows of timestamp and values. Show column headers.
+                Show the time window attributes.
+
+
+                ###### options
+
+                - `iso_timestamp`: `False`
+
+                - `header_array`: `row`
+
+                - `roll_up`: `False`
+
+                - `data_axis`: `column`
+
+                - `include_window_spec`: `True`'
+              type: string
+            - const: SERIES
+              description: 'Render timestamps and each series (column) as a values
+                array. Show column headers.
+
+
+                ###### options
+
+                - `iso_timestamp`: `False`
+
+                - `header_array`: `row`
+
+                - `data_axis`: `row`
+
+                - `roll_up`: `True`
+
+                - `include_window_spec`: `True`'
+              type: string
+            - const: HEADER_COLUMN
+              description: 'Renders row index in `rows`, and each series as a values
+                array.
+
+
+                The series are prefixed by their series attributes.The `rows` index
+                is prefixed by the labels for these attributes.
+
+
+                ###### options
+
+                - `iso_timestamp`: `True`
+
+                - `header_array`: `column`
+
+                - `roll_up`: `False`
+
+                - `data_axis`: `row`'
+              type: string
+            - const: FLAT_DICT
+              description: 'Render an object for each observation. Uses flattened
+                keys.
+
+
+                ###### options
+
+                - `iso_timestamp`: `True`
+
+                - `hierarchical`: `False`
+
+                - `show_levels`: `True`
+
+                - `roll_up`: `False`'
+              type: string
+            - const: HIER_DICT
+              description: 'Render an hierarchical object for each observation. Shows
+                an iso timestamp.
+
+
+                ###### options
+
+                - `iso_timestamp`: `True`
+
+                - `hierarchical`: `True`
+
+                - `show_levels`: `True`
+
+                - `roll_up`: `True`'
+              type: string
+            - const: METRIC_FLAT_DICT
+              description: 'Render an object with metric keys for each observation.
+                Shows an iso timestamp.
+
+
+                ###### options
+
+                - `iso_timestamp`: `True`
+
+                - `hierarchical`: `[''metric'']`
+
+                - `show_levels`: `False`
+
+                - `roll_up`: `True`
+
+                - `key_skip_empty`: `True`'
+              type: string
+            - const: UPLOAD
+              description: 'Render in an object format compatible with the `/data/v1/events`
+                upload.
+
+
+                ###### options
+
+                - `iso_timestamp`: `False`
+
+                - `hierarchical`: `False`
+
+                - `show_levels`: `False`
+
+                - `roll_up`: `True`'
+              type: string
+            - const: CSV
+              description: 'Render in csv format with row headers.
+
+
+                ###### options
+
+                - `iso_timestamp`: `False`'
+              type: string
           - $ref: '#/components/schemas/Render'
             title: Render Override.
           title: Render
@@ -3323,7 +3817,7 @@ paths:
   /queries/v1/query:
     get:
       tags:
-      - Manage
+      - Named Queries
       summary: List Queries
       description: List named queries.
       operationId: list_queries_queries_v1_query_get
@@ -3405,8 +3899,8 @@ paths:
       security: *id001
     post:
       tags:
-      - Manage
-      summary: Post Query
+      - Named Queries
+      summary: Create Query
       description: Create a new named query.
       operationId: create_query_queries_v1_query_post
       requestBody:
@@ -3432,7 +3926,7 @@ paths:
   /queries/v1/query/{query_name}:
     get:
       tags:
-      - Manage
+      - Named Queries
       summary: Get Query
       description: Get the definition of a named query.
       operationId: get_query_queries_v1_query__query_name__get
@@ -3461,7 +3955,7 @@ paths:
       security: *id001
     put:
       tags:
-      - Manage
+      - Named Queries
       summary: Update Query
       description: Create or update a named query definition.
       operationId: update_query_queries_v1_query__query_name__put
@@ -3499,7 +3993,7 @@ paths:
       security: *id001
     delete:
       tags:
-      - Manage
+      - Named Queries
       summary: Remove Query
       description: Remove definition of a named query.
       operationId: remove_query_queries_v1_query__query_name__delete
@@ -3528,47 +4022,6 @@ paths:
       security: *id001
 components:
   schemas:
-    AggregationMethod:
-      type: string
-      title: Aggregation Method.
-      oneOf:
-      - const: first
-        title: First
-        description: Use the first value (in time) to represent all data for the sample
-          interval.
-      - const: last
-        title: Last
-        description: Use the last value (in time) to represent all data for the sample
-          interval.
-      - const: mean
-        title: Mean
-        description: 'Aggregate data by the mean value: The sum of values divided
-          by number of observations.'
-      - const: median
-        title: Median
-        description: 'Aggregate data by the median value: The n/2-th value when ordered,
-          the average of the (n-1)/2-th and (n+1)/2-th value when n is uneven.'
-      - const: sum
-        title: Sum
-        description: The sum of all values summarizes the data for the sample interval.
-      - const: count
-        title: Count
-        description: Use the count of observations in the sample interval.
-      - const: std
-        title: Standard Deviation
-        description: Use the standard deviation of all observations in the sample
-          interval.
-      - const: max
-        title: Maximum
-        description: Use the maximum of all values in the sample interval.
-      - const: min
-        title: Minimum
-        description: Use the minimum of all values in the sample interval.
-      - title: Precentile
-        description: Aggregate data by the p-th percentile, where p is a number between
-          0 and 1.
-        pattern: ^percentile\((1(\.0*)?)|(0\.[0-9]*)\)$
-        example: percentile(0.02)
     AlignAt:
       type: string
       enum:
@@ -3598,11 +4051,39 @@ components:
       properties:
         at:
           $ref: '#/components/schemas/AlignAt'
+          oneOf:
+          - type: string
+            const: grid
+            description: Align to a fixed grid defined by the alignment `frequency`
+              and `timezone`.
+          - type: string
+            const: boundary
+            description: Align a the `from` boundary if specified, otherwise use the
+              `until` boundary (specfied or computed)
+          - type: string
+            const: from
+            description: Align a the `from` window boundary.
+          - type: string
+            const: until
+            description: Align a the `until` window boundary
           title: Align At
           description: Method used to align the aggregation grid. The default value
             is system-dependent (normally `grid`)
         shift:
           $ref: '#/components/schemas/AlignShift'
+          oneOf:
+          - type: string
+            const: backward
+            description: Shift both boundaries (`align.at=grid`) or first boundary
+              (`align.at=until`) backward to align with the grid.
+          - type: string
+            const: forward
+            description: Shift both boundaries (`align.at=grid`) or last boundary
+              (`align.at=from`) forward to align with the grid.
+          - type: string
+            const: wrap
+            description: Shift first boundary backward, and last boundary forward
+              to align with the grid
           title: Align Shift
           description: '
 
@@ -3702,8 +4183,6 @@ components:
           $ref: '#/components/schemas/DataSetWindow'
         data_axis:
           type: string
-          enum:
-          - row
           const: row
           title: Data Axis
           default: row
@@ -3864,8 +4343,10 @@ components:
             - items:
                 $ref: '#/components/schemas/HALLink'
               type: array
+          propertyNames:
+            $ref: '#/components/schemas/HALLinkRole'
           type: object
-          title: ' Links'
+          title: Links
           description: HAL links, indexed by link relation.
         _embeddings:
           additionalProperties:
@@ -3874,8 +4355,10 @@ components:
             - items:
                 $ref: '#/components/schemas/HALEmbedding'
               type: array
+          propertyNames:
+            $ref: '#/components/schemas/HALLinkRole'
           type: object
-          title: ' Embeddings'
+          title: Embeddings
           description: Hal embeddings, indexed by relation.
       additionalProperties: true
       type: object
@@ -4021,7 +4504,9 @@ components:
           type: string
           title: Interpolation method
         value:
-          type: integer
+          anyOf:
+          - type: number
+          - type: integer
           title: Interpolation parameter
           description: Optional parameter value for the interpolation method (see
             method description).
@@ -4063,7 +4548,8 @@ components:
           default: info
         args:
           anyOf:
-          - type: object
+          - additionalProperties: true
+            type: object
           - type: 'null'
           title: Args
       type: object
@@ -4216,21 +4702,188 @@ components:
           description: Default metric for the series in the query.
         aggregation:
           anyOf:
-          - description: Aggregation method for a series in the query.
-            $ref: '#/components/schemas/AggregationMethod'
+          - oneOf:
+            - const: first
+              title: First
+              description: Use the first value (in time) to represent all data for
+                the sample interval.
+            - const: last
+              title: Last
+              description: Use the last value (in time) to represent all data for
+                the sample interval.
+            - const: mean
+              title: Mean
+              description: 'Aggregate data by the mean value: The sum of values divided
+                by number of observations.'
+            - const: median
+              title: Median
+              description: 'Aggregate data by the median value: The n/2-th value when
+                ordered, the average of the (n-1)/2-th and (n+1)/2-th value when n
+                is uneven.'
+            - const: sum
+              title: Sum
+              description: The sum of all values summarizes the data for the sample
+                interval.
+            - const: count
+              title: Count
+              description: Use the count of observations in the sample interval.
+            - const: std
+              title: Standard Deviation
+              description: Use the standard deviation of all observations in the sample
+                interval.
+            - const: max
+              title: Maximum
+              description: Use the maximum of all values in the sample interval.
+            - const: min
+              title: Minimum
+              description: Use the minimum of all values in the sample interval.
+            - pattern: ^percentile\((1(\.0*)?)|(0\.[0-9]*)\)$
+              title: Precentile
+              description: Aggregate data by the p-th percentile, where p is a number
+                between 0 and 1.
+              example: percentile(0.02)
+            type: string
+            title: Aggregation
+            description: Aggregation method for a series in the query.
           - items:
               anyOf:
-              - $ref: '#/components/schemas/AggregationMethod'
+              - oneOf:
+                - const: first
+                  title: First
+                  description: Use the first value (in time) to represent all data
+                    for the sample interval.
+                - const: last
+                  title: Last
+                  description: Use the last value (in time) to represent all data
+                    for the sample interval.
+                - const: mean
+                  title: Mean
+                  description: 'Aggregate data by the mean value: The sum of values
+                    divided by number of observations.'
+                - const: median
+                  title: Median
+                  description: 'Aggregate data by the median value: The n/2-th value
+                    when ordered, the average of the (n-1)/2-th and (n+1)/2-th value
+                    when n is uneven.'
+                - const: sum
+                  title: Sum
+                  description: The sum of all values summarizes the data for the sample
+                    interval.
+                - const: count
+                  title: Count
+                  description: Use the count of observations in the sample interval.
+                - const: std
+                  title: Standard Deviation
+                  description: Use the standard deviation of all observations in the
+                    sample interval.
+                - const: max
+                  title: Maximum
+                  description: Use the maximum of all values in the sample interval.
+                - const: min
+                  title: Minimum
+                  description: Use the minimum of all values in the sample interval.
+                - pattern: ^percentile\((1(\.0*)?)|(0\.[0-9]*)\)$
+                  title: Precentile
+                  description: Aggregate data by the p-th percentile, where p is a
+                    number between 0 and 1.
+                  example: percentile(0.02)
+                type: string
+                title: Aggregation
+                description: Aggregation method for a series in the query.
               - type: 'null'
             type: array
             title: Aggregations
             description: Aggregation methods, leading to sepearate series.
           - additionalProperties:
               anyOf:
-              - $ref: '#/components/schemas/AggregationMethod'
+              - oneOf:
+                - const: first
+                  title: First
+                  description: Use the first value (in time) to represent all data
+                    for the sample interval.
+                - const: last
+                  title: Last
+                  description: Use the last value (in time) to represent all data
+                    for the sample interval.
+                - const: mean
+                  title: Mean
+                  description: 'Aggregate data by the mean value: The sum of values
+                    divided by number of observations.'
+                - const: median
+                  title: Median
+                  description: 'Aggregate data by the median value: The n/2-th value
+                    when ordered, the average of the (n-1)/2-th and (n+1)/2-th value
+                    when n is uneven.'
+                - const: sum
+                  title: Sum
+                  description: The sum of all values summarizes the data for the sample
+                    interval.
+                - const: count
+                  title: Count
+                  description: Use the count of observations in the sample interval.
+                - const: std
+                  title: Standard Deviation
+                  description: Use the standard deviation of all observations in the
+                    sample interval.
+                - const: max
+                  title: Maximum
+                  description: Use the maximum of all values in the sample interval.
+                - const: min
+                  title: Minimum
+                  description: Use the minimum of all values in the sample interval.
+                - pattern: ^percentile\((1(\.0*)?)|(0\.[0-9]*)\)$
+                  title: Precentile
+                  description: Aggregate data by the p-th percentile, where p is a
+                    number between 0 and 1.
+                  example: percentile(0.02)
+                type: string
+                title: Aggregation
+                description: Aggregation method for a series in the query.
               - items:
                   anyOf:
-                  - $ref: '#/components/schemas/AggregationMethod'
+                  - oneOf:
+                    - const: first
+                      title: First
+                      description: Use the first value (in time) to represent all
+                        data for the sample interval.
+                    - const: last
+                      title: Last
+                      description: Use the last value (in time) to represent all data
+                        for the sample interval.
+                    - const: mean
+                      title: Mean
+                      description: 'Aggregate data by the mean value: The sum of values
+                        divided by number of observations.'
+                    - const: median
+                      title: Median
+                      description: 'Aggregate data by the median value: The n/2-th
+                        value when ordered, the average of the (n-1)/2-th and (n+1)/2-th
+                        value when n is uneven.'
+                    - const: sum
+                      title: Sum
+                      description: The sum of all values summarizes the data for the
+                        sample interval.
+                    - const: count
+                      title: Count
+                      description: Use the count of observations in the sample interval.
+                    - const: std
+                      title: Standard Deviation
+                      description: Use the standard deviation of all observations
+                        in the sample interval.
+                    - const: max
+                      title: Maximum
+                      description: Use the maximum of all values in the sample interval.
+                    - const: min
+                      title: Minimum
+                      description: Use the minimum of all values in the sample interval.
+                    - pattern: ^percentile\((1(\.0*)?)|(0\.[0-9]*)\)$
+                      title: Precentile
+                      description: Aggregate data by the p-th percentile, where p
+                        is a number between 0 and 1.
+                      example: percentile(0.02)
+                    type: string
+                    title: Aggregation
+                    description: Aggregation method for a series in the query.
                   - type: 'null'
                 type: array
                 title: Aggregations
@@ -4243,10 +4896,97 @@ components:
               anyOf:
               - additionalProperties:
                   anyOf:
-                  - $ref: '#/components/schemas/AggregationMethod'
+                  - oneOf:
+                    - const: first
+                      title: First
+                      description: Use the first value (in time) to represent all
+                        data for the sample interval.
+                    - const: last
+                      title: Last
+                      description: Use the last value (in time) to represent all data
+                        for the sample interval.
+                    - const: mean
+                      title: Mean
+                      description: 'Aggregate data by the mean value: The sum of values
+                        divided by number of observations.'
+                    - const: median
+                      title: Median
+                      description: 'Aggregate data by the median value: The n/2-th
+                        value when ordered, the average of the (n-1)/2-th and (n+1)/2-th
+                        value when n is uneven.'
+                    - const: sum
+                      title: Sum
+                      description: The sum of all values summarizes the data for the
+                        sample interval.
+                    - const: count
+                      title: Count
+                      description: Use the count of observations in the sample interval.
+                    - const: std
+                      title: Standard Deviation
+                      description: Use the standard deviation of all observations
+                        in the sample interval.
+                    - const: max
+                      title: Maximum
+                      description: Use the maximum of all values in the sample interval.
+                    - const: min
+                      title: Minimum
+                      description: Use the minimum of all values in the sample interval.
+                    - pattern: ^percentile\((1(\.0*)?)|(0\.[0-9]*)\)$
+                      title: Precentile
+                      description: Aggregate data by the p-th percentile, where p
+                        is a number between 0 and 1.
+                      example: percentile(0.02)
+                    type: string
+                    title: Aggregation
+                    description: Aggregation method for a series in the query.
                   - items:
                       anyOf:
-                      - $ref: '#/components/schemas/AggregationMethod'
+                      - oneOf:
+                        - const: first
+                          title: First
+                          description: Use the first value (in time) to represent
+                            all data for the sample interval.
+                        - const: last
+                          title: Last
+                          description: Use the last value (in time) to represent all
+                            data for the sample interval.
+                        - const: mean
+                          title: Mean
+                          description: 'Aggregate data by the mean value: The sum
+                            of values divided by number of observations.'
+                        - const: median
+                          title: Median
+                          description: 'Aggregate data by the median value: The n/2-th
+                            value when ordered, the average of the (n-1)/2-th and
+                            (n+1)/2-th value when n is uneven.'
+                        - const: sum
+                          title: Sum
+                          description: The sum of all values summarizes the data for
+                            the sample interval.
+                        - const: count
+                          title: Count
+                          description: Use the count of observations in the sample
+                            interval.
+                        - const: std
+                          title: Standard Deviation
+                          description: Use the standard deviation of all observations
+                            in the sample interval.
+                        - const: max
+                          title: Maximum
+                          description: Use the maximum of all values in the sample
+                            interval.
+                        - const: min
+                          title: Minimum
+                          description: Use the minimum of all values in the sample
+                            interval.
+                        - pattern: ^percentile\((1(\.0*)?)|(0\.[0-9]*)\)$
+                          title: Precentile
+                          description: Aggregate data by the p-th percentile, where
+                            p is a number between 0 and 1.
+                          example: percentile(0.02)
+                        type: string
+                        title: Aggregation
+                        description: Aggregation method for a series in the query.
                       - type: 'null'
                     type: array
                     title: Aggregations
@@ -4265,6 +5005,60 @@ components:
         interpolation:
           anyOf:
           - $ref: '#/components/schemas/InterpolationMethod'
+            oneOf:
+            - const: pad
+              title: pad
+              description: Interpolate with the value of the first observed point.
+                This method also extrapolates.
+            - const: fixed
+              title: fixed
+              description: Interpolate with a fixed, user-specified value. This method
+                also extrapolates.
+            - const: backfill
+              title: backfill
+              description: Same as pad, but using the last observed value. This method
+                also extrapolates
+            - const: linear
+              title: linear
+              description: Linearly go from the first observed value of the gap to
+                the last observed oneThis method also extrapolates
+            - const: nearest
+              title: nearest
+              description: Use the value that is closest in time.
+            - const: zero
+              title: zero
+              description: Interpolate with a spline function of order 0, which is
+                a piecewise polynomial.
+            - const: slinear
+              title: slinear
+              description: Interpolate with a spline function of order 1, which is
+                a piecewise polynomial.
+            - const: quadratic
+              title: quadratic
+              description: Interpolate with a spline function of order 2, which is
+                a piecewise polynomial.
+            - const: cubic
+              title: cubic
+              description: Interpolate with a spline function of order 3, which is
+                a piecewise polynomial.
+            - const: polynomial
+              title: polynomial
+              description: Interpolate with a polynomial of the lowest possible degree
+                passing trough the data points.
+            - const: spline
+              title: spline
+              description: Interpolate with a spline function of a user-specified
+                order.
+            - const: from_derivatives
+              title: from_derivatives
+              description: Interpolate with the derivative of order 1.
+            - const: pchip
+              title: pchip
+              description: Interpolate with a piecewise cubic spline function.
+            - const: akima
+              title: akima
+              description: Interpolate with a non-smoothing spline of order 2, called
+                Akima interpolation.
             title: Interpolation Method
           - $ref: '#/components/schemas/InterpolationSpec'
             title: Interpolation specification.
@@ -4388,20 +5182,188 @@ components:
           description: Default metric for the series in the query.
         aggregation:
           anyOf:
-          - $ref: '#/components/schemas/AggregationMethod'
+          - oneOf:
+            - const: first
+              title: First
+              description: Use the first value (in time) to represent all data for
+                the sample interval.
+            - const: last
+              title: Last
+              description: Use the last value (in time) to represent all data for
+                the sample interval.
+            - const: mean
+              title: Mean
+              description: 'Aggregate data by the mean value: The sum of values divided
+                by number of observations.'
+            - const: median
+              title: Median
+              description: 'Aggregate data by the median value: The n/2-th value when
+                ordered, the average of the (n-1)/2-th and (n+1)/2-th value when n
+                is uneven.'
+            - const: sum
+              title: Sum
+              description: The sum of all values summarizes the data for the sample
+                interval.
+            - const: count
+              title: Count
+              description: Use the count of observations in the sample interval.
+            - const: std
+              title: Standard Deviation
+              description: Use the standard deviation of all observations in the sample
+                interval.
+            - const: max
+              title: Maximum
+              description: Use the maximum of all values in the sample interval.
+            - const: min
+              title: Minimum
+              description: Use the minimum of all values in the sample interval.
+            - pattern: ^percentile\((1(\.0*)?)|(0\.[0-9]*)\)$
+              title: Precentile
+              description: Aggregate data by the p-th percentile, where p is a number
+                between 0 and 1.
+              example: percentile(0.02)
+            type: string
+            title: Aggregation
+            description: Aggregation method for a series in the query.
           - items:
               anyOf:
-              - $ref: '#/components/schemas/AggregationMethod'
+              - oneOf:
+                - const: first
+                  title: First
+                  description: Use the first value (in time) to represent all data
+                    for the sample interval.
+                - const: last
+                  title: Last
+                  description: Use the last value (in time) to represent all data
+                    for the sample interval.
+                - const: mean
+                  title: Mean
+                  description: 'Aggregate data by the mean value: The sum of values
+                    divided by number of observations.'
+                - const: median
+                  title: Median
+                  description: 'Aggregate data by the median value: The n/2-th value
+                    when ordered, the average of the (n-1)/2-th and (n+1)/2-th value
+                    when n is uneven.'
+                - const: sum
+                  title: Sum
+                  description: The sum of all values summarizes the data for the sample
+                    interval.
+                - const: count
+                  title: Count
+                  description: Use the count of observations in the sample interval.
+                - const: std
+                  title: Standard Deviation
+                  description: Use the standard deviation of all observations in the
+                    sample interval.
+                - const: max
+                  title: Maximum
+                  description: Use the maximum of all values in the sample interval.
+                - const: min
+                  title: Minimum
+                  description: Use the minimum of all values in the sample interval.
+                - pattern: ^percentile\((1(\.0*)?)|(0\.[0-9]*)\)$
+                  title: Precentile
+                  description: Aggregate data by the p-th percentile, where p is a
+                    number between 0 and 1.
+                  example: percentile(0.02)
+                type: string
+                title: Aggregation
+                description: Aggregation method for a series in the query.
               - type: 'null'
             type: array
             title: Aggregations
             description: Aggregation methods, leading to sepearate series.
           - additionalProperties:
               anyOf:
-              - $ref: '#/components/schemas/AggregationMethod'
+              - oneOf:
+                - const: first
+                  title: First
+                  description: Use the first value (in time) to represent all data
+                    for the sample interval.
+                - const: last
+                  title: Last
+                  description: Use the last value (in time) to represent all data
+                    for the sample interval.
+                - const: mean
+                  title: Mean
+                  description: 'Aggregate data by the mean value: The sum of values
+                    divided by number of observations.'
+                - const: median
+                  title: Median
+                  description: 'Aggregate data by the median value: The n/2-th value
+                    when ordered, the average of the (n-1)/2-th and (n+1)/2-th value
+                    when n is uneven.'
+                - const: sum
+                  title: Sum
+                  description: The sum of all values summarizes the data for the sample
+                    interval.
+                - const: count
+                  title: Count
+                  description: Use the count of observations in the sample interval.
+                - const: std
+                  title: Standard Deviation
+                  description: Use the standard deviation of all observations in the
+                    sample interval.
+                - const: max
+                  title: Maximum
+                  description: Use the maximum of all values in the sample interval.
+                - const: min
+                  title: Minimum
+                  description: Use the minimum of all values in the sample interval.
+                - pattern: ^percentile\((1(\.0*)?)|(0\.[0-9]*)\)$
+                  title: Precentile
+                  description: Aggregate data by the p-th percentile, where p is a
+                    number between 0 and 1.
+                  example: percentile(0.02)
+                type: string
+                title: Aggregation
+                description: Aggregation method for a series in the query.
               - items:
                   anyOf:
-                  - $ref: '#/components/schemas/AggregationMethod'
+                  - oneOf:
+                    - const: first
+                      title: First
+                      description: Use the first value (in time) to represent all
+                        data for the sample interval.
+                    - const: last
+                      title: Last
+                      description: Use the last value (in time) to represent all data
+                        for the sample interval.
+                    - const: mean
+                      title: Mean
+                      description: 'Aggregate data by the mean value: The sum of values
+                        divided by number of observations.'
+                    - const: median
+                      title: Median
+                      description: 'Aggregate data by the median value: The n/2-th
+                        value when ordered, the average of the (n-1)/2-th and (n+1)/2-th
+                        value when n is uneven.'
+                    - const: sum
+                      title: Sum
+                      description: The sum of all values summarizes the data for the
+                        sample interval.
+                    - const: count
+                      title: Count
+                      description: Use the count of observations in the sample interval.
+                    - const: std
+                      title: Standard Deviation
+                      description: Use the standard deviation of all observations
+                        in the sample interval.
+                    - const: max
+                      title: Maximum
+                      description: Use the maximum of all values in the sample interval.
+                    - const: min
+                      title: Minimum
+                      description: Use the minimum of all values in the sample interval.
+                    - pattern: ^percentile\((1(\.0*)?)|(0\.[0-9]*)\)$
+                      title: Precentile
+                      description: Aggregate data by the p-th percentile, where p
+                        is a number between 0 and 1.
+                      example: percentile(0.02)
+                    type: string
+                    title: Aggregation
+                    description: Aggregation method for a series in the query.
                   - type: 'null'
                 type: array
                 title: Aggregations
@@ -4414,10 +5376,97 @@ components:
               anyOf:
               - additionalProperties:
                   anyOf:
-                  - $ref: '#/components/schemas/AggregationMethod'
+                  - oneOf:
+                    - const: first
+                      title: First
+                      description: Use the first value (in time) to represent all
+                        data for the sample interval.
+                    - const: last
+                      title: Last
+                      description: Use the last value (in time) to represent all data
+                        for the sample interval.
+                    - const: mean
+                      title: Mean
+                      description: 'Aggregate data by the mean value: The sum of values
+                        divided by number of observations.'
+                    - const: median
+                      title: Median
+                      description: 'Aggregate data by the median value: The n/2-th
+                        value when ordered, the average of the (n-1)/2-th and (n+1)/2-th
+                        value when n is uneven.'
+                    - const: sum
+                      title: Sum
+                      description: The sum of all values summarizes the data for the
+                        sample interval.
+                    - const: count
+                      title: Count
+                      description: Use the count of observations in the sample interval.
+                    - const: std
+                      title: Standard Deviation
+                      description: Use the standard deviation of all observations
+                        in the sample interval.
+                    - const: max
+                      title: Maximum
+                      description: Use the maximum of all values in the sample interval.
+                    - const: min
+                      title: Minimum
+                      description: Use the minimum of all values in the sample interval.
+                    - pattern: ^percentile\((1(\.0*)?)|(0\.[0-9]*)\)$
+                      title: Precentile
+                      description: Aggregate data by the p-th percentile, where p
+                        is a number between 0 and 1.
+                      example: percentile(0.02)
+                    type: string
+                    title: Aggregation
+                    description: Aggregation method for a series in the query.
                   - items:
                       anyOf:
-                      - $ref: '#/components/schemas/AggregationMethod'
+                      - oneOf:
+                        - const: first
+                          title: First
+                          description: Use the first value (in time) to represent
+                            all data for the sample interval.
+                        - const: last
+                          title: Last
+                          description: Use the last value (in time) to represent all
+                            data for the sample interval.
+                        - const: mean
+                          title: Mean
+                          description: 'Aggregate data by the mean value: The sum
+                            of values divided by number of observations.'
+                        - const: median
+                          title: Median
+                          description: 'Aggregate data by the median value: The n/2-th
+                            value when ordered, the average of the (n-1)/2-th and
+                            (n+1)/2-th value when n is uneven.'
+                        - const: sum
+                          title: Sum
+                          description: The sum of all values summarizes the data for
+                            the sample interval.
+                        - const: count
+                          title: Count
+                          description: Use the count of observations in the sample
+                            interval.
+                        - const: std
+                          title: Standard Deviation
+                          description: Use the standard deviation of all observations
+                            in the sample interval.
+                        - const: max
+                          title: Maximum
+                          description: Use the maximum of all values in the sample
+                            interval.
+                        - const: min
+                          title: Minimum
+                          description: Use the minimum of all values in the sample
+                            interval.
+                        - pattern: ^percentile\((1(\.0*)?)|(0\.[0-9]*)\)$
+                          title: Precentile
+                          description: Aggregate data by the p-th percentile, where
+                            p is a number between 0 and 1.
+                          example: percentile(0.02)
+                        type: string
+                        title: Aggregation
+                        description: Aggregation method for a series in the query.
                       - type: 'null'
                     type: array
                     title: Aggregations
@@ -4436,6 +5485,60 @@ components:
         interpolation:
           anyOf:
           - $ref: '#/components/schemas/InterpolationMethod'
+            oneOf:
+            - const: pad
+              title: pad
+              description: Interpolate with the value of the first observed point.
+                This method also extrapolates.
+            - const: fixed
+              title: fixed
+              description: Interpolate with a fixed, user-specified value. This method
+                also extrapolates.
+            - const: backfill
+              title: backfill
+              description: Same as pad, but using the last observed value. This method
+                also extrapolates
+            - const: linear
+              title: linear
+              description: Linearly go from the first observed value of the gap to
+                the last observed oneThis method also extrapolates
+            - const: nearest
+              title: nearest
+              description: Use the value that is closest in time.
+            - const: zero
+              title: zero
+              description: Interpolate with a spline function of order 0, which is
+                a piecewise polynomial.
+            - const: slinear
+              title: slinear
+              description: Interpolate with a spline function of order 1, which is
+                a piecewise polynomial.
+            - const: quadratic
+              title: quadratic
+              description: Interpolate with a spline function of order 2, which is
+                a piecewise polynomial.
+            - const: cubic
+              title: cubic
+              description: Interpolate with a spline function of order 3, which is
+                a piecewise polynomial.
+            - const: polynomial
+              title: polynomial
+              description: Interpolate with a polynomial of the lowest possible degree
+                passing trough the data points.
+            - const: spline
+              title: spline
+              description: Interpolate with a spline function of a user-specified
+                order.
+            - const: from_derivatives
+              title: from_derivatives
+              description: Interpolate with the derivative of order 1.
+            - const: pchip
+              title: pchip
+              description: Interpolate with a piecewise cubic spline function.
+            - const: akima
+              title: akima
+              description: Interpolate with a non-smoothing spline of order 2, called
+                Akima interpolation.
             title: Interpolation Method
           - $ref: '#/components/schemas/InterpolationSpec'
             title: Interpolation specification.
@@ -4554,6 +5657,7 @@ components:
           title: Query name
           description: Name of the stored query definition.
         meta:
+          additionalProperties: true
           type: object
           title: Query metadata
           description: User metadata for the query definition.
@@ -4666,6 +5770,7 @@ components:
         _links:
           $ref: '#/components/schemas/QueryHALLinks'
         attrs:
+          additionalProperties: true
           type: object
           title: Query attributes
           description: System provided metadata for the query definition.
@@ -4674,6 +5779,7 @@ components:
           title: Query name
           description: Name of the stored query definition.
         meta:
+          additionalProperties: true
           type: object
           title: Query metadata
           description: User metadata for the query definition.
@@ -4690,6 +5796,7 @@ components:
         _links:
           $ref: '#/components/schemas/QueryHALLinks'
         attrs:
+          additionalProperties: true
           type: object
           title: Query attributes
           description: System provided metadata for the query definition.
@@ -4698,6 +5805,7 @@ components:
           title: Query name
           description: Name of the stored query definition.
         meta:
+          additionalProperties: true
           type: object
           title: Query metadata
           description: User metadata for the query definition.
@@ -4738,7 +5846,7 @@ components:
             The data is represented according to the `render`  options in the query
             (default `COMPACT_WS`).'
         query:
-          $ref: '#/components/schemas/Query-Input'
+          $ref: '#/components/schemas/Query-Output'
           description: The query that lead to this result.
         messages:
           items:
@@ -4760,15 +5868,10 @@ components:
         `render` options of the request (defaults to `COMPACT_WS`).
 
         '''
-      examples:
-      - data: []
-        query:
-          resource: R
-          metric: temperature
-        messages: []
     QueryUpdateInput:
       properties:
         meta:
+          additionalProperties: true
           type: object
           title: Query metadata
           description: User metadata for the query definition.
@@ -4783,6 +5886,158 @@ components:
       properties:
         mode:
           $ref: '#/components/schemas/_RenderMode'
+          oneOf:
+          - type: string
+            const: HEADER_ROW
+            description: 'Render rows of timestamp and values. Show column headers.
+              Includes an iso timestamp.
+
+
+              ###### options
+
+              - `iso_timestamp`: `True`
+
+              - `header_array`: `row`
+
+              - `roll_up`: `False`
+
+              - `data_axis`: `column`'
+          - type: string
+            const: COMPACT
+            description: 'Render rows of timestamp and values. Show column headers.
+
+
+              ###### options
+
+              - `iso_timestamp`: `False`
+
+              - `header_array`: `row`
+
+              - `roll_up`: `False`
+
+              - `data_axis`: `column`'
+          - type: string
+            const: COMPACT_WS
+            description: 'Render rows of timestamp and values. Show column headers.
+              Show the time window attributes.
+
+
+              ###### options
+
+              - `iso_timestamp`: `False`
+
+              - `header_array`: `row`
+
+              - `roll_up`: `False`
+
+              - `data_axis`: `column`
+
+              - `include_window_spec`: `True`'
+          - type: string
+            const: SERIES
+            description: 'Render timestamps and each series (column) as a values array.
+              Show column headers.
+
+
+              ###### options
+
+              - `iso_timestamp`: `False`
+
+              - `header_array`: `row`
+
+              - `data_axis`: `row`
+
+              - `roll_up`: `True`
+
+              - `include_window_spec`: `True`'
+          - type: string
+            const: HEADER_COLUMN
+            description: 'Renders row index in `rows`, and each series as a values
+              array.
+
+
+              The series are prefixed by their series attributes.The `rows` index
+              is prefixed by the labels for these attributes.
+
+
+              ###### options
+
+              - `iso_timestamp`: `True`
+
+              - `header_array`: `column`
+
+              - `roll_up`: `False`
+
+              - `data_axis`: `row`'
+          - type: string
+            const: FLAT_DICT
+            description: 'Render an object for each observation. Uses flattened keys.
+
+
+              ###### options
+
+              - `iso_timestamp`: `True`
+
+              - `hierarchical`: `False`
+
+              - `show_levels`: `True`
+
+              - `roll_up`: `False`'
+          - type: string
+            const: HIER_DICT
+            description: 'Render an hierarchical object for each observation. Shows
+              an iso timestamp.
+
+
+              ###### options
+
+              - `iso_timestamp`: `True`
+
+              - `hierarchical`: `True`
+
+              - `show_levels`: `True`
+
+              - `roll_up`: `True`'
+          - type: string
+            const: METRIC_FLAT_DICT
+            description: 'Render an object with metric keys for each observation.
+              Shows an iso timestamp.
+
+
+              ###### options
+
+              - `iso_timestamp`: `True`
+
+              - `hierarchical`: `[''metric'']`
+
+              - `show_levels`: `False`
+
+              - `roll_up`: `True`
+
+              - `key_skip_empty`: `True`'
+          - type: string
+            const: UPLOAD
+            description: 'Render in an object format compatible with the `/data/v1/events`
+              upload.
+
+
+              ###### options
+
+              - `iso_timestamp`: `False`
+
+              - `hierarchical`: `False`
+
+              - `show_levels`: `False`
+
+              - `roll_up`: `True`'
+          - type: string
+            const: CSV
+            description: 'Render in csv format with row headers.
+
+
+              ###### options
+
+              - `iso_timestamp`: `False`'
           title: Named configuration of render options.
           description: A render mode combines a number of render option under a single
             name. Each option can still be overriden by an explicit value.
@@ -4871,8 +6126,6 @@ components:
           $ref: '#/components/schemas/DataSetWindow'
         data_axis:
           type: string
-          enum:
-          - column
           const: column
           title: Data Axis
           default: column
@@ -4951,8 +6204,6 @@ components:
           $ref: '#/components/schemas/DataSetWindow'
         data_axis:
           type: string
-          enum:
-          - row
           const: row
           title: Data Axis
           default: row
@@ -5029,10 +6280,107 @@ components:
           - temperature
           - uptime
         aggregration:
-          $ref: '#/components/schemas/AggregationMethod'
+          oneOf:
+          - const: first
+            title: First
+            description: Use the first value (in time) to represent all data for the
+              sample interval.
+          - const: last
+            title: Last
+            description: Use the last value (in time) to represent all data for the
+              sample interval.
+          - const: mean
+            title: Mean
+            description: 'Aggregate data by the mean value: The sum of values divided
+              by number of observations.'
+          - const: median
+            title: Median
+            description: 'Aggregate data by the median value: The n/2-th value when
+              ordered, the average of the (n-1)/2-th and (n+1)/2-th value when n is
+              uneven.'
+          - const: sum
+            title: Sum
+            description: The sum of all values summarizes the data for the sample
+              interval.
+          - const: count
+            title: Count
+            description: Use the count of observations in the sample interval.
+          - const: std
+            title: Standard Deviation
+            description: Use the standard deviation of all observations in the sample
+              interval.
+          - const: max
+            title: Maximum
+            description: Use the maximum of all values in the sample interval.
+          - const: min
+            title: Minimum
+            description: Use the minimum of all values in the sample interval.
+          - pattern: ^percentile\((1(\.0*)?)|(0\.[0-9]*)\)$
+            title: Precentile
+            description: Aggregate data by the p-th percentile, where p is a number
+              between 0 and 1.
+            example: percentile(0.02)
+          type: string
+          title: Aggregration
+          description: Aggregation method for the series (if aggregated). If missing,
+            the query default is used.
         interpolation:
           anyOf:
           - $ref: '#/components/schemas/InterpolationMethod'
+            oneOf:
+            - const: pad
+              title: pad
+              description: Interpolate with the value of the first observed point.
+                This method also extrapolates.
+            - const: fixed
+              title: fixed
+              description: Interpolate with a fixed, user-specified value. This method
+                also extrapolates.
+            - const: backfill
+              title: backfill
+              description: Same as pad, but using the last observed value. This method
+                also extrapolates
+            - const: linear
+              title: linear
+              description: Linearly go from the first observed value of the gap to
+                the last observed oneThis method also extrapolates
+            - const: nearest
+              title: nearest
+              description: Use the value that is closest in time.
+            - const: zero
+              title: zero
+              description: Interpolate with a spline function of order 0, which is
+                a piecewise polynomial.
+            - const: slinear
+              title: slinear
+              description: Interpolate with a spline function of order 1, which is
+                a piecewise polynomial.
+            - const: quadratic
+              title: quadratic
+              description: Interpolate with a spline function of order 2, which is
+                a piecewise polynomial.
+            - const: cubic
+              title: cubic
+              description: Interpolate with a spline function of order 3, which is
+                a piecewise polynomial.
+            - const: polynomial
+              title: polynomial
+              description: Interpolate with a polynomial of the lowest possible degree
+                passing trough the data points.
+            - const: spline
+              title: spline
+              description: Interpolate with a spline function of a user-specified
+                order.
+            - const: from_derivatives
+              title: from_derivatives
+              description: Interpolate with the derivative of order 1.
+            - const: pchip
+              title: pchip
+              description: Interpolate with a piecewise cubic spline function.
+            - const: akima
+              title: akima
+              description: Interpolate with a non-smoothing spline of order 2, called
+                Akima interpolation.
             title: Interpolation Method
           - $ref: '#/components/schemas/InterpolationSpec'
             title: Interpolation specification.
@@ -5073,158 +6421,18 @@ components:
       title: ValidationError
     _RenderMode:
       type: string
-      title: Render Mode
-      oneOf:
-      - const: HEADER_ROW
-        description: 'Render rows of timestamp and values. Show column headers. Includes
-          an iso timestamp.
-
-
-          ###### options
-
-          - `iso_timestamp`: `True`
-
-          - `header_array`: `row`
-
-          - `roll_up`: `False`
-
-          - `data_axis`: `column`'
-        type: string
-      - const: COMPACT
-        description: 'Render rows of timestamp and values. Show column headers.
-
-
-          ###### options
-
-          - `iso_timestamp`: `False`
-
-          - `header_array`: `row`
-
-          - `roll_up`: `False`
-
-          - `data_axis`: `column`'
-        type: string
-      - const: COMPACT_WS
-        description: 'Render rows of timestamp and values. Show column headers. Show
-          the time window attributes.
-
-
-          ###### options
-
-          - `iso_timestamp`: `False`
-
-          - `header_array`: `row`
-
-          - `roll_up`: `False`
-
-          - `data_axis`: `column`
-
-          - `include_window_spec`: `True`'
-        type: string
-      - const: SERIES
-        description: 'Render timestamps and each series (column) as a values array.
-          Show column headers.
-
-
-          ###### options
-
-          - `iso_timestamp`: `False`
-
-          - `header_array`: `row`
-
-          - `data_axis`: `row`
-
-          - `roll_up`: `True`
-
-          - `include_window_spec`: `True`'
-        type: string
-      - const: HEADER_COLUMN
-        description: 'Renders row index in `rows`, and each series as a values array.
-
-
-          The series are prefixed by their series attributes.The `rows` index is prefixed
-          by the labels for these attributes.
-
-
-          ###### options
-
-          - `iso_timestamp`: `True`
-
-          - `header_array`: `column`
-
-          - `roll_up`: `False`
-
-          - `data_axis`: `row`'
-        type: string
-      - const: FLAT_DICT
-        description: 'Render an object for each observation. Uses flattened keys.
-
-
-          ###### options
-
-          - `iso_timestamp`: `True`
-
-          - `hierarchical`: `False`
-
-          - `show_levels`: `True`
-
-          - `roll_up`: `False`'
-        type: string
-      - const: HIER_DICT
-        description: 'Render an hierarchical object for each observation. Shows an
-          iso timestamp.
-
-
-          ###### options
-
-          - `iso_timestamp`: `True`
-
-          - `hierarchical`: `True`
-
-          - `show_levels`: `True`
-
-          - `roll_up`: `True`'
-        type: string
-      - const: METRIC_FLAT_DICT
-        description: 'Render an object with metric keys for each observation. Shows
-          an iso timestamp.
-
-
-          ###### options
-
-          - `iso_timestamp`: `True`
-
-          - `hierarchical`: `[''metric'']`
-
-          - `show_levels`: `False`
-
-          - `roll_up`: `True`
-
-          - `key_skip_empty`: `True`'
-        type: string
-      - const: UPLOAD
-        description: 'Render in an object format compatible with the `/data/v1/events`
-          upload.
-
-
-          ###### options
-
-          - `iso_timestamp`: `False`
-
-          - `hierarchical`: `False`
-
-          - `show_levels`: `False`
-
-          - `roll_up`: `True`'
-        type: string
-      - const: CSV
-        description: 'Render in csv format with row headers.
-
-
-          ###### options
-
-          - `iso_timestamp`: `False`'
-        type: string
+      enum:
+      - HEADER_ROW
+      - COMPACT
+      - SERIES
+      - HEADER_COLUMN
+      - FLAT_DICT
+      - HIER_DICT
+      - METRIC_FLAT_DICT
+      - UPLOAD
+      - COMPACT_WS
+      - CSV
+      title: _RenderMode
       description: Render mode configuration keys.
   securitySchemes:
     waylayApiKeySecret:
@@ -5233,9 +6441,9 @@ components:
         also Waylay JWT Bearer authentication.
       scheme: basic
 tags:
-- name: Execute
+- name: Execute Queries
   description: Execute a named or ad-hoc query.
-- name: Manage
+- name: Named Queries
   description: List, read, create, update and remove queries that are stored by name.
 - name: Status
   description: Inspect the technical status of the waylay-query service.

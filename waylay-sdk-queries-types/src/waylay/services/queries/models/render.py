@@ -17,19 +17,18 @@ from pydantic import (
     StrictBool,
     StrictStr,
 )
-
 from waylay.sdk.api._models import BaseModel as WaylayBaseModel
 
 from ..models.data_axis_option import DataAxisOption
 from ..models.header_array_option import HeaderArrayOption
 from ..models.hierarchical import Hierarchical
-from ..models.render_mode import RenderMode
+from ..models.render1_any_of import Render1AnyOf
 
 
 class Render(WaylayBaseModel):
     """Configures the representation of data sets returned by the query API.."""
 
-    mode: RenderMode | None = None
+    mode: Render1AnyOf | None = None
     roll_up: StrictBool | None = Field(
         default=None,
         description="move up attributes on rows (or columns) that are the same for             all rows (or columns) to a table attribute.             Levels enumerated in 'hierarchical' are excluded.",

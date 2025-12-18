@@ -14,20 +14,19 @@ from __future__ import annotations
 from pydantic import (
     ConfigDict,
 )
-
 from waylay.sdk.api._models import BaseModel as WaylayBaseModel
 
-from ..models.align_at import AlignAt
-from ..models.align_shift import AlignShift
+from ..models.alignment_at import AlignmentAt
 from ..models.alignment_grid_interval import AlignmentGridInterval
+from ..models.alignment_shift import AlignmentShift
 from ..models.alignment_timezone import AlignmentTimezone
 
 
 class Alignment(WaylayBaseModel):
     """Aggregation Alignment Options.  Specifies how the aggregation grid is aligned.."""
 
-    at: AlignAt | None = None
-    shift: AlignShift | None = None
+    at: AlignmentAt | None = None
+    shift: AlignmentShift | None = None
     freq: AlignmentGridInterval | None = None
     timezone: AlignmentTimezone | None = None
 

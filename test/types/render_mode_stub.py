@@ -28,27 +28,7 @@ render_mode_model_schema = json.loads(
   "title" : "_RenderMode",
   "type" : "string",
   "description" : "Render mode configuration keys.",
-  "oneOf" : [ {
-    "$ref" : "#/components/schemas/_RenderMode_oneOf"
-  }, {
-    "$ref" : "#/components/schemas/_RenderMode_oneOf_1"
-  }, {
-    "$ref" : "#/components/schemas/_RenderMode_oneOf_2"
-  }, {
-    "$ref" : "#/components/schemas/_RenderMode_oneOf_3"
-  }, {
-    "$ref" : "#/components/schemas/_RenderMode_oneOf_4"
-  }, {
-    "$ref" : "#/components/schemas/_RenderMode_oneOf_5"
-  }, {
-    "$ref" : "#/components/schemas/_RenderMode_oneOf_6"
-  }, {
-    "$ref" : "#/components/schemas/_RenderMode_oneOf_7"
-  }, {
-    "$ref" : "#/components/schemas/_RenderMode_oneOf_8"
-  }, {
-    "$ref" : "#/components/schemas/_RenderMode_oneOf_9"
-  } ]
+  "enum" : [ "HEADER_ROW", "COMPACT", "SERIES", "HEADER_COLUMN", "FLAT_DICT", "HIER_DICT", "METRIC_FLAT_DICT", "UPLOAD", "COMPACT_WS", "CSV" ]
 }
 """,
     object_hook=with_example_provider,

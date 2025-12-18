@@ -11,15 +11,9 @@ Do not edit the class manually.
 
 from __future__ import annotations
 
-from typing import (
-    Dict,
-    List,
-    Union,
-)
+from typing import Dict, List, Union
 
-from typing_extensions import (
-    Annotated,  # >=3.9
-)
+from typing_extensions import Annotated
 
 EmbeddingsValue = Union[
     Annotated[Dict[str, object], "Any embedded representation in a HAL response."],

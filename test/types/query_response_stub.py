@@ -34,6 +34,7 @@ query_response_model_schema = json.loads(
     "attrs" : {
       "title" : "Query attributes",
       "type" : "object",
+      "additionalProperties" : true,
       "description" : "System provided metadata for the query definition."
     },
     "name" : {
@@ -44,6 +45,7 @@ query_response_model_schema = json.loads(
     "meta" : {
       "title" : "Query metadata",
       "type" : "object",
+      "additionalProperties" : true,
       "description" : "User metadata for the query definition."
     },
     "query" : {

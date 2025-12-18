@@ -25,7 +25,7 @@ except ImportError as exc:
 
 embeddings_value_model_schema = json.loads(
     r"""{
-  "title" : "_Embeddings_value",
+  "title" : "Embeddings_value",
   "anyOf" : [ {
     "$ref" : "#/components/schemas/HALEmbedding"
   }, {

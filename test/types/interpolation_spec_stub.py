@@ -32,9 +32,7 @@ interpolation_spec_model_schema = json.loads(
       "$ref" : "#/components/schemas/Interpolation_method"
     },
     "value" : {
-      "title" : "Interpolation parameter",
-      "type" : "integer",
-      "description" : "Optional parameter value for the interpolation method (see method description)."
+      "$ref" : "#/components/schemas/Interpolation_parameter"
     },
     "order" : {
       "title" : "Interpolation order",

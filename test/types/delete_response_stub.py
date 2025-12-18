@@ -35,20 +35,26 @@ delete_response_model_schema = json.loads(
       }
     },
     "_links" : {
-      "title" : " Links",
+      "title" : "Links",
       "type" : "object",
       "additionalProperties" : {
-        "$ref" : "#/components/schemas/_Links_value"
+        "$ref" : "#/components/schemas/Links_value"
       },
-      "description" : "HAL links, indexed by link relation."
+      "description" : "HAL links, indexed by link relation.",
+      "x-propertyNames" : {
+        "$ref" : "#/components/schemas/HALLinkRole"
+      }
     },
     "_embeddings" : {
-      "title" : " Embeddings",
+      "title" : "Embeddings",
       "type" : "object",
       "additionalProperties" : {
-        "$ref" : "#/components/schemas/_Embeddings_value"
+        "$ref" : "#/components/schemas/Embeddings_value"
       },
-      "description" : "Hal embeddings, indexed by relation."
+      "description" : "Hal embeddings, indexed by relation.",
+      "x-propertyNames" : {
+        "$ref" : "#/components/schemas/HALLinkRole"
+      }
     }
   },
   "additionalProperties" : true,

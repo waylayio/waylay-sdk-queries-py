@@ -6,7 +6,7 @@ Input data to update a query definition.
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**meta** | **object** | User metadata for the query definition. | [optional] 
+**meta** | **Dict[str, object]** | User metadata for the query definition. | [optional] 
 **query** | [**QueryInput**](QueryInput.md) |  | [optional] 
 
 ## Example

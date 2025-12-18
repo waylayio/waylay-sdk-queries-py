@@ -17,11 +17,10 @@ from pydantic import (
     ConfigDict,
     Field,
 )
-
 from waylay.sdk.api._models import BaseModel as WaylayBaseModel
 
 from ..models.query_execution_message import QueryExecutionMessage
-from ..models.query_input import QueryInput
+from ..models.query_output import QueryOutput
 from ..models.response_data_set import ResponseDataSet
 
 
@@ -31,7 +30,7 @@ class QueryResult(WaylayBaseModel):
     data: List[ResponseDataSet] = Field(
         description="A list of data sets, each with their own time axis. There will be one dataset for each `role` specified in the query (by default a single `input` role).  The data is represented according to the `render`  options in the query (default `COMPACT_WS`)."
     )
-    query: QueryInput
+    query: QueryOutput
     messages: List[QueryExecutionMessage]
 
     model_config = ConfigDict(

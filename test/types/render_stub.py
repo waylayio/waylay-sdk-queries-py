@@ -29,7 +29,7 @@ render_model_schema = json.loads(
   "type" : "object",
   "properties" : {
     "mode" : {
-      "$ref" : "#/components/schemas/_RenderMode"
+      "$ref" : "#/components/schemas/Render_1_anyOf"
     },
     "roll_up" : {
       "title" : "Roll Up",

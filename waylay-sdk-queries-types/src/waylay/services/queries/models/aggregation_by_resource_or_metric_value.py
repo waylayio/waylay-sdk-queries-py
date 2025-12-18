@@ -11,20 +11,15 @@ Do not edit the class manually.
 
 from __future__ import annotations
 
-from typing import (
-    List,
-    Union,
-)
+from typing import List, Union
 
-from typing_extensions import (
-    Annotated,  # >=3.9
-)
+from typing_extensions import Annotated
 
-from ..models.aggregation_method import AggregationMethod
+from ..models.aggregation import Aggregation
 from ..models.aggregations_inner import AggregationsInner
 
 AggregationByResourceOrMetricValue = Union[
-    Annotated[AggregationMethod, ""],
+    Annotated[Aggregation, ""],
     Annotated[
         List[AggregationsInner], "Aggregation methods, leading to sepearate series."
     ],
