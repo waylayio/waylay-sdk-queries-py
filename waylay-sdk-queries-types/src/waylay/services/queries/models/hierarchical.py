@@ -11,14 +11,9 @@ Do not edit the class manually.
 
 from __future__ import annotations
 
-from typing import (
-    List,
-    Union,
-)
+from typing import List, Union
 
-from typing_extensions import (
-    Annotated,  # >=3.9
-)
+from typing_extensions import Annotated
 
 Hierarchical = Union[Annotated[bool, ""], Annotated[List[str], ""]]
 """if true, use hierarchical objects to represent multiple row (or column) dimensions, otherwise multi-keys get concatenated with a dot-delimiter. If the value is a list, only these levels are kept as separate levels, while remaining levels get concatenated keys."""

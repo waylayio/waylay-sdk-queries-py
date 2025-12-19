@@ -15,9 +15,7 @@ from typing import (
     Union,
 )
 
-from typing_extensions import (
-    Annotated,  # >=3.9
-)
+from typing_extensions import Annotated
 
 Datum = Union[Annotated[float, ""], Annotated[str, ""], Annotated[bool, ""]]
 """A single metric value for a timeseries.  A null value indicates that no (aggregated/interpolated) value  exists for the corresponding timestamp.."""

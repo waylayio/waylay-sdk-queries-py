@@ -11,35 +11,22 @@ Do not edit the class manually.
 
 from __future__ import annotations
 
-from typing import (
-    Union,
-)
+from enum import Enum
 
-from typing_extensions import (
-    Annotated,  # >=3.9
-)
 
-from ..models.render_mode_one_of import RenderModeOneOf
-from ..models.render_mode_one_of1 import RenderModeOneOf1
-from ..models.render_mode_one_of2 import RenderModeOneOf2
-from ..models.render_mode_one_of3 import RenderModeOneOf3
-from ..models.render_mode_one_of4 import RenderModeOneOf4
-from ..models.render_mode_one_of5 import RenderModeOneOf5
-from ..models.render_mode_one_of6 import RenderModeOneOf6
-from ..models.render_mode_one_of7 import RenderModeOneOf7
-from ..models.render_mode_one_of8 import RenderModeOneOf8
-from ..models.render_mode_one_of9 import RenderModeOneOf9
+class RenderMode(str, Enum):
+    """Render mode configuration keys.."""
 
-RenderMode = Union[
-    Annotated[RenderModeOneOf, ""],
-    Annotated[RenderModeOneOf1, ""],
-    Annotated[RenderModeOneOf2, ""],
-    Annotated[RenderModeOneOf3, ""],
-    Annotated[RenderModeOneOf4, ""],
-    Annotated[RenderModeOneOf5, ""],
-    Annotated[RenderModeOneOf6, ""],
-    Annotated[RenderModeOneOf7, ""],
-    Annotated[RenderModeOneOf8, ""],
-    Annotated[RenderModeOneOf9, ""],
-]
-"""Render mode configuration keys.."""
+    HEADER_ROW = "HEADER_ROW"
+    COMPACT = "COMPACT"
+    SERIES = "SERIES"
+    HEADER_COLUMN = "HEADER_COLUMN"
+    FLAT_DICT = "FLAT_DICT"
+    HIER_DICT = "HIER_DICT"
+    METRIC_FLAT_DICT = "METRIC_FLAT_DICT"
+    UPLOAD = "UPLOAD"
+    COMPACT_WS = "COMPACT_WS"
+    CSV = "CSV"
+
+    def __str__(self) -> str:
+        return str(self.value)

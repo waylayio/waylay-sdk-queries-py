@@ -47,7 +47,7 @@ series_spec_model_schema = json.loads(
       "example" : "temperature"
     },
     "aggregration" : {
-      "$ref" : "#/components/schemas/AggregationMethod"
+      "$ref" : "#/components/schemas/Aggregration"
     },
     "interpolation" : {
       "$ref" : "#/components/schemas/Interpolation"

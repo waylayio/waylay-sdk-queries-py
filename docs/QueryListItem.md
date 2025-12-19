@@ -7,9 +7,9 @@ Listing of a query definition item.
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **links** | [**QueryHALLinks**](QueryHALLinks.md) |  | 
-**attrs** | **object** | System provided metadata for the query definition. | 
+**attrs** | **Dict[str, object]** | System provided metadata for the query definition. | 
 **name** | **str** | Name of the stored query definition. | 
-**meta** | **object** | User metadata for the query definition. | [optional] 
+**meta** | **Dict[str, object]** | User metadata for the query definition. | [optional] 
 
 ## Example
 

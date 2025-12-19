@@ -11,18 +11,14 @@ Do not edit the class manually.
 
 from __future__ import annotations
 
-from typing import (
-    Union,
-)
+from typing import Union
 
-from typing_extensions import (
-    Annotated,  # >=3.9
-)
+from typing_extensions import Annotated
 
-from ..models.interpolation_method import InterpolationMethod
+from ..models.interpolation_any_of import InterpolationAnyOf
 from ..models.interpolation_spec import InterpolationSpec
 
 DefaultInterpolation = Union[
-    Annotated[InterpolationMethod, ""], Annotated[InterpolationSpec, ""]
+    Annotated[InterpolationAnyOf, ""], Annotated[InterpolationSpec, ""]
 ]
 """Default Interpolation method for the series (if aggregated).."""

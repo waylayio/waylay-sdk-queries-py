@@ -7,7 +7,7 @@ Input data to create a query definition.
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **name** | **str** | Name of the stored query definition. | 
-**meta** | **object** | User metadata for the query definition. | [optional] 
+**meta** | **Dict[str, object]** | User metadata for the query definition. | [optional] 
 **query** | [**QueryInput**](QueryInput.md) |  | 
 
 ## Example

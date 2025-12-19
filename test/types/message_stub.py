@@ -44,6 +44,7 @@ message_model_schema = json.loads(
     "args" : {
       "title" : "args",
       "type" : "object",
+      "additionalProperties" : true,
       "nullable" : true
     }
   },
