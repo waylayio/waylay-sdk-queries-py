@@ -2,6 +2,11 @@
 
 A link target in a HAL response.
 
+**Source:** `waylay.services.queries.models.hal_link`
+
+
+
+
 ## Properties
 
 Name | Type | Description | Notes
@@ -10,23 +15,23 @@ Name | Type | Description | Notes
 **type** | **str** | Type of the resource referenced by this link. | [optional] 
 **method** | [**HALLinkMethod**](HALLinkMethod.md) |  | [optional] 
 
+
 ## Example
 
 ```python
 from waylay.services.queries.models.hal_link import HALLink
 
-# TODO update the JSON string below
-json = "{}"
-# create an instance of HALLink from a JSON string
-hal_link_instance = HALLink.from_json(json)
-# print the JSON string representation of the object
-print HALLink.to_json()
+hal_link = HALLink(href=..., type=..., method=...)
 
-# convert the object into a dict
-hal_link_dict = hal_link_instance.to_dict()
-# create an instance of HALLink from a dict
-hal_link_form_dict = hal_link.from_dict(hal_link_dict)
+# Create from JSON
+hal_link = HALLink.from_json('{ "href": ..., "type": ..., "method": ... }')
+
+# Export to dictionary
+hal_link_dict = hal_link.to_dict()
 ```
+
+
+
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 
 

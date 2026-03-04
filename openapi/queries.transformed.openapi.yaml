@@ -70,246 +70,38 @@ paths:
           in: query
           required: false
           schema:
-            type: string
-            title: Aggregation Override.
-            oneOf:
-              - description: >-
-                  Use the first value (in time) to represent all data for the
-                  sample interval.
-                enum:
-                  - first
-              - description: >-
-                  Use the last value (in time) to represent all data for the
-                  sample interval.
-                enum:
-                  - last
-              - description: >-
-                  Aggregate data by the mean value: The sum of values divided by
-                  number of observations.
-                enum:
-                  - mean
-              - description: >-
-                  Aggregate data by the median value: The n/2-th value when
-                  ordered, the average of the (n-1)/2-th and (n+1)/2-th value
-                  when n is uneven.
-                enum:
-                  - median
-              - description: >-
-                  The sum of all values summarizes the data for the sample
-                  interval.
-                enum:
-                  - sum
-              - description: Use the count of observations in the sample interval.
-                enum:
-                  - count
-              - description: >-
-                  Use the standard deviation of all observations in the sample
-                  interval.
-                enum:
-                  - std
-              - description: Use the maximum of all values in the sample interval.
-                enum:
-                  - max
-              - description: Use the minimum of all values in the sample interval.
-                enum:
-                  - min
-              - title: Precentile
-                description: >-
-                  Aggregate data by the p-th percentile, where p is a number
-                  between 0 and 1.
-                pattern: ^percentile\((1(\.0*)?)|(0\.[0-9]*)\)$
-                example: percentile(0.02)
+            $ref: '#/components/schemas/ExecuteQueryQueriesV1DataPostAggregation'
           x-showExample: false
         - name: interpolation
           in: query
           required: false
           schema:
-            anyOf:
-              - $ref: '#/components/schemas/InterpolationMethod'
-                title: Interpolation Override.
-                oneOf:
-                  - description: >-
-                      Interpolate with the value of the first observed point.
-                      This method also extrapolates.
-                    enum:
-                      - pad
-                  - description: >-
-                      Interpolate with a fixed, user-specified value. This
-                      method also extrapolates.
-                    enum:
-                      - fixed
-                  - description: >-
-                      Same as pad, but using the last observed value. This
-                      method also extrapolates
-                    enum:
-                      - backfill
-                  - description: >-
-                      Linearly go from the first observed value of the gap to
-                      the last observed oneThis method also extrapolates
-                    enum:
-                      - linear
-                  - description: Use the value that is closest in time.
-                    enum:
-                      - nearest
-                  - description: >-
-                      Interpolate with a spline function of order 0, which is a
-                      piecewise polynomial.
-                    enum:
-                      - zero
-                  - description: >-
-                      Interpolate with a spline function of order 1, which is a
-                      piecewise polynomial.
-                    enum:
-                      - slinear
-                  - description: >-
-                      Interpolate with a spline function of order 2, which is a
-                      piecewise polynomial.
-                    enum:
-                      - quadratic
-                  - description: >-
-                      Interpolate with a spline function of order 3, which is a
-                      piecewise polynomial.
-                    enum:
-                      - cubic
-                  - description: >-
-                      Interpolate with a polynomial of the lowest possible
-                      degree passing trough the data points.
-                    enum:
-                      - polynomial
-                  - description: >-
-                      Interpolate with a spline function of a user-specified
-                      order.
-                    enum:
-                      - spline
-                  - description: Interpolate with the derivative of order 1.
-                    enum:
-                      - from_derivatives
-                  - description: Interpolate with a piecewise cubic spline function.
-                    enum:
-                      - pchip
-                  - description: >-
-                      Interpolate with a non-smoothing spline of order 2, called
-                      Akima interpolation.
-                    enum:
-                      - akima
-              - $ref: '#/components/schemas/InterpolationSpec'
-                title: Interpolation Override.
-            title: Interpolation
+            $ref: '#/components/schemas/ExecuteQueryQueriesV1DataPostInterpolation'
           x-showExample: false
         - name: freq
           in: query
           required: false
           schema:
-            type: string
-            title: Grouping Interval Override
-            description: Override for the `freq` query attribute.
-            oneOf:
-              - type: string
-                format: period
-                example: PT3H15M
-                pattern: >-
-                  ^P([0-9]+Y)?([0-9]+M)?([0-9]+W)?([0-9]+D)?(T([0-9]+H)?([0-9]+M)?([0-9]+(\.[0-9]*)?S)?)?$
-                title: 'ISO8601 period '
-                description: >-
-                  A period in [ISO8601
-                  duration](https://en.wikipedia.org/wiki/ISO_8601#Durations)
-                  format.
-              - type: string
-                description: >-
-                  When `inferred` is specified, the frequency of aggregation
-                  will be inferred from the main/first time series. This can be
-                  used to regularize the time series
-                enum:
-                  - inferred
+            $ref: '#/components/schemas/ExecuteQueryQueriesV1DataPostFreq'
           description: Override for the `freq` query attribute.
           x-showExample: false
         - name: from
           in: query
           required: false
           schema:
-            type: string
-            title: From Override.
-            oneOf:
-              - title: ISO8601 absolute timestamp
-                type: string
-                format: date-time
-                example: '2018-03-21T12:23:00+01:00'
-                description: >-
-                  A date or date-time in
-                  [ISO8601](https://en.wikipedia.org/wiki/ISO_8601#Combined_date_and_time_representations)
-                  format. When no timezone is specified, the UTC timezone is
-                  assumed (`+00:00`)
-                pattern: '[0-9]{4}-[0-9]{2}-[0-9]{2}(T.*)?'
-              - type: integer
-                title: UNIX epoch milliseconds
-                minimum: 0
-                description: >-
-                  Absolute timestamp milliseconds in unix epoch since
-                  1970-01-01.
-                example: 1534836422284
-              - type: string
-                format: period
-                example: PT3H15M
-                pattern: >-
-                  ^P([0-9]+Y)?([0-9]+M)?([0-9]+W)?([0-9]+D)?(T([0-9]+H)?([0-9]+M)?([0-9]+(\.[0-9]*)?S)?)?$
-                title: ISO8601 Period Before Now
-                description: >-
-                  Specifies a timestamp before _now_ as a period in [ISO8601
-                  duration](https://en.wikipedia.org/wiki/ISO_8601#Durations)
-                  format.
+            $ref: '#/components/schemas/ExecuteQueryQueriesV1DataPostFrom'
           x-showExample: false
         - name: until
           in: query
           required: false
           schema:
-            type: string
-            title: From Override.
-            oneOf:
-              - title: ISO8601 absolute timestamp
-                type: string
-                format: date-time
-                example: '2018-03-21T12:23:00+01:00'
-                description: >-
-                  A date or date-time in
-                  [ISO8601](https://en.wikipedia.org/wiki/ISO_8601#Combined_date_and_time_representations)
-                  format. When no timezone is specified, the UTC timezone is
-                  assumed (`+00:00`)
-                pattern: '[0-9]{4}-[0-9]{2}-[0-9]{2}(T.*)?'
-              - type: integer
-                title: UNIX epoch milliseconds
-                minimum: 0
-                description: >-
-                  Absolute timestamp milliseconds in unix epoch since
-                  1970-01-01.
-                example: 1534836422284
-              - type: string
-                format: period
-                example: PT3H15M
-                pattern: >-
-                  ^P([0-9]+Y)?([0-9]+M)?([0-9]+W)?([0-9]+D)?(T([0-9]+H)?([0-9]+M)?([0-9]+(\.[0-9]*)?S)?)?$
-                title: ISO8601 Period Before Now
-                description: >-
-                  Specifies a timestamp before _now_ as a period in [ISO8601
-                  duration](https://en.wikipedia.org/wiki/ISO_8601#Durations)
-                  format.
+            $ref: '#/components/schemas/ExecuteQueryQueriesV1DataPostUntil'
           x-showExample: false
         - name: window
           in: query
           required: false
           schema:
-            type: string
-            title: Window Override.
-            oneOf:
-              - type: string
-                format: period
-                example: PT3H15M
-                pattern: >-
-                  ^P([0-9]+Y)?([0-9]+M)?([0-9]+W)?([0-9]+D)?(T([0-9]+H)?([0-9]+M)?([0-9]+(\.[0-9]*)?S)?)?$
-                title: 'ISO8601 period '
-                description: >-
-                  A period in [ISO8601
-                  duration](https://en.wikipedia.org/wiki/ISO_8601#Durations)
-                  format.
+            $ref: '#/components/schemas/ExecuteQueryQueriesV1DataPostWindow'
           x-showExample: false
         - name: periods
           in: query
@@ -322,189 +114,13 @@ paths:
           in: query
           required: false
           schema:
-            anyOf:
-              - $ref: '#/components/schemas/_RenderMode'
-                title: Render Mode
-                oneOf:
-                  - description: >-
-                      Render rows of timestamp and values. Show column headers.
-                      Includes an iso timestamp.
-
-
-                      ###### options
-
-                      - `iso_timestamp`: `True`
-
-                      - `header_array`: `row`
-
-                      - `roll_up`: `False`
-
-                      - `data_axis`: `column`
-                    type: string
-                    enum:
-                      - HEADER_ROW
-                  - description: |-
-                      Render rows of timestamp and values. Show column headers.
-
-                      ###### options
-                      - `iso_timestamp`: `False`
-                      - `header_array`: `row`
-                      - `roll_up`: `False`
-                      - `data_axis`: `column`
-                    type: string
-                    enum:
-                      - COMPACT
-                  - description: >-
-                      Render rows of timestamp and values. Show column headers.
-                      Show the time window attributes.
-
-
-                      ###### options
-
-                      - `iso_timestamp`: `False`
-
-                      - `header_array`: `row`
-
-                      - `roll_up`: `False`
-
-                      - `data_axis`: `column`
-
-                      - `include_window_spec`: `True`
-                    type: string
-                    enum:
-                      - COMPACT_WS
-                  - description: >-
-                      Render timestamps and each series (column) as a values
-                      array. Show column headers.
-
-
-                      ###### options
-
-                      - `iso_timestamp`: `False`
-
-                      - `header_array`: `row`
-
-                      - `data_axis`: `row`
-
-                      - `roll_up`: `True`
-
-                      - `include_window_spec`: `True`
-                    type: string
-                    enum:
-                      - SERIES
-                  - description: >-
-                      Renders row index in `rows`, and each series as a values
-                      array.
-
-
-                      The series are prefixed by their series attributes.The
-                      `rows` index is prefixed by the labels for these
-                      attributes.
-
-
-                      ###### options
-
-                      - `iso_timestamp`: `True`
-
-                      - `header_array`: `column`
-
-                      - `roll_up`: `False`
-
-                      - `data_axis`: `row`
-                    type: string
-                    enum:
-                      - HEADER_COLUMN
-                  - description: >-
-                      Render an object for each observation. Uses flattened
-                      keys.
-
-
-                      ###### options
-
-                      - `iso_timestamp`: `True`
-
-                      - `hierarchical`: `False`
-
-                      - `show_levels`: `True`
-
-                      - `roll_up`: `False`
-                    type: string
-                    enum:
-                      - FLAT_DICT
-                  - description: >-
-                      Render an hierarchical object for each observation. Shows
-                      an iso timestamp.
-
-
-                      ###### options
-
-                      - `iso_timestamp`: `True`
-
-                      - `hierarchical`: `True`
-
-                      - `show_levels`: `True`
-
-                      - `roll_up`: `True`
-                    type: string
-                    enum:
-                      - HIER_DICT
-                  - description: >-
-                      Render an object with metric keys for each observation.
-                      Shows an iso timestamp.
-
-
-                      ###### options
-
-                      - `iso_timestamp`: `True`
-
-                      - `hierarchical`: `['metric']`
-
-                      - `show_levels`: `False`
-
-                      - `roll_up`: `True`
-
-                      - `key_skip_empty`: `True`
-                    type: string
-                    enum:
-                      - METRIC_FLAT_DICT
-                  - description: >-
-                      Render in an object format compatible with the
-                      `/data/v1/events` upload.
-
-
-                      ###### options
-
-                      - `iso_timestamp`: `False`
-
-                      - `hierarchical`: `False`
-
-                      - `show_levels`: `False`
-
-                      - `roll_up`: `True`
-                    type: string
-                    enum:
-                      - UPLOAD
-                  - description: |-
-                      Render in csv format with row headers.
-
-                      ###### options
-                      - `iso_timestamp`: `False`
-                    type: string
-                    enum:
-                      - CSV
-              - $ref: '#/components/schemas/Render'
-                title: Render Override.
-            title: Render
+            $ref: '#/components/schemas/ExecuteQueryQueriesV1DataPostRender'
           x-showExample: false
         - name: accept
           in: header
           required: false
           schema:
-            anyOf:
-              - type: string
-                nullable: true
-            title: Accept header
-            description: Use a 'text/csv' accept header to get CSV formatted results.
+            $ref: '#/components/schemas/ExecuteQueryQueriesV1DataPostAccept'
           description: Use a 'text/csv' accept header to get CSV formatted results.
           x-showExample: false
       requestBody:
@@ -2064,246 +1680,40 @@ paths:
           in: query
           required: false
           schema:
-            type: string
-            title: Aggregation Override.
-            oneOf:
-              - description: >-
-                  Use the first value (in time) to represent all data for the
-                  sample interval.
-                enum:
-                  - first
-              - description: >-
-                  Use the last value (in time) to represent all data for the
-                  sample interval.
-                enum:
-                  - last
-              - description: >-
-                  Aggregate data by the mean value: The sum of values divided by
-                  number of observations.
-                enum:
-                  - mean
-              - description: >-
-                  Aggregate data by the median value: The n/2-th value when
-                  ordered, the average of the (n-1)/2-th and (n+1)/2-th value
-                  when n is uneven.
-                enum:
-                  - median
-              - description: >-
-                  The sum of all values summarizes the data for the sample
-                  interval.
-                enum:
-                  - sum
-              - description: Use the count of observations in the sample interval.
-                enum:
-                  - count
-              - description: >-
-                  Use the standard deviation of all observations in the sample
-                  interval.
-                enum:
-                  - std
-              - description: Use the maximum of all values in the sample interval.
-                enum:
-                  - max
-              - description: Use the minimum of all values in the sample interval.
-                enum:
-                  - min
-              - title: Precentile
-                description: >-
-                  Aggregate data by the p-th percentile, where p is a number
-                  between 0 and 1.
-                pattern: ^percentile\((1(\.0*)?)|(0\.[0-9]*)\)$
-                example: percentile(0.02)
+            $ref: >-
+              #/components/schemas/ExecuteByNameQueriesV1DataQueryNameGetAggregation
           x-showExample: false
         - name: interpolation
           in: query
           required: false
           schema:
-            anyOf:
-              - $ref: '#/components/schemas/InterpolationMethod'
-                title: Interpolation Override.
-                oneOf:
-                  - description: >-
-                      Interpolate with the value of the first observed point.
-                      This method also extrapolates.
-                    enum:
-                      - pad
-                  - description: >-
-                      Interpolate with a fixed, user-specified value. This
-                      method also extrapolates.
-                    enum:
-                      - fixed
-                  - description: >-
-                      Same as pad, but using the last observed value. This
-                      method also extrapolates
-                    enum:
-                      - backfill
-                  - description: >-
-                      Linearly go from the first observed value of the gap to
-                      the last observed oneThis method also extrapolates
-                    enum:
-                      - linear
-                  - description: Use the value that is closest in time.
-                    enum:
-                      - nearest
-                  - description: >-
-                      Interpolate with a spline function of order 0, which is a
-                      piecewise polynomial.
-                    enum:
-                      - zero
-                  - description: >-
-                      Interpolate with a spline function of order 1, which is a
-                      piecewise polynomial.
-                    enum:
-                      - slinear
-                  - description: >-
-                      Interpolate with a spline function of order 2, which is a
-                      piecewise polynomial.
-                    enum:
-                      - quadratic
-                  - description: >-
-                      Interpolate with a spline function of order 3, which is a
-                      piecewise polynomial.
-                    enum:
-                      - cubic
-                  - description: >-
-                      Interpolate with a polynomial of the lowest possible
-                      degree passing trough the data points.
-                    enum:
-                      - polynomial
-                  - description: >-
-                      Interpolate with a spline function of a user-specified
-                      order.
-                    enum:
-                      - spline
-                  - description: Interpolate with the derivative of order 1.
-                    enum:
-                      - from_derivatives
-                  - description: Interpolate with a piecewise cubic spline function.
-                    enum:
-                      - pchip
-                  - description: >-
-                      Interpolate with a non-smoothing spline of order 2, called
-                      Akima interpolation.
-                    enum:
-                      - akima
-              - $ref: '#/components/schemas/InterpolationSpec'
-                title: Interpolation Override.
-            title: Interpolation
+            $ref: >-
+              #/components/schemas/ExecuteByNameQueriesV1DataQueryNameGetInterpolation
           x-showExample: false
         - name: freq
           in: query
           required: false
           schema:
-            type: string
-            title: Grouping Interval Override
-            description: Override for the `freq` query attribute.
-            oneOf:
-              - type: string
-                format: period
-                example: PT3H15M
-                pattern: >-
-                  ^P([0-9]+Y)?([0-9]+M)?([0-9]+W)?([0-9]+D)?(T([0-9]+H)?([0-9]+M)?([0-9]+(\.[0-9]*)?S)?)?$
-                title: 'ISO8601 period '
-                description: >-
-                  A period in [ISO8601
-                  duration](https://en.wikipedia.org/wiki/ISO_8601#Durations)
-                  format.
-              - type: string
-                description: >-
-                  When `inferred` is specified, the frequency of aggregation
-                  will be inferred from the main/first time series. This can be
-                  used to regularize the time series
-                enum:
-                  - inferred
+            $ref: '#/components/schemas/ExecuteByNameQueriesV1DataQueryNameGetFreq'
           description: Override for the `freq` query attribute.
           x-showExample: false
         - name: from
           in: query
           required: false
           schema:
-            type: string
-            title: From Override.
-            oneOf:
-              - title: ISO8601 absolute timestamp
-                type: string
-                format: date-time
-                example: '2018-03-21T12:23:00+01:00'
-                description: >-
-                  A date or date-time in
-                  [ISO8601](https://en.wikipedia.org/wiki/ISO_8601#Combined_date_and_time_representations)
-                  format. When no timezone is specified, the UTC timezone is
-                  assumed (`+00:00`)
-                pattern: '[0-9]{4}-[0-9]{2}-[0-9]{2}(T.*)?'
-              - type: integer
-                title: UNIX epoch milliseconds
-                minimum: 0
-                description: >-
-                  Absolute timestamp milliseconds in unix epoch since
-                  1970-01-01.
-                example: 1534836422284
-              - type: string
-                format: period
-                example: PT3H15M
-                pattern: >-
-                  ^P([0-9]+Y)?([0-9]+M)?([0-9]+W)?([0-9]+D)?(T([0-9]+H)?([0-9]+M)?([0-9]+(\.[0-9]*)?S)?)?$
-                title: ISO8601 Period Before Now
-                description: >-
-                  Specifies a timestamp before _now_ as a period in [ISO8601
-                  duration](https://en.wikipedia.org/wiki/ISO_8601#Durations)
-                  format.
+            $ref: '#/components/schemas/ExecuteByNameQueriesV1DataQueryNameGetFrom'
           x-showExample: false
         - name: until
           in: query
           required: false
           schema:
-            type: string
-            title: From Override.
-            oneOf:
-              - title: ISO8601 absolute timestamp
-                type: string
-                format: date-time
-                example: '2018-03-21T12:23:00+01:00'
-                description: >-
-                  A date or date-time in
-                  [ISO8601](https://en.wikipedia.org/wiki/ISO_8601#Combined_date_and_time_representations)
-                  format. When no timezone is specified, the UTC timezone is
-                  assumed (`+00:00`)
-                pattern: '[0-9]{4}-[0-9]{2}-[0-9]{2}(T.*)?'
-              - type: integer
-                title: UNIX epoch milliseconds
-                minimum: 0
-                description: >-
-                  Absolute timestamp milliseconds in unix epoch since
-                  1970-01-01.
-                example: 1534836422284
-              - type: string
-                format: period
-                example: PT3H15M
-                pattern: >-
-                  ^P([0-9]+Y)?([0-9]+M)?([0-9]+W)?([0-9]+D)?(T([0-9]+H)?([0-9]+M)?([0-9]+(\.[0-9]*)?S)?)?$
-                title: ISO8601 Period Before Now
-                description: >-
-                  Specifies a timestamp before _now_ as a period in [ISO8601
-                  duration](https://en.wikipedia.org/wiki/ISO_8601#Durations)
-                  format.
+            $ref: '#/components/schemas/ExecuteByNameQueriesV1DataQueryNameGetUntil'
           x-showExample: false
         - name: window
           in: query
           required: false
           schema:
-            type: string
-            title: Window Override.
-            oneOf:
-              - type: string
-                format: period
-                example: PT3H15M
-                pattern: >-
-                  ^P([0-9]+Y)?([0-9]+M)?([0-9]+W)?([0-9]+D)?(T([0-9]+H)?([0-9]+M)?([0-9]+(\.[0-9]*)?S)?)?$
-                title: 'ISO8601 period '
-                description: >-
-                  A period in [ISO8601
-                  duration](https://en.wikipedia.org/wiki/ISO_8601#Durations)
-                  format.
+            $ref: '#/components/schemas/ExecuteByNameQueriesV1DataQueryNameGetWindow'
           x-showExample: false
         - name: periods
           in: query
@@ -2316,189 +1726,13 @@ paths:
           in: query
           required: false
           schema:
-            anyOf:
-              - $ref: '#/components/schemas/_RenderMode'
-                title: Render Mode
-                oneOf:
-                  - description: >-
-                      Render rows of timestamp and values. Show column headers.
-                      Includes an iso timestamp.
-
-
-                      ###### options
-
-                      - `iso_timestamp`: `True`
-
-                      - `header_array`: `row`
-
-                      - `roll_up`: `False`
-
-                      - `data_axis`: `column`
-                    type: string
-                    enum:
-                      - HEADER_ROW
-                  - description: |-
-                      Render rows of timestamp and values. Show column headers.
-
-                      ###### options
-                      - `iso_timestamp`: `False`
-                      - `header_array`: `row`
-                      - `roll_up`: `False`
-                      - `data_axis`: `column`
-                    type: string
-                    enum:
-                      - COMPACT
-                  - description: >-
-                      Render rows of timestamp and values. Show column headers.
-                      Show the time window attributes.
-
-
-                      ###### options
-
-                      - `iso_timestamp`: `False`
-
-                      - `header_array`: `row`
-
-                      - `roll_up`: `False`
-
-                      - `data_axis`: `column`
-
-                      - `include_window_spec`: `True`
-                    type: string
-                    enum:
-                      - COMPACT_WS
-                  - description: >-
-                      Render timestamps and each series (column) as a values
-                      array. Show column headers.
-
-
-                      ###### options
-
-                      - `iso_timestamp`: `False`
-
-                      - `header_array`: `row`
-
-                      - `data_axis`: `row`
-
-                      - `roll_up`: `True`
-
-                      - `include_window_spec`: `True`
-                    type: string
-                    enum:
-                      - SERIES
-                  - description: >-
-                      Renders row index in `rows`, and each series as a values
-                      array.
-
-
-                      The series are prefixed by their series attributes.The
-                      `rows` index is prefixed by the labels for these
-                      attributes.
-
-
-                      ###### options
-
-                      - `iso_timestamp`: `True`
-
-                      - `header_array`: `column`
-
-                      - `roll_up`: `False`
-
-                      - `data_axis`: `row`
-                    type: string
-                    enum:
-                      - HEADER_COLUMN
-                  - description: >-
-                      Render an object for each observation. Uses flattened
-                      keys.
-
-
-                      ###### options
-
-                      - `iso_timestamp`: `True`
-
-                      - `hierarchical`: `False`
-
-                      - `show_levels`: `True`
-
-                      - `roll_up`: `False`
-                    type: string
-                    enum:
-                      - FLAT_DICT
-                  - description: >-
-                      Render an hierarchical object for each observation. Shows
-                      an iso timestamp.
-
-
-                      ###### options
-
-                      - `iso_timestamp`: `True`
-
-                      - `hierarchical`: `True`
-
-                      - `show_levels`: `True`
-
-                      - `roll_up`: `True`
-                    type: string
-                    enum:
-                      - HIER_DICT
-                  - description: >-
-                      Render an object with metric keys for each observation.
-                      Shows an iso timestamp.
-
-
-                      ###### options
-
-                      - `iso_timestamp`: `True`
-
-                      - `hierarchical`: `['metric']`
-
-                      - `show_levels`: `False`
-
-                      - `roll_up`: `True`
-
-                      - `key_skip_empty`: `True`
-                    type: string
-                    enum:
-                      - METRIC_FLAT_DICT
-                  - description: >-
-                      Render in an object format compatible with the
-                      `/data/v1/events` upload.
-
-
-                      ###### options
-
-                      - `iso_timestamp`: `False`
-
-                      - `hierarchical`: `False`
-
-                      - `show_levels`: `False`
-
-                      - `roll_up`: `True`
-                    type: string
-                    enum:
-                      - UPLOAD
-                  - description: |-
-                      Render in csv format with row headers.
-
-                      ###### options
-                      - `iso_timestamp`: `False`
-                    type: string
-                    enum:
-                      - CSV
-              - $ref: '#/components/schemas/Render'
-                title: Render Override.
-            title: Render
+            $ref: '#/components/schemas/ExecuteByNameQueriesV1DataQueryNameGetRender'
           x-showExample: false
         - name: accept
           in: header
           required: false
           schema:
-            anyOf:
-              - type: string
-                nullable: true
-            title: Accept header
-            description: Use a 'text/csv' accept header to get CSV formatted results.
+            $ref: '#/components/schemas/ExecuteByNameQueriesV1DataQueryNameGetAccept'
           description: Use a 'text/csv' accept header to get CSV formatted results.
           x-showExample: false
       responses:
@@ -4298,26 +3532,10 @@ components:
         at:
           $ref: '#/components/schemas/AlignAt'
           oneOf:
-            - type: string
-              description: >-
-                Align to a fixed grid defined by the alignment `frequency` and
-                `timezone`.
-              enum:
-                - grid
-            - type: string
-              description: >-
-                Align a the `from` boundary if specified, otherwise use the
-                `until` boundary (specfied or computed)
-              enum:
-                - boundary
-            - type: string
-              description: Align a the `from` window boundary.
-              enum:
-                - from
-            - type: string
-              description: Align a the `until` window boundary
-              enum:
-                - until
+            - $ref: '#/components/schemas/AlignmentGrid'
+            - $ref: '#/components/schemas/AlignmentBoundary'
+            - $ref: '#/components/schemas/AlignmentFrom'
+            - $ref: '#/components/schemas/AlignmentUntil'
           title: Align At
           description: >-
             Method used to align the aggregation grid. The default value is
@@ -4325,24 +3543,9 @@ components:
         shift:
           $ref: '#/components/schemas/AlignShift'
           oneOf:
-            - type: string
-              description: >-
-                Shift both boundaries (`align.at=grid`) or first boundary
-                (`align.at=until`) backward to align with the grid.
-              enum:
-                - backward
-            - type: string
-              description: >-
-                Shift both boundaries (`align.at=grid`) or last boundary
-                (`align.at=from`) forward to align with the grid.
-              enum:
-                - forward
-            - type: string
-              description: >-
-                Shift first boundary backward, and last boundary forward to
-                align with the grid
-              enum:
-                - wrap
+            - $ref: '#/components/schemas/AlignmentBackward'
+            - $ref: '#/components/schemas/AlignmentForward'
+            - $ref: '#/components/schemas/AlignmentWrap'
           title: Align Shift
           description: |
 
@@ -4364,13 +3567,7 @@ components:
                 duration](https://en.wikipedia.org/wiki/ISO_8601#Durations)
                 format.
               example: PT3H15M
-            - type: string
-              description: >-
-                When `inferred` is specified, the frequency of aggregation will
-                be inferred from the main/first time series. This can be used to
-                regularize the time series
-              enum:
-                - inferred
+            - $ref: '#/components/schemas/AlignmentInferred'
           type: string
           title: Alignment Grid interval.
           description: >
@@ -4691,68 +3888,20 @@ components:
       properties:
         method:
           oneOf:
-            - description: >-
-                Interpolate with the value of the first observed point. This
-                method also extrapolates.
-              enum:
-                - pad
-            - description: >-
-                Interpolate with a fixed, user-specified value. This method also
-                extrapolates.
-              enum:
-                - fixed
-            - description: >-
-                Same as pad, but using the last observed value. This method also
-                extrapolates
-              enum:
-                - backfill
-            - description: >-
-                Linearly go from the first observed value of the gap to the last
-                observed oneThis method also extrapolates
-              enum:
-                - linear
-            - description: Use the value that is closest in time.
-              enum:
-                - nearest
-            - description: >-
-                Interpolate with a spline function of order 0, which is a
-                piecewise polynomial.
-              enum:
-                - zero
-            - description: >-
-                Interpolate with a spline function of order 1, which is a
-                piecewise polynomial.
-              enum:
-                - slinear
-            - description: >-
-                Interpolate with a spline function of order 2, which is a
-                piecewise polynomial.
-              enum:
-                - quadratic
-            - description: >-
-                Interpolate with a spline function of order 3, which is a
-                piecewise polynomial.
-              enum:
-                - cubic
-            - description: >-
-                Interpolate with a polynomial of the lowest possible degree
-                passing trough the data points.
-              enum:
-                - polynomial
-            - description: Interpolate with a spline function of a user-specified order.
-              enum:
-                - spline
-            - description: Interpolate with the derivative of order 1.
-              enum:
-                - from_derivatives
-            - description: Interpolate with a piecewise cubic spline function.
-              enum:
-                - pchip
-            - description: >-
-                Interpolate with a non-smoothing spline of order 2, called Akima
-                interpolation.
-              enum:
-                - akima
+            - $ref: '#/components/schemas/InterpolationSpecPad'
+            - $ref: '#/components/schemas/InterpolationSpecFixed'
+            - $ref: '#/components/schemas/InterpolationSpecBackfill'
+            - $ref: '#/components/schemas/InterpolationSpecLinear'
+            - $ref: '#/components/schemas/InterpolationSpecNearest'
+            - $ref: '#/components/schemas/InterpolationSpecZero'
+            - $ref: '#/components/schemas/InterpolationSpecSlinear'
+            - $ref: '#/components/schemas/InterpolationSpecQuadratic'
+            - $ref: '#/components/schemas/InterpolationSpecCubic'
+            - $ref: '#/components/schemas/InterpolationSpecPolynomial'
+            - $ref: '#/components/schemas/InterpolationSpecSpline'
+            - $ref: '#/components/schemas/InterpolationSpecFrom_derivatives'
+            - $ref: '#/components/schemas/InterpolationSpecPchip'
+            - $ref: '#/components/schemas/InterpolationSpecAkima'
           type: string
           title: Interpolation method
         value:
@@ -4975,46 +4124,15 @@ components:
         aggregation:
           anyOf:
             - oneOf:
-                - description: >-
-                    Use the first value (in time) to represent all data for the
-                    sample interval.
-                  enum:
-                    - first
-                - description: >-
-                    Use the last value (in time) to represent all data for the
-                    sample interval.
-                  enum:
-                    - last
-                - description: >-
-                    Aggregate data by the mean value: The sum of values divided
-                    by number of observations.
-                  enum:
-                    - mean
-                - description: >-
-                    Aggregate data by the median value: The n/2-th value when
-                    ordered, the average of the (n-1)/2-th and (n+1)/2-th value
-                    when n is uneven.
-                  enum:
-                    - median
-                - description: >-
-                    The sum of all values summarizes the data for the sample
-                    interval.
-                  enum:
-                    - sum
-                - description: Use the count of observations in the sample interval.
-                  enum:
-                    - count
-                - description: >-
-                    Use the standard deviation of all observations in the sample
-                    interval.
-                  enum:
-                    - std
-                - description: Use the maximum of all values in the sample interval.
-                  enum:
-                    - max
-                - description: Use the minimum of all values in the sample interval.
-                  enum:
-                    - min
+                - $ref: '#/components/schemas/Query-InputFirst'
+                - $ref: '#/components/schemas/Query-InputLast'
+                - $ref: '#/components/schemas/Query-InputMean'
+                - $ref: '#/components/schemas/Query-InputMedian'
+                - $ref: '#/components/schemas/Query-InputSum'
+                - $ref: '#/components/schemas/Query-InputCount'
+                - $ref: '#/components/schemas/Query-InputStd'
+                - $ref: '#/components/schemas/Query-InputMax'
+                - $ref: '#/components/schemas/Query-InputMin'
                 - pattern: ^percentile\((1(\.0*)?)|(0\.[0-9]*)\)$
                   title: Precentile
                   description: >-
@@ -5028,46 +4146,15 @@ components:
             - items:
                 anyOf:
                   - oneOf:
-                      - description: >-
-                          Use the first value (in time) to represent all data
-                          for the sample interval.
-                        enum:
-                          - first
-                      - description: >-
-                          Use the last value (in time) to represent all data for
-                          the sample interval.
-                        enum:
-                          - last
-                      - description: >-
-                          Aggregate data by the mean value: The sum of values
-                          divided by number of observations.
-                        enum:
-                          - mean
-                      - description: >-
-                          Aggregate data by the median value: The n/2-th value
-                          when ordered, the average of the (n-1)/2-th and
-                          (n+1)/2-th value when n is uneven.
-                        enum:
-                          - median
-                      - description: >-
-                          The sum of all values summarizes the data for the
-                          sample interval.
-                        enum:
-                          - sum
-                      - description: Use the count of observations in the sample interval.
-                        enum:
-                          - count
-                      - description: >-
-                          Use the standard deviation of all observations in the
-                          sample interval.
-                        enum:
-                          - std
-                      - description: Use the maximum of all values in the sample interval.
-                        enum:
-                          - max
-                      - description: Use the minimum of all values in the sample interval.
-                        enum:
-                          - min
+                      - $ref: '#/components/schemas/Query-InputFirst'
+                      - $ref: '#/components/schemas/Query-InputLast'
+                      - $ref: '#/components/schemas/Query-InputMean'
+                      - $ref: '#/components/schemas/Query-InputMedian'
+                      - $ref: '#/components/schemas/Query-InputSum'
+                      - $ref: '#/components/schemas/Query-InputCount'
+                      - $ref: '#/components/schemas/Query-InputStd'
+                      - $ref: '#/components/schemas/Query-InputMax'
+                      - $ref: '#/components/schemas/Query-InputMin'
                       - pattern: ^percentile\((1(\.0*)?)|(0\.[0-9]*)\)$
                         title: Precentile
                         description: >-
@@ -5085,46 +4172,15 @@ components:
             - additionalProperties:
                 anyOf:
                   - oneOf:
-                      - description: >-
-                          Use the first value (in time) to represent all data
-                          for the sample interval.
-                        enum:
-                          - first
-                      - description: >-
-                          Use the last value (in time) to represent all data for
-                          the sample interval.
-                        enum:
-                          - last
-                      - description: >-
-                          Aggregate data by the mean value: The sum of values
-                          divided by number of observations.
-                        enum:
-                          - mean
-                      - description: >-
-                          Aggregate data by the median value: The n/2-th value
-                          when ordered, the average of the (n-1)/2-th and
-                          (n+1)/2-th value when n is uneven.
-                        enum:
-                          - median
-                      - description: >-
-                          The sum of all values summarizes the data for the
-                          sample interval.
-                        enum:
-                          - sum
-                      - description: Use the count of observations in the sample interval.
-                        enum:
-                          - count
-                      - description: >-
-                          Use the standard deviation of all observations in the
-                          sample interval.
-                        enum:
-                          - std
-                      - description: Use the maximum of all values in the sample interval.
-                        enum:
-                          - max
-                      - description: Use the minimum of all values in the sample interval.
-                        enum:
-                          - min
+                      - $ref: '#/components/schemas/Query-InputFirst'
+                      - $ref: '#/components/schemas/Query-InputLast'
+                      - $ref: '#/components/schemas/Query-InputMean'
+                      - $ref: '#/components/schemas/Query-InputMedian'
+                      - $ref: '#/components/schemas/Query-InputSum'
+                      - $ref: '#/components/schemas/Query-InputCount'
+                      - $ref: '#/components/schemas/Query-InputStd'
+                      - $ref: '#/components/schemas/Query-InputMax'
+                      - $ref: '#/components/schemas/Query-InputMin'
                       - pattern: ^percentile\((1(\.0*)?)|(0\.[0-9]*)\)$
                         title: Precentile
                         description: >-
@@ -5138,53 +4194,15 @@ components:
                   - items:
                       anyOf:
                         - oneOf:
-                            - description: >-
-                                Use the first value (in time) to represent all
-                                data for the sample interval.
-                              enum:
-                                - first
-                            - description: >-
-                                Use the last value (in time) to represent all
-                                data for the sample interval.
-                              enum:
-                                - last
-                            - description: >-
-                                Aggregate data by the mean value: The sum of
-                                values divided by number of observations.
-                              enum:
-                                - mean
-                            - description: >-
-                                Aggregate data by the median value: The n/2-th
-                                value when ordered, the average of the
-                                (n-1)/2-th and (n+1)/2-th value when n is
-                                uneven.
-                              enum:
-                                - median
-                            - description: >-
-                                The sum of all values summarizes the data for
-                                the sample interval.
-                              enum:
-                                - sum
-                            - description: >-
-                                Use the count of observations in the sample
-                                interval.
-                              enum:
-                                - count
-                            - description: >-
-                                Use the standard deviation of all observations
-                                in the sample interval.
-                              enum:
-                                - std
-                            - description: >-
-                                Use the maximum of all values in the sample
-                                interval.
-                              enum:
-                                - max
-                            - description: >-
-                                Use the minimum of all values in the sample
-                                interval.
-                              enum:
-                                - min
+                            - $ref: '#/components/schemas/Query-InputFirst'
+                            - $ref: '#/components/schemas/Query-InputLast'
+                            - $ref: '#/components/schemas/Query-InputMean'
+                            - $ref: '#/components/schemas/Query-InputMedian'
+                            - $ref: '#/components/schemas/Query-InputSum'
+                            - $ref: '#/components/schemas/Query-InputCount'
+                            - $ref: '#/components/schemas/Query-InputStd'
+                            - $ref: '#/components/schemas/Query-InputMax'
+                            - $ref: '#/components/schemas/Query-InputMin'
                             - pattern: ^percentile\((1(\.0*)?)|(0\.[0-9]*)\)$
                               title: Precentile
                               description: >-
@@ -5208,53 +4226,15 @@ components:
                   - additionalProperties:
                       anyOf:
                         - oneOf:
-                            - description: >-
-                                Use the first value (in time) to represent all
-                                data for the sample interval.
-                              enum:
-                                - first
-                            - description: >-
-                                Use the last value (in time) to represent all
-                                data for the sample interval.
-                              enum:
-                                - last
-                            - description: >-
-                                Aggregate data by the mean value: The sum of
-                                values divided by number of observations.
-                              enum:
-                                - mean
-                            - description: >-
-                                Aggregate data by the median value: The n/2-th
-                                value when ordered, the average of the
-                                (n-1)/2-th and (n+1)/2-th value when n is
-                                uneven.
-                              enum:
-                                - median
-                            - description: >-
-                                The sum of all values summarizes the data for
-                                the sample interval.
-                              enum:
-                                - sum
-                            - description: >-
-                                Use the count of observations in the sample
-                                interval.
-                              enum:
-                                - count
-                            - description: >-
-                                Use the standard deviation of all observations
-                                in the sample interval.
-                              enum:
-                                - std
-                            - description: >-
-                                Use the maximum of all values in the sample
-                                interval.
-                              enum:
-                                - max
-                            - description: >-
-                                Use the minimum of all values in the sample
-                                interval.
-                              enum:
-                                - min
+                            - $ref: '#/components/schemas/Query-InputFirst'
+                            - $ref: '#/components/schemas/Query-InputLast'
+                            - $ref: '#/components/schemas/Query-InputMean'
+                            - $ref: '#/components/schemas/Query-InputMedian'
+                            - $ref: '#/components/schemas/Query-InputSum'
+                            - $ref: '#/components/schemas/Query-InputCount'
+                            - $ref: '#/components/schemas/Query-InputStd'
+                            - $ref: '#/components/schemas/Query-InputMax'
+                            - $ref: '#/components/schemas/Query-InputMin'
                             - pattern: ^percentile\((1(\.0*)?)|(0\.[0-9]*)\)$
                               title: Precentile
                               description: >-
@@ -5268,54 +4248,15 @@ components:
                         - items:
                             anyOf:
                               - oneOf:
-                                  - description: >-
-                                      Use the first value (in time) to represent
-                                      all data for the sample interval.
-                                    enum:
-                                      - first
-                                  - description: >-
-                                      Use the last value (in time) to represent
-                                      all data for the sample interval.
-                                    enum:
-                                      - last
-                                  - description: >-
-                                      Aggregate data by the mean value: The sum
-                                      of values divided by number of
-                                      observations.
-                                    enum:
-                                      - mean
-                                  - description: >-
-                                      Aggregate data by the median value: The
-                                      n/2-th value when ordered, the average of
-                                      the (n-1)/2-th and (n+1)/2-th value when n
-                                      is uneven.
-                                    enum:
-                                      - median
-                                  - description: >-
-                                      The sum of all values summarizes the data
-                                      for the sample interval.
-                                    enum:
-                                      - sum
-                                  - description: >-
-                                      Use the count of observations in the
-                                      sample interval.
-                                    enum:
-                                      - count
-                                  - description: >-
-                                      Use the standard deviation of all
-                                      observations in the sample interval.
-                                    enum:
-                                      - std
-                                  - description: >-
-                                      Use the maximum of all values in the
-                                      sample interval.
-                                    enum:
-                                      - max
-                                  - description: >-
-                                      Use the minimum of all values in the
-                                      sample interval.
-                                    enum:
-                                      - min
+                                  - $ref: '#/components/schemas/Query-InputFirst'
+                                  - $ref: '#/components/schemas/Query-InputLast'
+                                  - $ref: '#/components/schemas/Query-InputMean'
+                                  - $ref: '#/components/schemas/Query-InputMedian'
+                                  - $ref: '#/components/schemas/Query-InputSum'
+                                  - $ref: '#/components/schemas/Query-InputCount'
+                                  - $ref: '#/components/schemas/Query-InputStd'
+                                  - $ref: '#/components/schemas/Query-InputMax'
+                                  - $ref: '#/components/schemas/Query-InputMin'
                                   - pattern: ^percentile\((1(\.0*)?)|(0\.[0-9]*)\)$
                                     title: Precentile
                                     description: >-
@@ -5344,70 +4285,20 @@ components:
           anyOf:
             - $ref: '#/components/schemas/InterpolationMethod'
               oneOf:
-                - description: >-
-                    Interpolate with the value of the first observed point. This
-                    method also extrapolates.
-                  enum:
-                    - pad
-                - description: >-
-                    Interpolate with a fixed, user-specified value. This method
-                    also extrapolates.
-                  enum:
-                    - fixed
-                - description: >-
-                    Same as pad, but using the last observed value. This method
-                    also extrapolates
-                  enum:
-                    - backfill
-                - description: >-
-                    Linearly go from the first observed value of the gap to the
-                    last observed oneThis method also extrapolates
-                  enum:
-                    - linear
-                - description: Use the value that is closest in time.
-                  enum:
-                    - nearest
-                - description: >-
-                    Interpolate with a spline function of order 0, which is a
-                    piecewise polynomial.
-                  enum:
-                    - zero
-                - description: >-
-                    Interpolate with a spline function of order 1, which is a
-                    piecewise polynomial.
-                  enum:
-                    - slinear
-                - description: >-
-                    Interpolate with a spline function of order 2, which is a
-                    piecewise polynomial.
-                  enum:
-                    - quadratic
-                - description: >-
-                    Interpolate with a spline function of order 3, which is a
-                    piecewise polynomial.
-                  enum:
-                    - cubic
-                - description: >-
-                    Interpolate with a polynomial of the lowest possible degree
-                    passing trough the data points.
-                  enum:
-                    - polynomial
-                - description: >-
-                    Interpolate with a spline function of a user-specified
-                    order.
-                  enum:
-                    - spline
-                - description: Interpolate with the derivative of order 1.
-                  enum:
-                    - from_derivatives
-                - description: Interpolate with a piecewise cubic spline function.
-                  enum:
-                    - pchip
-                - description: >-
-                    Interpolate with a non-smoothing spline of order 2, called
-                    Akima interpolation.
-                  enum:
-                    - akima
+                - $ref: '#/components/schemas/Query-InputPad'
+                - $ref: '#/components/schemas/Query-InputFixed'
+                - $ref: '#/components/schemas/Query-InputBackfill'
+                - $ref: '#/components/schemas/Query-InputLinear'
+                - $ref: '#/components/schemas/Query-InputNearest'
+                - $ref: '#/components/schemas/Query-InputZero'
+                - $ref: '#/components/schemas/Query-InputSlinear'
+                - $ref: '#/components/schemas/Query-InputQuadratic'
+                - $ref: '#/components/schemas/Query-InputCubic'
+                - $ref: '#/components/schemas/Query-InputPolynomial'
+                - $ref: '#/components/schemas/Query-InputSpline'
+                - $ref: '#/components/schemas/Query-InputFrom_derivatives'
+                - $ref: '#/components/schemas/Query-InputPchip'
+                - $ref: '#/components/schemas/Query-InputAkima'
               title: Interpolation Method
             - $ref: '#/components/schemas/InterpolationSpec'
               title: Interpolation specification.
@@ -5425,13 +4316,7 @@ components:
                 duration](https://en.wikipedia.org/wiki/ISO_8601#Durations)
                 format.
               example: PT3H15M
-            - type: string
-              description: >-
-                When `inferred` is specified, the frequency of aggregation will
-                be inferred from the main/first time series. This can be used to
-                regularize the time series
-              enum:
-                - inferred
+            - $ref: '#/components/schemas/Query-InputInferred'
           type: string
           title: Grouping interval
           description: >-
@@ -5564,46 +4449,15 @@ components:
         aggregation:
           anyOf:
             - oneOf:
-                - description: >-
-                    Use the first value (in time) to represent all data for the
-                    sample interval.
-                  enum:
-                    - first
-                - description: >-
-                    Use the last value (in time) to represent all data for the
-                    sample interval.
-                  enum:
-                    - last
-                - description: >-
-                    Aggregate data by the mean value: The sum of values divided
-                    by number of observations.
-                  enum:
-                    - mean
-                - description: >-
-                    Aggregate data by the median value: The n/2-th value when
-                    ordered, the average of the (n-1)/2-th and (n+1)/2-th value
-                    when n is uneven.
-                  enum:
-                    - median
-                - description: >-
-                    The sum of all values summarizes the data for the sample
-                    interval.
-                  enum:
-                    - sum
-                - description: Use the count of observations in the sample interval.
-                  enum:
-                    - count
-                - description: >-
-                    Use the standard deviation of all observations in the sample
-                    interval.
-                  enum:
-                    - std
-                - description: Use the maximum of all values in the sample interval.
-                  enum:
-                    - max
-                - description: Use the minimum of all values in the sample interval.
-                  enum:
-                    - min
+                - $ref: '#/components/schemas/Query-OutputFirst'
+                - $ref: '#/components/schemas/Query-OutputLast'
+                - $ref: '#/components/schemas/Query-OutputMean'
+                - $ref: '#/components/schemas/Query-OutputMedian'
+                - $ref: '#/components/schemas/Query-OutputSum'
+                - $ref: '#/components/schemas/Query-OutputCount'
+                - $ref: '#/components/schemas/Query-OutputStd'
+                - $ref: '#/components/schemas/Query-OutputMax'
+                - $ref: '#/components/schemas/Query-OutputMin'
                 - pattern: ^percentile\((1(\.0*)?)|(0\.[0-9]*)\)$
                   title: Precentile
                   description: >-
@@ -5617,46 +4471,15 @@ components:
             - items:
                 anyOf:
                   - oneOf:
-                      - description: >-
-                          Use the first value (in time) to represent all data
-                          for the sample interval.
-                        enum:
-                          - first
-                      - description: >-
-                          Use the last value (in time) to represent all data for
-                          the sample interval.
-                        enum:
-                          - last
-                      - description: >-
-                          Aggregate data by the mean value: The sum of values
-                          divided by number of observations.
-                        enum:
-                          - mean
-                      - description: >-
-                          Aggregate data by the median value: The n/2-th value
-                          when ordered, the average of the (n-1)/2-th and
-                          (n+1)/2-th value when n is uneven.
-                        enum:
-                          - median
-                      - description: >-
-                          The sum of all values summarizes the data for the
-                          sample interval.
-                        enum:
-                          - sum
-                      - description: Use the count of observations in the sample interval.
-                        enum:
-                          - count
-                      - description: >-
-                          Use the standard deviation of all observations in the
-                          sample interval.
-                        enum:
-                          - std
-                      - description: Use the maximum of all values in the sample interval.
-                        enum:
-                          - max
-                      - description: Use the minimum of all values in the sample interval.
-                        enum:
-                          - min
+                      - $ref: '#/components/schemas/Query-OutputFirst'
+                      - $ref: '#/components/schemas/Query-OutputLast'
+                      - $ref: '#/components/schemas/Query-OutputMean'
+                      - $ref: '#/components/schemas/Query-OutputMedian'
+                      - $ref: '#/components/schemas/Query-OutputSum'
+                      - $ref: '#/components/schemas/Query-OutputCount'
+                      - $ref: '#/components/schemas/Query-OutputStd'
+                      - $ref: '#/components/schemas/Query-OutputMax'
+                      - $ref: '#/components/schemas/Query-OutputMin'
                       - pattern: ^percentile\((1(\.0*)?)|(0\.[0-9]*)\)$
                         title: Precentile
                         description: >-
@@ -5674,46 +4497,15 @@ components:
             - additionalProperties:
                 anyOf:
                   - oneOf:
-                      - description: >-
-                          Use the first value (in time) to represent all data
-                          for the sample interval.
-                        enum:
-                          - first
-                      - description: >-
-                          Use the last value (in time) to represent all data for
-                          the sample interval.
-                        enum:
-                          - last
-                      - description: >-
-                          Aggregate data by the mean value: The sum of values
-                          divided by number of observations.
-                        enum:
-                          - mean
-                      - description: >-
-                          Aggregate data by the median value: The n/2-th value
-                          when ordered, the average of the (n-1)/2-th and
-                          (n+1)/2-th value when n is uneven.
-                        enum:
-                          - median
-                      - description: >-
-                          The sum of all values summarizes the data for the
-                          sample interval.
-                        enum:
-                          - sum
-                      - description: Use the count of observations in the sample interval.
-                        enum:
-                          - count
-                      - description: >-
-                          Use the standard deviation of all observations in the
-                          sample interval.
-                        enum:
-                          - std
-                      - description: Use the maximum of all values in the sample interval.
-                        enum:
-                          - max
-                      - description: Use the minimum of all values in the sample interval.
-                        enum:
-                          - min
+                      - $ref: '#/components/schemas/Query-OutputFirst'
+                      - $ref: '#/components/schemas/Query-OutputLast'
+                      - $ref: '#/components/schemas/Query-OutputMean'
+                      - $ref: '#/components/schemas/Query-OutputMedian'
+                      - $ref: '#/components/schemas/Query-OutputSum'
+                      - $ref: '#/components/schemas/Query-OutputCount'
+                      - $ref: '#/components/schemas/Query-OutputStd'
+                      - $ref: '#/components/schemas/Query-OutputMax'
+                      - $ref: '#/components/schemas/Query-OutputMin'
                       - pattern: ^percentile\((1(\.0*)?)|(0\.[0-9]*)\)$
                         title: Precentile
                         description: >-
@@ -5727,53 +4519,15 @@ components:
                   - items:
                       anyOf:
                         - oneOf:
-                            - description: >-
-                                Use the first value (in time) to represent all
-                                data for the sample interval.
-                              enum:
-                                - first
-                            - description: >-
-                                Use the last value (in time) to represent all
-                                data for the sample interval.
-                              enum:
-                                - last
-                            - description: >-
-                                Aggregate data by the mean value: The sum of
-                                values divided by number of observations.
-                              enum:
-                                - mean
-                            - description: >-
-                                Aggregate data by the median value: The n/2-th
-                                value when ordered, the average of the
-                                (n-1)/2-th and (n+1)/2-th value when n is
-                                uneven.
-                              enum:
-                                - median
-                            - description: >-
-                                The sum of all values summarizes the data for
-                                the sample interval.
-                              enum:
-                                - sum
-                            - description: >-
-                                Use the count of observations in the sample
-                                interval.
-                              enum:
-                                - count
-                            - description: >-
-                                Use the standard deviation of all observations
-                                in the sample interval.
-                              enum:
-                                - std
-                            - description: >-
-                                Use the maximum of all values in the sample
-                                interval.
-                              enum:
-                                - max
-                            - description: >-
-                                Use the minimum of all values in the sample
-                                interval.
-                              enum:
-                                - min
+                            - $ref: '#/components/schemas/Query-OutputFirst'
+                            - $ref: '#/components/schemas/Query-OutputLast'
+                            - $ref: '#/components/schemas/Query-OutputMean'
+                            - $ref: '#/components/schemas/Query-OutputMedian'
+                            - $ref: '#/components/schemas/Query-OutputSum'
+                            - $ref: '#/components/schemas/Query-OutputCount'
+                            - $ref: '#/components/schemas/Query-OutputStd'
+                            - $ref: '#/components/schemas/Query-OutputMax'
+                            - $ref: '#/components/schemas/Query-OutputMin'
                             - pattern: ^percentile\((1(\.0*)?)|(0\.[0-9]*)\)$
                               title: Precentile
                               description: >-
@@ -5797,53 +4551,15 @@ components:
                   - additionalProperties:
                       anyOf:
                         - oneOf:
-                            - description: >-
-                                Use the first value (in time) to represent all
-                                data for the sample interval.
-                              enum:
-                                - first
-                            - description: >-
-                                Use the last value (in time) to represent all
-                                data for the sample interval.
-                              enum:
-                                - last
-                            - description: >-
-                                Aggregate data by the mean value: The sum of
-                                values divided by number of observations.
-                              enum:
-                                - mean
-                            - description: >-
-                                Aggregate data by the median value: The n/2-th
-                                value when ordered, the average of the
-                                (n-1)/2-th and (n+1)/2-th value when n is
-                                uneven.
-                              enum:
-                                - median
-                            - description: >-
-                                The sum of all values summarizes the data for
-                                the sample interval.
-                              enum:
-                                - sum
-                            - description: >-
-                                Use the count of observations in the sample
-                                interval.
-                              enum:
-                                - count
-                            - description: >-
-                                Use the standard deviation of all observations
-                                in the sample interval.
-                              enum:
-                                - std
-                            - description: >-
-                                Use the maximum of all values in the sample
-                                interval.
-                              enum:
-                                - max
-                            - description: >-
-                                Use the minimum of all values in the sample
-                                interval.
-                              enum:
-                                - min
+                            - $ref: '#/components/schemas/Query-OutputFirst'
+                            - $ref: '#/components/schemas/Query-OutputLast'
+                            - $ref: '#/components/schemas/Query-OutputMean'
+                            - $ref: '#/components/schemas/Query-OutputMedian'
+                            - $ref: '#/components/schemas/Query-OutputSum'
+                            - $ref: '#/components/schemas/Query-OutputCount'
+                            - $ref: '#/components/schemas/Query-OutputStd'
+                            - $ref: '#/components/schemas/Query-OutputMax'
+                            - $ref: '#/components/schemas/Query-OutputMin'
                             - pattern: ^percentile\((1(\.0*)?)|(0\.[0-9]*)\)$
                               title: Precentile
                               description: >-
@@ -5857,54 +4573,15 @@ components:
                         - items:
                             anyOf:
                               - oneOf:
-                                  - description: >-
-                                      Use the first value (in time) to represent
-                                      all data for the sample interval.
-                                    enum:
-                                      - first
-                                  - description: >-
-                                      Use the last value (in time) to represent
-                                      all data for the sample interval.
-                                    enum:
-                                      - last
-                                  - description: >-
-                                      Aggregate data by the mean value: The sum
-                                      of values divided by number of
-                                      observations.
-                                    enum:
-                                      - mean
-                                  - description: >-
-                                      Aggregate data by the median value: The
-                                      n/2-th value when ordered, the average of
-                                      the (n-1)/2-th and (n+1)/2-th value when n
-                                      is uneven.
-                                    enum:
-                                      - median
-                                  - description: >-
-                                      The sum of all values summarizes the data
-                                      for the sample interval.
-                                    enum:
-                                      - sum
-                                  - description: >-
-                                      Use the count of observations in the
-                                      sample interval.
-                                    enum:
-                                      - count
-                                  - description: >-
-                                      Use the standard deviation of all
-                                      observations in the sample interval.
-                                    enum:
-                                      - std
-                                  - description: >-
-                                      Use the maximum of all values in the
-                                      sample interval.
-                                    enum:
-                                      - max
-                                  - description: >-
-                                      Use the minimum of all values in the
-                                      sample interval.
-                                    enum:
-                                      - min
+                                  - $ref: '#/components/schemas/Query-OutputFirst'
+                                  - $ref: '#/components/schemas/Query-OutputLast'
+                                  - $ref: '#/components/schemas/Query-OutputMean'
+                                  - $ref: '#/components/schemas/Query-OutputMedian'
+                                  - $ref: '#/components/schemas/Query-OutputSum'
+                                  - $ref: '#/components/schemas/Query-OutputCount'
+                                  - $ref: '#/components/schemas/Query-OutputStd'
+                                  - $ref: '#/components/schemas/Query-OutputMax'
+                                  - $ref: '#/components/schemas/Query-OutputMin'
                                   - pattern: ^percentile\((1(\.0*)?)|(0\.[0-9]*)\)$
                                     title: Precentile
                                     description: >-
@@ -5933,70 +4610,20 @@ components:
           anyOf:
             - $ref: '#/components/schemas/InterpolationMethod'
               oneOf:
-                - description: >-
-                    Interpolate with the value of the first observed point. This
-                    method also extrapolates.
-                  enum:
-                    - pad
-                - description: >-
-                    Interpolate with a fixed, user-specified value. This method
-                    also extrapolates.
-                  enum:
-                    - fixed
-                - description: >-
-                    Same as pad, but using the last observed value. This method
-                    also extrapolates
-                  enum:
-                    - backfill
-                - description: >-
-                    Linearly go from the first observed value of the gap to the
-                    last observed oneThis method also extrapolates
-                  enum:
-                    - linear
-                - description: Use the value that is closest in time.
-                  enum:
-                    - nearest
-                - description: >-
-                    Interpolate with a spline function of order 0, which is a
-                    piecewise polynomial.
-                  enum:
-                    - zero
-                - description: >-
-                    Interpolate with a spline function of order 1, which is a
-                    piecewise polynomial.
-                  enum:
-                    - slinear
-                - description: >-
-                    Interpolate with a spline function of order 2, which is a
-                    piecewise polynomial.
-                  enum:
-                    - quadratic
-                - description: >-
-                    Interpolate with a spline function of order 3, which is a
-                    piecewise polynomial.
-                  enum:
-                    - cubic
-                - description: >-
-                    Interpolate with a polynomial of the lowest possible degree
-                    passing trough the data points.
-                  enum:
-                    - polynomial
-                - description: >-
-                    Interpolate with a spline function of a user-specified
-                    order.
-                  enum:
-                    - spline
-                - description: Interpolate with the derivative of order 1.
-                  enum:
-                    - from_derivatives
-                - description: Interpolate with a piecewise cubic spline function.
-                  enum:
-                    - pchip
-                - description: >-
-                    Interpolate with a non-smoothing spline of order 2, called
-                    Akima interpolation.
-                  enum:
-                    - akima
+                - $ref: '#/components/schemas/Query-OutputPad'
+                - $ref: '#/components/schemas/Query-OutputFixed'
+                - $ref: '#/components/schemas/Query-OutputBackfill'
+                - $ref: '#/components/schemas/Query-OutputLinear'
+                - $ref: '#/components/schemas/Query-OutputNearest'
+                - $ref: '#/components/schemas/Query-OutputZero'
+                - $ref: '#/components/schemas/Query-OutputSlinear'
+                - $ref: '#/components/schemas/Query-OutputQuadratic'
+                - $ref: '#/components/schemas/Query-OutputCubic'
+                - $ref: '#/components/schemas/Query-OutputPolynomial'
+                - $ref: '#/components/schemas/Query-OutputSpline'
+                - $ref: '#/components/schemas/Query-OutputFrom_derivatives'
+                - $ref: '#/components/schemas/Query-OutputPchip'
+                - $ref: '#/components/schemas/Query-OutputAkima'
               title: Interpolation Method
             - $ref: '#/components/schemas/InterpolationSpec'
               title: Interpolation specification.
@@ -6014,13 +4641,7 @@ components:
                 duration](https://en.wikipedia.org/wiki/ISO_8601#Durations)
                 format.
               example: PT3H15M
-            - type: string
-              description: >-
-                When `inferred` is specified, the frequency of aggregation will
-                be inferred from the main/first time series. This can be used to
-                regularize the time series
-              enum:
-                - inferred
+            - $ref: '#/components/schemas/Query-OutputInferred'
           type: string
           title: Grouping interval
           description: >-
@@ -6363,169 +4984,22 @@ components:
         mode:
           $ref: '#/components/schemas/_RenderMode'
           oneOf:
-            - type: string
-              description: >-
-                Render rows of timestamp and values. Show column headers.
-                Includes an iso timestamp.
-
-
-                ###### options
-
-                - `iso_timestamp`: `True`
-
-                - `header_array`: `row`
-
-                - `roll_up`: `False`
-
-                - `data_axis`: `column`
-              enum:
-                - HEADER_ROW
-            - type: string
-              description: |-
-                Render rows of timestamp and values. Show column headers.
-
-                ###### options
-                - `iso_timestamp`: `False`
-                - `header_array`: `row`
-                - `roll_up`: `False`
-                - `data_axis`: `column`
-              enum:
-                - COMPACT
-            - type: string
-              description: >-
-                Render rows of timestamp and values. Show column headers. Show
-                the time window attributes.
-
-
-                ###### options
-
-                - `iso_timestamp`: `False`
-
-                - `header_array`: `row`
-
-                - `roll_up`: `False`
-
-                - `data_axis`: `column`
-
-                - `include_window_spec`: `True`
-              enum:
-                - COMPACT_WS
-            - type: string
-              description: >-
-                Render timestamps and each series (column) as a values array.
-                Show column headers.
-
-
-                ###### options
-
-                - `iso_timestamp`: `False`
-
-                - `header_array`: `row`
-
-                - `data_axis`: `row`
-
-                - `roll_up`: `True`
-
-                - `include_window_spec`: `True`
-              enum:
-                - SERIES
-            - type: string
-              description: >-
-                Renders row index in `rows`, and each series as a values array.
-
-
-                The series are prefixed by their series attributes.The `rows`
-                index is prefixed by the labels for these attributes.
-
-
-                ###### options
-
-                - `iso_timestamp`: `True`
-
-                - `header_array`: `column`
-
-                - `roll_up`: `False`
-
-                - `data_axis`: `row`
-              enum:
-                - HEADER_COLUMN
-            - type: string
-              description: |-
-                Render an object for each observation. Uses flattened keys.
-
-                ###### options
-                - `iso_timestamp`: `True`
-                - `hierarchical`: `False`
-                - `show_levels`: `True`
-                - `roll_up`: `False`
-              enum:
-                - FLAT_DICT
-            - type: string
-              description: >-
-                Render an hierarchical object for each observation. Shows an iso
-                timestamp.
-
-
-                ###### options
-
-                - `iso_timestamp`: `True`
-
-                - `hierarchical`: `True`
-
-                - `show_levels`: `True`
-
-                - `roll_up`: `True`
-              enum:
-                - HIER_DICT
-            - type: string
-              description: >-
-                Render an object with metric keys for each observation. Shows an
-                iso timestamp.
-
-
-                ###### options
-
-                - `iso_timestamp`: `True`
-
-                - `hierarchical`: `['metric']`
-
-                - `show_levels`: `False`
-
-                - `roll_up`: `True`
-
-                - `key_skip_empty`: `True`
-              enum:
-                - METRIC_FLAT_DICT
-            - type: string
-              description: >-
-                Render in an object format compatible with the `/data/v1/events`
-                upload.
-
-
-                ###### options
-
-                - `iso_timestamp`: `False`
-
-                - `hierarchical`: `False`
-
-                - `show_levels`: `False`
-
-                - `roll_up`: `True`
-              enum:
-                - UPLOAD
-            - type: string
-              description: |-
-                Render in csv format with row headers.
-
-                ###### options
-                - `iso_timestamp`: `False`
-              enum:
-                - CSV
+            - $ref: '#/components/schemas/RenderHEADER_ROW'
+            - $ref: '#/components/schemas/RenderCOMPACT'
+            - $ref: '#/components/schemas/RenderCOMPACT_WS'
+            - $ref: '#/components/schemas/RenderSERIES'
+            - $ref: '#/components/schemas/RenderHEADER_COLUMN'
+            - $ref: '#/components/schemas/RenderFLAT_DICT'
+            - $ref: '#/components/schemas/RenderHIER_DICT'
+            - $ref: '#/components/schemas/RenderMETRIC_FLAT_DICT'
+            - $ref: '#/components/schemas/RenderUPLOAD'
+            - $ref: '#/components/schemas/RenderCSV'
           title: Named configuration of render options.
           description: >-
             A render mode combines a number of render option under a single
             name. Each option can still be overriden by an explicit value.
           default: COMPACT_WS
+          x-typeDefaultIgnore: true
         roll_up:
           type: boolean
           title: Roll Up
@@ -6760,46 +5234,15 @@ components:
           example: temperature
         aggregration:
           oneOf:
-            - description: >-
-                Use the first value (in time) to represent all data for the
-                sample interval.
-              enum:
-                - first
-            - description: >-
-                Use the last value (in time) to represent all data for the
-                sample interval.
-              enum:
-                - last
-            - description: >-
-                Aggregate data by the mean value: The sum of values divided by
-                number of observations.
-              enum:
-                - mean
-            - description: >-
-                Aggregate data by the median value: The n/2-th value when
-                ordered, the average of the (n-1)/2-th and (n+1)/2-th value when
-                n is uneven.
-              enum:
-                - median
-            - description: >-
-                The sum of all values summarizes the data for the sample
-                interval.
-              enum:
-                - sum
-            - description: Use the count of observations in the sample interval.
-              enum:
-                - count
-            - description: >-
-                Use the standard deviation of all observations in the sample
-                interval.
-              enum:
-                - std
-            - description: Use the maximum of all values in the sample interval.
-              enum:
-                - max
-            - description: Use the minimum of all values in the sample interval.
-              enum:
-                - min
+            - $ref: '#/components/schemas/SeriesSpecFirst'
+            - $ref: '#/components/schemas/SeriesSpecLast'
+            - $ref: '#/components/schemas/SeriesSpecMean'
+            - $ref: '#/components/schemas/SeriesSpecMedian'
+            - $ref: '#/components/schemas/SeriesSpecSum'
+            - $ref: '#/components/schemas/SeriesSpecCount'
+            - $ref: '#/components/schemas/SeriesSpecStd'
+            - $ref: '#/components/schemas/SeriesSpecMax'
+            - $ref: '#/components/schemas/SeriesSpecMin'
             - pattern: ^percentile\((1(\.0*)?)|(0\.[0-9]*)\)$
               title: Precentile
               description: >-
@@ -6815,70 +5258,20 @@ components:
           anyOf:
             - $ref: '#/components/schemas/InterpolationMethod'
               oneOf:
-                - description: >-
-                    Interpolate with the value of the first observed point. This
-                    method also extrapolates.
-                  enum:
-                    - pad
-                - description: >-
-                    Interpolate with a fixed, user-specified value. This method
-                    also extrapolates.
-                  enum:
-                    - fixed
-                - description: >-
-                    Same as pad, but using the last observed value. This method
-                    also extrapolates
-                  enum:
-                    - backfill
-                - description: >-
-                    Linearly go from the first observed value of the gap to the
-                    last observed oneThis method also extrapolates
-                  enum:
-                    - linear
-                - description: Use the value that is closest in time.
-                  enum:
-                    - nearest
-                - description: >-
-                    Interpolate with a spline function of order 0, which is a
-                    piecewise polynomial.
-                  enum:
-                    - zero
-                - description: >-
-                    Interpolate with a spline function of order 1, which is a
-                    piecewise polynomial.
-                  enum:
-                    - slinear
-                - description: >-
-                    Interpolate with a spline function of order 2, which is a
-                    piecewise polynomial.
-                  enum:
-                    - quadratic
-                - description: >-
-                    Interpolate with a spline function of order 3, which is a
-                    piecewise polynomial.
-                  enum:
-                    - cubic
-                - description: >-
-                    Interpolate with a polynomial of the lowest possible degree
-                    passing trough the data points.
-                  enum:
-                    - polynomial
-                - description: >-
-                    Interpolate with a spline function of a user-specified
-                    order.
-                  enum:
-                    - spline
-                - description: Interpolate with the derivative of order 1.
-                  enum:
-                    - from_derivatives
-                - description: Interpolate with a piecewise cubic spline function.
-                  enum:
-                    - pchip
-                - description: >-
-                    Interpolate with a non-smoothing spline of order 2, called
-                    Akima interpolation.
-                  enum:
-                    - akima
+                - $ref: '#/components/schemas/SeriesSpecPad'
+                - $ref: '#/components/schemas/SeriesSpecFixed'
+                - $ref: '#/components/schemas/SeriesSpecBackfill'
+                - $ref: '#/components/schemas/SeriesSpecLinear'
+                - $ref: '#/components/schemas/SeriesSpecNearest'
+                - $ref: '#/components/schemas/SeriesSpecZero'
+                - $ref: '#/components/schemas/SeriesSpecSlinear'
+                - $ref: '#/components/schemas/SeriesSpecQuadratic'
+                - $ref: '#/components/schemas/SeriesSpecCubic'
+                - $ref: '#/components/schemas/SeriesSpecPolynomial'
+                - $ref: '#/components/schemas/SeriesSpecSpline'
+                - $ref: '#/components/schemas/SeriesSpecFrom_derivatives'
+                - $ref: '#/components/schemas/SeriesSpecPchip'
+                - $ref: '#/components/schemas/SeriesSpecAkima'
               title: Interpolation Method
             - $ref: '#/components/schemas/InterpolationSpec'
               title: Interpolation specification.
@@ -6929,6 +5322,1589 @@ components:
         - COMPACT_WS
         - CSV
       description: Render mode configuration keys.
+    ExecuteQueryQueriesV1DataPostAggregationFirst:
+      description: >-
+        Use the first value (in time) to represent all data for the sample
+        interval.
+      enum:
+        - first
+    ExecuteQueryQueriesV1DataPostAggregationLast:
+      description: >-
+        Use the last value (in time) to represent all data for the sample
+        interval.
+      enum:
+        - last
+    ExecuteQueryQueriesV1DataPostAggregationMean:
+      description: >-
+        Aggregate data by the mean value: The sum of values divided by number of
+        observations.
+      enum:
+        - mean
+    ExecuteQueryQueriesV1DataPostAggregationMedian:
+      description: >-
+        Aggregate data by the median value: The n/2-th value when ordered, the
+        average of the (n-1)/2-th and (n+1)/2-th value when n is uneven.
+      enum:
+        - median
+    ExecuteQueryQueriesV1DataPostAggregationSum:
+      description: The sum of all values summarizes the data for the sample interval.
+      enum:
+        - sum
+    ExecuteQueryQueriesV1DataPostAggregationCount:
+      description: Use the count of observations in the sample interval.
+      enum:
+        - count
+    ExecuteQueryQueriesV1DataPostAggregationStd:
+      description: Use the standard deviation of all observations in the sample interval.
+      enum:
+        - std
+    ExecuteQueryQueriesV1DataPostAggregationMax:
+      description: Use the maximum of all values in the sample interval.
+      enum:
+        - max
+    ExecuteQueryQueriesV1DataPostAggregationMin:
+      description: Use the minimum of all values in the sample interval.
+      enum:
+        - min
+    ExecuteQueryQueriesV1DataPostAggregation:
+      type: string
+      oneOf:
+        - $ref: '#/components/schemas/ExecuteQueryQueriesV1DataPostAggregationFirst'
+        - $ref: '#/components/schemas/ExecuteQueryQueriesV1DataPostAggregationLast'
+        - $ref: '#/components/schemas/ExecuteQueryQueriesV1DataPostAggregationMean'
+        - $ref: '#/components/schemas/ExecuteQueryQueriesV1DataPostAggregationMedian'
+        - $ref: '#/components/schemas/ExecuteQueryQueriesV1DataPostAggregationSum'
+        - $ref: '#/components/schemas/ExecuteQueryQueriesV1DataPostAggregationCount'
+        - $ref: '#/components/schemas/ExecuteQueryQueriesV1DataPostAggregationStd'
+        - $ref: '#/components/schemas/ExecuteQueryQueriesV1DataPostAggregationMax'
+        - $ref: '#/components/schemas/ExecuteQueryQueriesV1DataPostAggregationMin'
+        - title: Precentile
+          description: >-
+            Aggregate data by the p-th percentile, where p is a number between 0
+            and 1.
+          pattern: ^percentile\((1(\.0*)?)|(0\.[0-9]*)\)$
+          example: percentile(0.02)
+    ExecuteQueryQueriesV1DataPostInterpolationPad:
+      description: >-
+        Interpolate with the value of the first observed point. This method also
+        extrapolates.
+      enum:
+        - pad
+    ExecuteQueryQueriesV1DataPostInterpolationFixed:
+      description: >-
+        Interpolate with a fixed, user-specified value. This method also
+        extrapolates.
+      enum:
+        - fixed
+    ExecuteQueryQueriesV1DataPostInterpolationBackfill:
+      description: >-
+        Same as pad, but using the last observed value. This method also
+        extrapolates
+      enum:
+        - backfill
+    ExecuteQueryQueriesV1DataPostInterpolationLinear:
+      description: >-
+        Linearly go from the first observed value of the gap to the last
+        observed oneThis method also extrapolates
+      enum:
+        - linear
+    ExecuteQueryQueriesV1DataPostInterpolationNearest:
+      description: Use the value that is closest in time.
+      enum:
+        - nearest
+    ExecuteQueryQueriesV1DataPostInterpolationZero:
+      description: >-
+        Interpolate with a spline function of order 0, which is a piecewise
+        polynomial.
+      enum:
+        - zero
+    ExecuteQueryQueriesV1DataPostInterpolationSlinear:
+      description: >-
+        Interpolate with a spline function of order 1, which is a piecewise
+        polynomial.
+      enum:
+        - slinear
+    ExecuteQueryQueriesV1DataPostInterpolationQuadratic:
+      description: >-
+        Interpolate with a spline function of order 2, which is a piecewise
+        polynomial.
+      enum:
+        - quadratic
+    ExecuteQueryQueriesV1DataPostInterpolationCubic:
+      description: >-
+        Interpolate with a spline function of order 3, which is a piecewise
+        polynomial.
+      enum:
+        - cubic
+    ExecuteQueryQueriesV1DataPostInterpolationPolynomial:
+      description: >-
+        Interpolate with a polynomial of the lowest possible degree passing
+        trough the data points.
+      enum:
+        - polynomial
+    ExecuteQueryQueriesV1DataPostInterpolationSpline:
+      description: Interpolate with a spline function of a user-specified order.
+      enum:
+        - spline
+    ExecuteQueryQueriesV1DataPostInterpolationFrom_derivatives:
+      description: Interpolate with the derivative of order 1.
+      enum:
+        - from_derivatives
+    ExecuteQueryQueriesV1DataPostInterpolationPchip:
+      description: Interpolate with a piecewise cubic spline function.
+      enum:
+        - pchip
+    ExecuteQueryQueriesV1DataPostInterpolationAkima:
+      description: >-
+        Interpolate with a non-smoothing spline of order 2, called Akima
+        interpolation.
+      enum:
+        - akima
+    ExecuteQueryQueriesV1DataPostInterpolation:
+      anyOf:
+        - $ref: '#/components/schemas/InterpolationMethod'
+          title: Interpolation Override.
+          oneOf:
+            - $ref: >-
+                #/components/schemas/ExecuteQueryQueriesV1DataPostInterpolationPad
+            - $ref: >-
+                #/components/schemas/ExecuteQueryQueriesV1DataPostInterpolationFixed
+            - $ref: >-
+                #/components/schemas/ExecuteQueryQueriesV1DataPostInterpolationBackfill
+            - $ref: >-
+                #/components/schemas/ExecuteQueryQueriesV1DataPostInterpolationLinear
+            - $ref: >-
+                #/components/schemas/ExecuteQueryQueriesV1DataPostInterpolationNearest
+            - $ref: >-
+                #/components/schemas/ExecuteQueryQueriesV1DataPostInterpolationZero
+            - $ref: >-
+                #/components/schemas/ExecuteQueryQueriesV1DataPostInterpolationSlinear
+            - $ref: >-
+                #/components/schemas/ExecuteQueryQueriesV1DataPostInterpolationQuadratic
+            - $ref: >-
+                #/components/schemas/ExecuteQueryQueriesV1DataPostInterpolationCubic
+            - $ref: >-
+                #/components/schemas/ExecuteQueryQueriesV1DataPostInterpolationPolynomial
+            - $ref: >-
+                #/components/schemas/ExecuteQueryQueriesV1DataPostInterpolationSpline
+            - $ref: >-
+                #/components/schemas/ExecuteQueryQueriesV1DataPostInterpolationFrom_derivatives
+            - $ref: >-
+                #/components/schemas/ExecuteQueryQueriesV1DataPostInterpolationPchip
+            - $ref: >-
+                #/components/schemas/ExecuteQueryQueriesV1DataPostInterpolationAkima
+        - $ref: '#/components/schemas/InterpolationSpec'
+          title: Interpolation Override.
+    ExecuteQueryQueriesV1DataPostFreqInferred:
+      type: string
+      description: >-
+        When `inferred` is specified, the frequency of aggregation will be
+        inferred from the main/first time series. This can be used to regularize
+        the time series
+      enum:
+        - inferred
+    ExecuteQueryQueriesV1DataPostFreq:
+      type: string
+      description: Override for the `freq` query attribute.
+      oneOf:
+        - type: string
+          format: period
+          example: PT3H15M
+          pattern: >-
+            ^P([0-9]+Y)?([0-9]+M)?([0-9]+W)?([0-9]+D)?(T([0-9]+H)?([0-9]+M)?([0-9]+(\.[0-9]*)?S)?)?$
+          title: 'ISO8601 period '
+          description: >-
+            A period in [ISO8601
+            duration](https://en.wikipedia.org/wiki/ISO_8601#Durations) format.
+        - $ref: '#/components/schemas/ExecuteQueryQueriesV1DataPostFreqInferred'
+    ExecuteQueryQueriesV1DataPostFrom:
+      type: string
+      oneOf:
+        - title: ISO8601 absolute timestamp
+          type: string
+          format: date-time
+          example: '2018-03-21T12:23:00+01:00'
+          description: >-
+            A date or date-time in
+            [ISO8601](https://en.wikipedia.org/wiki/ISO_8601#Combined_date_and_time_representations)
+            format. When no timezone is specified, the UTC timezone is assumed
+            (`+00:00`)
+          pattern: '[0-9]{4}-[0-9]{2}-[0-9]{2}(T.*)?'
+        - type: integer
+          title: UNIX epoch milliseconds
+          minimum: 0
+          description: Absolute timestamp milliseconds in unix epoch since 1970-01-01.
+          example: 1534836422284
+        - type: string
+          format: period
+          example: PT3H15M
+          pattern: >-
+            ^P([0-9]+Y)?([0-9]+M)?([0-9]+W)?([0-9]+D)?(T([0-9]+H)?([0-9]+M)?([0-9]+(\.[0-9]*)?S)?)?$
+          title: ISO8601 Period Before Now
+          description: >-
+            Specifies a timestamp before _now_ as a period in [ISO8601
+            duration](https://en.wikipedia.org/wiki/ISO_8601#Durations) format.
+    ExecuteQueryQueriesV1DataPostUntil:
+      type: string
+      oneOf:
+        - title: ISO8601 absolute timestamp
+          type: string
+          format: date-time
+          example: '2018-03-21T12:23:00+01:00'
+          description: >-
+            A date or date-time in
+            [ISO8601](https://en.wikipedia.org/wiki/ISO_8601#Combined_date_and_time_representations)
+            format. When no timezone is specified, the UTC timezone is assumed
+            (`+00:00`)
+          pattern: '[0-9]{4}-[0-9]{2}-[0-9]{2}(T.*)?'
+        - type: integer
+          title: UNIX epoch milliseconds
+          minimum: 0
+          description: Absolute timestamp milliseconds in unix epoch since 1970-01-01.
+          example: 1534836422284
+        - type: string
+          format: period
+          example: PT3H15M
+          pattern: >-
+            ^P([0-9]+Y)?([0-9]+M)?([0-9]+W)?([0-9]+D)?(T([0-9]+H)?([0-9]+M)?([0-9]+(\.[0-9]*)?S)?)?$
+          title: ISO8601 Period Before Now
+          description: >-
+            Specifies a timestamp before _now_ as a period in [ISO8601
+            duration](https://en.wikipedia.org/wiki/ISO_8601#Durations) format.
+    ExecuteQueryQueriesV1DataPostWindow:
+      type: string
+      oneOf:
+        - type: string
+          format: period
+          example: PT3H15M
+          pattern: >-
+            ^P([0-9]+Y)?([0-9]+M)?([0-9]+W)?([0-9]+D)?(T([0-9]+H)?([0-9]+M)?([0-9]+(\.[0-9]*)?S)?)?$
+          title: 'ISO8601 period '
+          description: >-
+            A period in [ISO8601
+            duration](https://en.wikipedia.org/wiki/ISO_8601#Durations) format.
+    ExecuteQueryQueriesV1DataPostRenderHEADER_ROW:
+      description: >-
+        Render rows of timestamp and values. Show column headers. Includes an
+        iso timestamp.
+
+
+        ###### options
+
+        - `iso_timestamp`: `True`
+
+        - `header_array`: `row`
+
+        - `roll_up`: `False`
+
+        - `data_axis`: `column`
+      type: string
+      enum:
+        - HEADER_ROW
+    ExecuteQueryQueriesV1DataPostRenderCOMPACT:
+      description: |-
+        Render rows of timestamp and values. Show column headers.
+
+        ###### options
+        - `iso_timestamp`: `False`
+        - `header_array`: `row`
+        - `roll_up`: `False`
+        - `data_axis`: `column`
+      type: string
+      enum:
+        - COMPACT
+    ExecuteQueryQueriesV1DataPostRenderCOMPACT_WS:
+      description: >-
+        Render rows of timestamp and values. Show column headers. Show the time
+        window attributes.
+
+
+        ###### options
+
+        - `iso_timestamp`: `False`
+
+        - `header_array`: `row`
+
+        - `roll_up`: `False`
+
+        - `data_axis`: `column`
+
+        - `include_window_spec`: `True`
+      type: string
+      enum:
+        - COMPACT_WS
+    ExecuteQueryQueriesV1DataPostRenderSERIES:
+      description: >-
+        Render timestamps and each series (column) as a values array. Show
+        column headers.
+
+
+        ###### options
+
+        - `iso_timestamp`: `False`
+
+        - `header_array`: `row`
+
+        - `data_axis`: `row`
+
+        - `roll_up`: `True`
+
+        - `include_window_spec`: `True`
+      type: string
+      enum:
+        - SERIES
+    ExecuteQueryQueriesV1DataPostRenderHEADER_COLUMN:
+      description: >-
+        Renders row index in `rows`, and each series as a values array.
+
+
+        The series are prefixed by their series attributes.The `rows` index is
+        prefixed by the labels for these attributes.
+
+
+        ###### options
+
+        - `iso_timestamp`: `True`
+
+        - `header_array`: `column`
+
+        - `roll_up`: `False`
+
+        - `data_axis`: `row`
+      type: string
+      enum:
+        - HEADER_COLUMN
+    ExecuteQueryQueriesV1DataPostRenderFLAT_DICT:
+      description: |-
+        Render an object for each observation. Uses flattened keys.
+
+        ###### options
+        - `iso_timestamp`: `True`
+        - `hierarchical`: `False`
+        - `show_levels`: `True`
+        - `roll_up`: `False`
+      type: string
+      enum:
+        - FLAT_DICT
+    ExecuteQueryQueriesV1DataPostRenderHIER_DICT:
+      description: >-
+        Render an hierarchical object for each observation. Shows an iso
+        timestamp.
+
+
+        ###### options
+
+        - `iso_timestamp`: `True`
+
+        - `hierarchical`: `True`
+
+        - `show_levels`: `True`
+
+        - `roll_up`: `True`
+      type: string
+      enum:
+        - HIER_DICT
+    ExecuteQueryQueriesV1DataPostRenderMETRIC_FLAT_DICT:
+      description: >-
+        Render an object with metric keys for each observation. Shows an iso
+        timestamp.
+
+
+        ###### options
+
+        - `iso_timestamp`: `True`
+
+        - `hierarchical`: `['metric']`
+
+        - `show_levels`: `False`
+
+        - `roll_up`: `True`
+
+        - `key_skip_empty`: `True`
+      type: string
+      enum:
+        - METRIC_FLAT_DICT
+    ExecuteQueryQueriesV1DataPostRenderUPLOAD:
+      description: |-
+        Render in an object format compatible with the `/data/v1/events` upload.
+
+        ###### options
+        - `iso_timestamp`: `False`
+        - `hierarchical`: `False`
+        - `show_levels`: `False`
+        - `roll_up`: `True`
+      type: string
+      enum:
+        - UPLOAD
+    ExecuteQueryQueriesV1DataPostRenderCSV:
+      description: |-
+        Render in csv format with row headers.
+
+        ###### options
+        - `iso_timestamp`: `False`
+      type: string
+      enum:
+        - CSV
+    ExecuteQueryQueriesV1DataPostRender:
+      anyOf:
+        - $ref: '#/components/schemas/_RenderMode'
+          title: Render Mode
+          oneOf:
+            - $ref: >-
+                #/components/schemas/ExecuteQueryQueriesV1DataPostRenderHEADER_ROW
+            - $ref: '#/components/schemas/ExecuteQueryQueriesV1DataPostRenderCOMPACT'
+            - $ref: >-
+                #/components/schemas/ExecuteQueryQueriesV1DataPostRenderCOMPACT_WS
+            - $ref: '#/components/schemas/ExecuteQueryQueriesV1DataPostRenderSERIES'
+            - $ref: >-
+                #/components/schemas/ExecuteQueryQueriesV1DataPostRenderHEADER_COLUMN
+            - $ref: >-
+                #/components/schemas/ExecuteQueryQueriesV1DataPostRenderFLAT_DICT
+            - $ref: >-
+                #/components/schemas/ExecuteQueryQueriesV1DataPostRenderHIER_DICT
+            - $ref: >-
+                #/components/schemas/ExecuteQueryQueriesV1DataPostRenderMETRIC_FLAT_DICT
+            - $ref: '#/components/schemas/ExecuteQueryQueriesV1DataPostRenderUPLOAD'
+            - $ref: '#/components/schemas/ExecuteQueryQueriesV1DataPostRenderCSV'
+        - $ref: '#/components/schemas/Render'
+          title: Render Override.
+    ExecuteQueryQueriesV1DataPostAccept:
+      anyOf:
+        - type: string
+          nullable: true
+      description: Use a 'text/csv' accept header to get CSV formatted results.
+    ExecuteByNameQueriesV1DataQueryNameGetAggregationFirst:
+      description: >-
+        Use the first value (in time) to represent all data for the sample
+        interval.
+      enum:
+        - first
+    ExecuteByNameQueriesV1DataQueryNameGetAggregationLast:
+      description: >-
+        Use the last value (in time) to represent all data for the sample
+        interval.
+      enum:
+        - last
+    ExecuteByNameQueriesV1DataQueryNameGetAggregationMean:
+      description: >-
+        Aggregate data by the mean value: The sum of values divided by number of
+        observations.
+      enum:
+        - mean
+    ExecuteByNameQueriesV1DataQueryNameGetAggregationMedian:
+      description: >-
+        Aggregate data by the median value: The n/2-th value when ordered, the
+        average of the (n-1)/2-th and (n+1)/2-th value when n is uneven.
+      enum:
+        - median
+    ExecuteByNameQueriesV1DataQueryNameGetAggregationSum:
+      description: The sum of all values summarizes the data for the sample interval.
+      enum:
+        - sum
+    ExecuteByNameQueriesV1DataQueryNameGetAggregationCount:
+      description: Use the count of observations in the sample interval.
+      enum:
+        - count
+    ExecuteByNameQueriesV1DataQueryNameGetAggregationStd:
+      description: Use the standard deviation of all observations in the sample interval.
+      enum:
+        - std
+    ExecuteByNameQueriesV1DataQueryNameGetAggregationMax:
+      description: Use the maximum of all values in the sample interval.
+      enum:
+        - max
+    ExecuteByNameQueriesV1DataQueryNameGetAggregationMin:
+      description: Use the minimum of all values in the sample interval.
+      enum:
+        - min
+    ExecuteByNameQueriesV1DataQueryNameGetAggregation:
+      type: string
+      oneOf:
+        - $ref: >-
+            #/components/schemas/ExecuteByNameQueriesV1DataQueryNameGetAggregationFirst
+        - $ref: >-
+            #/components/schemas/ExecuteByNameQueriesV1DataQueryNameGetAggregationLast
+        - $ref: >-
+            #/components/schemas/ExecuteByNameQueriesV1DataQueryNameGetAggregationMean
+        - $ref: >-
+            #/components/schemas/ExecuteByNameQueriesV1DataQueryNameGetAggregationMedian
+        - $ref: >-
+            #/components/schemas/ExecuteByNameQueriesV1DataQueryNameGetAggregationSum
+        - $ref: >-
+            #/components/schemas/ExecuteByNameQueriesV1DataQueryNameGetAggregationCount
+        - $ref: >-
+            #/components/schemas/ExecuteByNameQueriesV1DataQueryNameGetAggregationStd
+        - $ref: >-
+            #/components/schemas/ExecuteByNameQueriesV1DataQueryNameGetAggregationMax
+        - $ref: >-
+            #/components/schemas/ExecuteByNameQueriesV1DataQueryNameGetAggregationMin
+        - title: Precentile
+          description: >-
+            Aggregate data by the p-th percentile, where p is a number between 0
+            and 1.
+          pattern: ^percentile\((1(\.0*)?)|(0\.[0-9]*)\)$
+          example: percentile(0.02)
+    ExecuteByNameQueriesV1DataQueryNameGetInterpolationPad:
+      description: >-
+        Interpolate with the value of the first observed point. This method also
+        extrapolates.
+      enum:
+        - pad
+    ExecuteByNameQueriesV1DataQueryNameGetInterpolationFixed:
+      description: >-
+        Interpolate with a fixed, user-specified value. This method also
+        extrapolates.
+      enum:
+        - fixed
+    ExecuteByNameQueriesV1DataQueryNameGetInterpolationBackfill:
+      description: >-
+        Same as pad, but using the last observed value. This method also
+        extrapolates
+      enum:
+        - backfill
+    ExecuteByNameQueriesV1DataQueryNameGetInterpolationLinear:
+      description: >-
+        Linearly go from the first observed value of the gap to the last
+        observed oneThis method also extrapolates
+      enum:
+        - linear
+    ExecuteByNameQueriesV1DataQueryNameGetInterpolationNearest:
+      description: Use the value that is closest in time.
+      enum:
+        - nearest
+    ExecuteByNameQueriesV1DataQueryNameGetInterpolationZero:
+      description: >-
+        Interpolate with a spline function of order 0, which is a piecewise
+        polynomial.
+      enum:
+        - zero
+    ExecuteByNameQueriesV1DataQueryNameGetInterpolationSlinear:
+      description: >-
+        Interpolate with a spline function of order 1, which is a piecewise
+        polynomial.
+      enum:
+        - slinear
+    ExecuteByNameQueriesV1DataQueryNameGetInterpolationQuadratic:
+      description: >-
+        Interpolate with a spline function of order 2, which is a piecewise
+        polynomial.
+      enum:
+        - quadratic
+    ExecuteByNameQueriesV1DataQueryNameGetInterpolationCubic:
+      description: >-
+        Interpolate with a spline function of order 3, which is a piecewise
+        polynomial.
+      enum:
+        - cubic
+    ExecuteByNameQueriesV1DataQueryNameGetInterpolationPolynomial:
+      description: >-
+        Interpolate with a polynomial of the lowest possible degree passing
+        trough the data points.
+      enum:
+        - polynomial
+    ExecuteByNameQueriesV1DataQueryNameGetInterpolationSpline:
+      description: Interpolate with a spline function of a user-specified order.
+      enum:
+        - spline
+    ExecuteByNameQueriesV1DataQueryNameGetInterpolationFrom_derivatives:
+      description: Interpolate with the derivative of order 1.
+      enum:
+        - from_derivatives
+    ExecuteByNameQueriesV1DataQueryNameGetInterpolationPchip:
+      description: Interpolate with a piecewise cubic spline function.
+      enum:
+        - pchip
+    ExecuteByNameQueriesV1DataQueryNameGetInterpolationAkima:
+      description: >-
+        Interpolate with a non-smoothing spline of order 2, called Akima
+        interpolation.
+      enum:
+        - akima
+    ExecuteByNameQueriesV1DataQueryNameGetInterpolation:
+      anyOf:
+        - $ref: '#/components/schemas/InterpolationMethod'
+          title: Interpolation Override.
+          oneOf:
+            - $ref: >-
+                #/components/schemas/ExecuteByNameQueriesV1DataQueryNameGetInterpolationPad
+            - $ref: >-
+                #/components/schemas/ExecuteByNameQueriesV1DataQueryNameGetInterpolationFixed
+            - $ref: >-
+                #/components/schemas/ExecuteByNameQueriesV1DataQueryNameGetInterpolationBackfill
+            - $ref: >-
+                #/components/schemas/ExecuteByNameQueriesV1DataQueryNameGetInterpolationLinear
+            - $ref: >-
+                #/components/schemas/ExecuteByNameQueriesV1DataQueryNameGetInterpolationNearest
+            - $ref: >-
+                #/components/schemas/ExecuteByNameQueriesV1DataQueryNameGetInterpolationZero
+            - $ref: >-
+                #/components/schemas/ExecuteByNameQueriesV1DataQueryNameGetInterpolationSlinear
+            - $ref: >-
+                #/components/schemas/ExecuteByNameQueriesV1DataQueryNameGetInterpolationQuadratic
+            - $ref: >-
+                #/components/schemas/ExecuteByNameQueriesV1DataQueryNameGetInterpolationCubic
+            - $ref: >-
+                #/components/schemas/ExecuteByNameQueriesV1DataQueryNameGetInterpolationPolynomial
+            - $ref: >-
+                #/components/schemas/ExecuteByNameQueriesV1DataQueryNameGetInterpolationSpline
+            - $ref: >-
+                #/components/schemas/ExecuteByNameQueriesV1DataQueryNameGetInterpolationFrom_derivatives
+            - $ref: >-
+                #/components/schemas/ExecuteByNameQueriesV1DataQueryNameGetInterpolationPchip
+            - $ref: >-
+                #/components/schemas/ExecuteByNameQueriesV1DataQueryNameGetInterpolationAkima
+        - $ref: '#/components/schemas/InterpolationSpec'
+          title: Interpolation Override.
+    ExecuteByNameQueriesV1DataQueryNameGetFreqInferred:
+      type: string
+      description: >-
+        When `inferred` is specified, the frequency of aggregation will be
+        inferred from the main/first time series. This can be used to regularize
+        the time series
+      enum:
+        - inferred
+    ExecuteByNameQueriesV1DataQueryNameGetFreq:
+      type: string
+      description: Override for the `freq` query attribute.
+      oneOf:
+        - type: string
+          format: period
+          example: PT3H15M
+          pattern: >-
+            ^P([0-9]+Y)?([0-9]+M)?([0-9]+W)?([0-9]+D)?(T([0-9]+H)?([0-9]+M)?([0-9]+(\.[0-9]*)?S)?)?$
+          title: 'ISO8601 period '
+          description: >-
+            A period in [ISO8601
+            duration](https://en.wikipedia.org/wiki/ISO_8601#Durations) format.
+        - $ref: >-
+            #/components/schemas/ExecuteByNameQueriesV1DataQueryNameGetFreqInferred
+    ExecuteByNameQueriesV1DataQueryNameGetFrom:
+      type: string
+      oneOf:
+        - title: ISO8601 absolute timestamp
+          type: string
+          format: date-time
+          example: '2018-03-21T12:23:00+01:00'
+          description: >-
+            A date or date-time in
+            [ISO8601](https://en.wikipedia.org/wiki/ISO_8601#Combined_date_and_time_representations)
+            format. When no timezone is specified, the UTC timezone is assumed
+            (`+00:00`)
+          pattern: '[0-9]{4}-[0-9]{2}-[0-9]{2}(T.*)?'
+        - type: integer
+          title: UNIX epoch milliseconds
+          minimum: 0
+          description: Absolute timestamp milliseconds in unix epoch since 1970-01-01.
+          example: 1534836422284
+        - type: string
+          format: period
+          example: PT3H15M
+          pattern: >-
+            ^P([0-9]+Y)?([0-9]+M)?([0-9]+W)?([0-9]+D)?(T([0-9]+H)?([0-9]+M)?([0-9]+(\.[0-9]*)?S)?)?$
+          title: ISO8601 Period Before Now
+          description: >-
+            Specifies a timestamp before _now_ as a period in [ISO8601
+            duration](https://en.wikipedia.org/wiki/ISO_8601#Durations) format.
+    ExecuteByNameQueriesV1DataQueryNameGetUntil:
+      type: string
+      oneOf:
+        - title: ISO8601 absolute timestamp
+          type: string
+          format: date-time
+          example: '2018-03-21T12:23:00+01:00'
+          description: >-
+            A date or date-time in
+            [ISO8601](https://en.wikipedia.org/wiki/ISO_8601#Combined_date_and_time_representations)
+            format. When no timezone is specified, the UTC timezone is assumed
+            (`+00:00`)
+          pattern: '[0-9]{4}-[0-9]{2}-[0-9]{2}(T.*)?'
+        - type: integer
+          title: UNIX epoch milliseconds
+          minimum: 0
+          description: Absolute timestamp milliseconds in unix epoch since 1970-01-01.
+          example: 1534836422284
+        - type: string
+          format: period
+          example: PT3H15M
+          pattern: >-
+            ^P([0-9]+Y)?([0-9]+M)?([0-9]+W)?([0-9]+D)?(T([0-9]+H)?([0-9]+M)?([0-9]+(\.[0-9]*)?S)?)?$
+          title: ISO8601 Period Before Now
+          description: >-
+            Specifies a timestamp before _now_ as a period in [ISO8601
+            duration](https://en.wikipedia.org/wiki/ISO_8601#Durations) format.
+    ExecuteByNameQueriesV1DataQueryNameGetWindow:
+      type: string
+      oneOf:
+        - type: string
+          format: period
+          example: PT3H15M
+          pattern: >-
+            ^P([0-9]+Y)?([0-9]+M)?([0-9]+W)?([0-9]+D)?(T([0-9]+H)?([0-9]+M)?([0-9]+(\.[0-9]*)?S)?)?$
+          title: 'ISO8601 period '
+          description: >-
+            A period in [ISO8601
+            duration](https://en.wikipedia.org/wiki/ISO_8601#Durations) format.
+    ExecuteByNameQueriesV1DataQueryNameGetRenderHEADER_ROW:
+      description: >-
+        Render rows of timestamp and values. Show column headers. Includes an
+        iso timestamp.
+
+
+        ###### options
+
+        - `iso_timestamp`: `True`
+
+        - `header_array`: `row`
+
+        - `roll_up`: `False`
+
+        - `data_axis`: `column`
+      type: string
+      enum:
+        - HEADER_ROW
+    ExecuteByNameQueriesV1DataQueryNameGetRenderCOMPACT:
+      description: |-
+        Render rows of timestamp and values. Show column headers.
+
+        ###### options
+        - `iso_timestamp`: `False`
+        - `header_array`: `row`
+        - `roll_up`: `False`
+        - `data_axis`: `column`
+      type: string
+      enum:
+        - COMPACT
+    ExecuteByNameQueriesV1DataQueryNameGetRenderCOMPACT_WS:
+      description: >-
+        Render rows of timestamp and values. Show column headers. Show the time
+        window attributes.
+
+
+        ###### options
+
+        - `iso_timestamp`: `False`
+
+        - `header_array`: `row`
+
+        - `roll_up`: `False`
+
+        - `data_axis`: `column`
+
+        - `include_window_spec`: `True`
+      type: string
+      enum:
+        - COMPACT_WS
+    ExecuteByNameQueriesV1DataQueryNameGetRenderSERIES:
+      description: >-
+        Render timestamps and each series (column) as a values array. Show
+        column headers.
+
+
+        ###### options
+
+        - `iso_timestamp`: `False`
+
+        - `header_array`: `row`
+
+        - `data_axis`: `row`
+
+        - `roll_up`: `True`
+
+        - `include_window_spec`: `True`
+      type: string
+      enum:
+        - SERIES
+    ExecuteByNameQueriesV1DataQueryNameGetRenderHEADER_COLUMN:
+      description: >-
+        Renders row index in `rows`, and each series as a values array.
+
+
+        The series are prefixed by their series attributes.The `rows` index is
+        prefixed by the labels for these attributes.
+
+
+        ###### options
+
+        - `iso_timestamp`: `True`
+
+        - `header_array`: `column`
+
+        - `roll_up`: `False`
+
+        - `data_axis`: `row`
+      type: string
+      enum:
+        - HEADER_COLUMN
+    ExecuteByNameQueriesV1DataQueryNameGetRenderFLAT_DICT:
+      description: |-
+        Render an object for each observation. Uses flattened keys.
+
+        ###### options
+        - `iso_timestamp`: `True`
+        - `hierarchical`: `False`
+        - `show_levels`: `True`
+        - `roll_up`: `False`
+      type: string
+      enum:
+        - FLAT_DICT
+    ExecuteByNameQueriesV1DataQueryNameGetRenderHIER_DICT:
+      description: >-
+        Render an hierarchical object for each observation. Shows an iso
+        timestamp.
+
+
+        ###### options
+
+        - `iso_timestamp`: `True`
+
+        - `hierarchical`: `True`
+
+        - `show_levels`: `True`
+
+        - `roll_up`: `True`
+      type: string
+      enum:
+        - HIER_DICT
+    ExecuteByNameQueriesV1DataQueryNameGetRenderMETRIC_FLAT_DICT:
+      description: >-
+        Render an object with metric keys for each observation. Shows an iso
+        timestamp.
+
+
+        ###### options
+
+        - `iso_timestamp`: `True`
+
+        - `hierarchical`: `['metric']`
+
+        - `show_levels`: `False`
+
+        - `roll_up`: `True`
+
+        - `key_skip_empty`: `True`
+      type: string
+      enum:
+        - METRIC_FLAT_DICT
+    ExecuteByNameQueriesV1DataQueryNameGetRenderUPLOAD:
+      description: |-
+        Render in an object format compatible with the `/data/v1/events` upload.
+
+        ###### options
+        - `iso_timestamp`: `False`
+        - `hierarchical`: `False`
+        - `show_levels`: `False`
+        - `roll_up`: `True`
+      type: string
+      enum:
+        - UPLOAD
+    ExecuteByNameQueriesV1DataQueryNameGetRenderCSV:
+      description: |-
+        Render in csv format with row headers.
+
+        ###### options
+        - `iso_timestamp`: `False`
+      type: string
+      enum:
+        - CSV
+    ExecuteByNameQueriesV1DataQueryNameGetRender:
+      anyOf:
+        - $ref: '#/components/schemas/_RenderMode'
+          title: Render Mode
+          oneOf:
+            - $ref: >-
+                #/components/schemas/ExecuteByNameQueriesV1DataQueryNameGetRenderHEADER_ROW
+            - $ref: >-
+                #/components/schemas/ExecuteByNameQueriesV1DataQueryNameGetRenderCOMPACT
+            - $ref: >-
+                #/components/schemas/ExecuteByNameQueriesV1DataQueryNameGetRenderCOMPACT_WS
+            - $ref: >-
+                #/components/schemas/ExecuteByNameQueriesV1DataQueryNameGetRenderSERIES
+            - $ref: >-
+                #/components/schemas/ExecuteByNameQueriesV1DataQueryNameGetRenderHEADER_COLUMN
+            - $ref: >-
+                #/components/schemas/ExecuteByNameQueriesV1DataQueryNameGetRenderFLAT_DICT
+            - $ref: >-
+                #/components/schemas/ExecuteByNameQueriesV1DataQueryNameGetRenderHIER_DICT
+            - $ref: >-
+                #/components/schemas/ExecuteByNameQueriesV1DataQueryNameGetRenderMETRIC_FLAT_DICT
+            - $ref: >-
+                #/components/schemas/ExecuteByNameQueriesV1DataQueryNameGetRenderUPLOAD
+            - $ref: >-
+                #/components/schemas/ExecuteByNameQueriesV1DataQueryNameGetRenderCSV
+        - $ref: '#/components/schemas/Render'
+          title: Render Override.
+    ExecuteByNameQueriesV1DataQueryNameGetAccept:
+      anyOf:
+        - type: string
+          nullable: true
+      description: Use a 'text/csv' accept header to get CSV formatted results.
+    AlignmentGrid:
+      type: string
+      description: >-
+        Align to a fixed grid defined by the alignment `frequency` and
+        `timezone`.
+      enum:
+        - grid
+    AlignmentBoundary:
+      type: string
+      description: >-
+        Align a the `from` boundary if specified, otherwise use the `until`
+        boundary (specfied or computed)
+      enum:
+        - boundary
+    AlignmentFrom:
+      type: string
+      description: Align a the `from` window boundary.
+      enum:
+        - from
+    AlignmentUntil:
+      type: string
+      description: Align a the `until` window boundary
+      enum:
+        - until
+    AlignmentBackward:
+      type: string
+      description: >-
+        Shift both boundaries (`align.at=grid`) or first boundary
+        (`align.at=until`) backward to align with the grid.
+      enum:
+        - backward
+    AlignmentForward:
+      type: string
+      description: >-
+        Shift both boundaries (`align.at=grid`) or last boundary
+        (`align.at=from`) forward to align with the grid.
+      enum:
+        - forward
+    AlignmentWrap:
+      type: string
+      description: >-
+        Shift first boundary backward, and last boundary forward to align with
+        the grid
+      enum:
+        - wrap
+    AlignmentInferred:
+      type: string
+      description: >-
+        When `inferred` is specified, the frequency of aggregation will be
+        inferred from the main/first time series. This can be used to regularize
+        the time series
+      enum:
+        - inferred
+    InterpolationSpecPad:
+      description: >-
+        Interpolate with the value of the first observed point. This method also
+        extrapolates.
+      enum:
+        - pad
+    InterpolationSpecFixed:
+      description: >-
+        Interpolate with a fixed, user-specified value. This method also
+        extrapolates.
+      enum:
+        - fixed
+    InterpolationSpecBackfill:
+      description: >-
+        Same as pad, but using the last observed value. This method also
+        extrapolates
+      enum:
+        - backfill
+    InterpolationSpecLinear:
+      description: >-
+        Linearly go from the first observed value of the gap to the last
+        observed oneThis method also extrapolates
+      enum:
+        - linear
+    InterpolationSpecNearest:
+      description: Use the value that is closest in time.
+      enum:
+        - nearest
+    InterpolationSpecZero:
+      description: >-
+        Interpolate with a spline function of order 0, which is a piecewise
+        polynomial.
+      enum:
+        - zero
+    InterpolationSpecSlinear:
+      description: >-
+        Interpolate with a spline function of order 1, which is a piecewise
+        polynomial.
+      enum:
+        - slinear
+    InterpolationSpecQuadratic:
+      description: >-
+        Interpolate with a spline function of order 2, which is a piecewise
+        polynomial.
+      enum:
+        - quadratic
+    InterpolationSpecCubic:
+      description: >-
+        Interpolate with a spline function of order 3, which is a piecewise
+        polynomial.
+      enum:
+        - cubic
+    InterpolationSpecPolynomial:
+      description: >-
+        Interpolate with a polynomial of the lowest possible degree passing
+        trough the data points.
+      enum:
+        - polynomial
+    InterpolationSpecSpline:
+      description: Interpolate with a spline function of a user-specified order.
+      enum:
+        - spline
+    InterpolationSpecFrom_derivatives:
+      description: Interpolate with the derivative of order 1.
+      enum:
+        - from_derivatives
+    InterpolationSpecPchip:
+      description: Interpolate with a piecewise cubic spline function.
+      enum:
+        - pchip
+    InterpolationSpecAkima:
+      description: >-
+        Interpolate with a non-smoothing spline of order 2, called Akima
+        interpolation.
+      enum:
+        - akima
+    Query-InputFirst:
+      description: >-
+        Use the first value (in time) to represent all data for the sample
+        interval.
+      enum:
+        - first
+    Query-InputLast:
+      description: >-
+        Use the last value (in time) to represent all data for the sample
+        interval.
+      enum:
+        - last
+    Query-InputMean:
+      description: >-
+        Aggregate data by the mean value: The sum of values divided by number of
+        observations.
+      enum:
+        - mean
+    Query-InputMedian:
+      description: >-
+        Aggregate data by the median value: The n/2-th value when ordered, the
+        average of the (n-1)/2-th and (n+1)/2-th value when n is uneven.
+      enum:
+        - median
+    Query-InputSum:
+      description: The sum of all values summarizes the data for the sample interval.
+      enum:
+        - sum
+    Query-InputCount:
+      description: Use the count of observations in the sample interval.
+      enum:
+        - count
+    Query-InputStd:
+      description: Use the standard deviation of all observations in the sample interval.
+      enum:
+        - std
+    Query-InputMax:
+      description: Use the maximum of all values in the sample interval.
+      enum:
+        - max
+    Query-InputMin:
+      description: Use the minimum of all values in the sample interval.
+      enum:
+        - min
+    Query-InputPad:
+      description: >-
+        Interpolate with the value of the first observed point. This method also
+        extrapolates.
+      enum:
+        - pad
+    Query-InputFixed:
+      description: >-
+        Interpolate with a fixed, user-specified value. This method also
+        extrapolates.
+      enum:
+        - fixed
+    Query-InputBackfill:
+      description: >-
+        Same as pad, but using the last observed value. This method also
+        extrapolates
+      enum:
+        - backfill
+    Query-InputLinear:
+      description: >-
+        Linearly go from the first observed value of the gap to the last
+        observed oneThis method also extrapolates
+      enum:
+        - linear
+    Query-InputNearest:
+      description: Use the value that is closest in time.
+      enum:
+        - nearest
+    Query-InputZero:
+      description: >-
+        Interpolate with a spline function of order 0, which is a piecewise
+        polynomial.
+      enum:
+        - zero
+    Query-InputSlinear:
+      description: >-
+        Interpolate with a spline function of order 1, which is a piecewise
+        polynomial.
+      enum:
+        - slinear
+    Query-InputQuadratic:
+      description: >-
+        Interpolate with a spline function of order 2, which is a piecewise
+        polynomial.
+      enum:
+        - quadratic
+    Query-InputCubic:
+      description: >-
+        Interpolate with a spline function of order 3, which is a piecewise
+        polynomial.
+      enum:
+        - cubic
+    Query-InputPolynomial:
+      description: >-
+        Interpolate with a polynomial of the lowest possible degree passing
+        trough the data points.
+      enum:
+        - polynomial
+    Query-InputSpline:
+      description: Interpolate with a spline function of a user-specified order.
+      enum:
+        - spline
+    Query-InputFrom_derivatives:
+      description: Interpolate with the derivative of order 1.
+      enum:
+        - from_derivatives
+    Query-InputPchip:
+      description: Interpolate with a piecewise cubic spline function.
+      enum:
+        - pchip
+    Query-InputAkima:
+      description: >-
+        Interpolate with a non-smoothing spline of order 2, called Akima
+        interpolation.
+      enum:
+        - akima
+    Query-InputInferred:
+      type: string
+      description: >-
+        When `inferred` is specified, the frequency of aggregation will be
+        inferred from the main/first time series. This can be used to regularize
+        the time series
+      enum:
+        - inferred
+    Query-OutputFirst:
+      description: >-
+        Use the first value (in time) to represent all data for the sample
+        interval.
+      enum:
+        - first
+    Query-OutputLast:
+      description: >-
+        Use the last value (in time) to represent all data for the sample
+        interval.
+      enum:
+        - last
+    Query-OutputMean:
+      description: >-
+        Aggregate data by the mean value: The sum of values divided by number of
+        observations.
+      enum:
+        - mean
+    Query-OutputMedian:
+      description: >-
+        Aggregate data by the median value: The n/2-th value when ordered, the
+        average of the (n-1)/2-th and (n+1)/2-th value when n is uneven.
+      enum:
+        - median
+    Query-OutputSum:
+      description: The sum of all values summarizes the data for the sample interval.
+      enum:
+        - sum
+    Query-OutputCount:
+      description: Use the count of observations in the sample interval.
+      enum:
+        - count
+    Query-OutputStd:
+      description: Use the standard deviation of all observations in the sample interval.
+      enum:
+        - std
+    Query-OutputMax:
+      description: Use the maximum of all values in the sample interval.
+      enum:
+        - max
+    Query-OutputMin:
+      description: Use the minimum of all values in the sample interval.
+      enum:
+        - min
+    Query-OutputPad:
+      description: >-
+        Interpolate with the value of the first observed point. This method also
+        extrapolates.
+      enum:
+        - pad
+    Query-OutputFixed:
+      description: >-
+        Interpolate with a fixed, user-specified value. This method also
+        extrapolates.
+      enum:
+        - fixed
+    Query-OutputBackfill:
+      description: >-
+        Same as pad, but using the last observed value. This method also
+        extrapolates
+      enum:
+        - backfill
+    Query-OutputLinear:
+      description: >-
+        Linearly go from the first observed value of the gap to the last
+        observed oneThis method also extrapolates
+      enum:
+        - linear
+    Query-OutputNearest:
+      description: Use the value that is closest in time.
+      enum:
+        - nearest
+    Query-OutputZero:
+      description: >-
+        Interpolate with a spline function of order 0, which is a piecewise
+        polynomial.
+      enum:
+        - zero
+    Query-OutputSlinear:
+      description: >-
+        Interpolate with a spline function of order 1, which is a piecewise
+        polynomial.
+      enum:
+        - slinear
+    Query-OutputQuadratic:
+      description: >-
+        Interpolate with a spline function of order 2, which is a piecewise
+        polynomial.
+      enum:
+        - quadratic
+    Query-OutputCubic:
+      description: >-
+        Interpolate with a spline function of order 3, which is a piecewise
+        polynomial.
+      enum:
+        - cubic
+    Query-OutputPolynomial:
+      description: >-
+        Interpolate with a polynomial of the lowest possible degree passing
+        trough the data points.
+      enum:
+        - polynomial
+    Query-OutputSpline:
+      description: Interpolate with a spline function of a user-specified order.
+      enum:
+        - spline
+    Query-OutputFrom_derivatives:
+      description: Interpolate with the derivative of order 1.
+      enum:
+        - from_derivatives
+    Query-OutputPchip:
+      description: Interpolate with a piecewise cubic spline function.
+      enum:
+        - pchip
+    Query-OutputAkima:
+      description: >-
+        Interpolate with a non-smoothing spline of order 2, called Akima
+        interpolation.
+      enum:
+        - akima
+    Query-OutputInferred:
+      type: string
+      description: >-
+        When `inferred` is specified, the frequency of aggregation will be
+        inferred from the main/first time series. This can be used to regularize
+        the time series
+      enum:
+        - inferred
+    RenderHEADER_ROW:
+      type: string
+      description: >-
+        Render rows of timestamp and values. Show column headers. Includes an
+        iso timestamp.
+
+
+        ###### options
+
+        - `iso_timestamp`: `True`
+
+        - `header_array`: `row`
+
+        - `roll_up`: `False`
+
+        - `data_axis`: `column`
+      enum:
+        - HEADER_ROW
+    RenderCOMPACT:
+      type: string
+      description: |-
+        Render rows of timestamp and values. Show column headers.
+
+        ###### options
+        - `iso_timestamp`: `False`
+        - `header_array`: `row`
+        - `roll_up`: `False`
+        - `data_axis`: `column`
+      enum:
+        - COMPACT
+    RenderCOMPACT_WS:
+      type: string
+      description: >-
+        Render rows of timestamp and values. Show column headers. Show the time
+        window attributes.
+
+
+        ###### options
+
+        - `iso_timestamp`: `False`
+
+        - `header_array`: `row`
+
+        - `roll_up`: `False`
+
+        - `data_axis`: `column`
+
+        - `include_window_spec`: `True`
+      enum:
+        - COMPACT_WS
+    RenderSERIES:
+      type: string
+      description: >-
+        Render timestamps and each series (column) as a values array. Show
+        column headers.
+
+
+        ###### options
+
+        - `iso_timestamp`: `False`
+
+        - `header_array`: `row`
+
+        - `data_axis`: `row`
+
+        - `roll_up`: `True`
+
+        - `include_window_spec`: `True`
+      enum:
+        - SERIES
+    RenderHEADER_COLUMN:
+      type: string
+      description: >-
+        Renders row index in `rows`, and each series as a values array.
+
+
+        The series are prefixed by their series attributes.The `rows` index is
+        prefixed by the labels for these attributes.
+
+
+        ###### options
+
+        - `iso_timestamp`: `True`
+
+        - `header_array`: `column`
+
+        - `roll_up`: `False`
+
+        - `data_axis`: `row`
+      enum:
+        - HEADER_COLUMN
+    RenderFLAT_DICT:
+      type: string
+      description: |-
+        Render an object for each observation. Uses flattened keys.
+
+        ###### options
+        - `iso_timestamp`: `True`
+        - `hierarchical`: `False`
+        - `show_levels`: `True`
+        - `roll_up`: `False`
+      enum:
+        - FLAT_DICT
+    RenderHIER_DICT:
+      type: string
+      description: >-
+        Render an hierarchical object for each observation. Shows an iso
+        timestamp.
+
+
+        ###### options
+
+        - `iso_timestamp`: `True`
+
+        - `hierarchical`: `True`
+
+        - `show_levels`: `True`
+
+        - `roll_up`: `True`
+      enum:
+        - HIER_DICT
+    RenderMETRIC_FLAT_DICT:
+      type: string
+      description: >-
+        Render an object with metric keys for each observation. Shows an iso
+        timestamp.
+
+
+        ###### options
+
+        - `iso_timestamp`: `True`
+
+        - `hierarchical`: `['metric']`
+
+        - `show_levels`: `False`
+
+        - `roll_up`: `True`
+
+        - `key_skip_empty`: `True`
+      enum:
+        - METRIC_FLAT_DICT
+    RenderUPLOAD:
+      type: string
+      description: |-
+        Render in an object format compatible with the `/data/v1/events` upload.
+
+        ###### options
+        - `iso_timestamp`: `False`
+        - `hierarchical`: `False`
+        - `show_levels`: `False`
+        - `roll_up`: `True`
+      enum:
+        - UPLOAD
+    RenderCSV:
+      type: string
+      description: |-
+        Render in csv format with row headers.
+
+        ###### options
+        - `iso_timestamp`: `False`
+      enum:
+        - CSV
+    SeriesSpecFirst:
+      description: >-
+        Use the first value (in time) to represent all data for the sample
+        interval.
+      enum:
+        - first
+    SeriesSpecLast:
+      description: >-
+        Use the last value (in time) to represent all data for the sample
+        interval.
+      enum:
+        - last
+    SeriesSpecMean:
+      description: >-
+        Aggregate data by the mean value: The sum of values divided by number of
+        observations.
+      enum:
+        - mean
+    SeriesSpecMedian:
+      description: >-
+        Aggregate data by the median value: The n/2-th value when ordered, the
+        average of the (n-1)/2-th and (n+1)/2-th value when n is uneven.
+      enum:
+        - median
+    SeriesSpecSum:
+      description: The sum of all values summarizes the data for the sample interval.
+      enum:
+        - sum
+    SeriesSpecCount:
+      description: Use the count of observations in the sample interval.
+      enum:
+        - count
+    SeriesSpecStd:
+      description: Use the standard deviation of all observations in the sample interval.
+      enum:
+        - std
+    SeriesSpecMax:
+      description: Use the maximum of all values in the sample interval.
+      enum:
+        - max
+    SeriesSpecMin:
+      description: Use the minimum of all values in the sample interval.
+      enum:
+        - min
+    SeriesSpecPad:
+      description: >-
+        Interpolate with the value of the first observed point. This method also
+        extrapolates.
+      enum:
+        - pad
+    SeriesSpecFixed:
+      description: >-
+        Interpolate with a fixed, user-specified value. This method also
+        extrapolates.
+      enum:
+        - fixed
+    SeriesSpecBackfill:
+      description: >-
+        Same as pad, but using the last observed value. This method also
+        extrapolates
+      enum:
+        - backfill
+    SeriesSpecLinear:
+      description: >-
+        Linearly go from the first observed value of the gap to the last
+        observed oneThis method also extrapolates
+      enum:
+        - linear
+    SeriesSpecNearest:
+      description: Use the value that is closest in time.
+      enum:
+        - nearest
+    SeriesSpecZero:
+      description: >-
+        Interpolate with a spline function of order 0, which is a piecewise
+        polynomial.
+      enum:
+        - zero
+    SeriesSpecSlinear:
+      description: >-
+        Interpolate with a spline function of order 1, which is a piecewise
+        polynomial.
+      enum:
+        - slinear
+    SeriesSpecQuadratic:
+      description: >-
+        Interpolate with a spline function of order 2, which is a piecewise
+        polynomial.
+      enum:
+        - quadratic
+    SeriesSpecCubic:
+      description: >-
+        Interpolate with a spline function of order 3, which is a piecewise
+        polynomial.
+      enum:
+        - cubic
+    SeriesSpecPolynomial:
+      description: >-
+        Interpolate with a polynomial of the lowest possible degree passing
+        trough the data points.
+      enum:
+        - polynomial
+    SeriesSpecSpline:
+      description: Interpolate with a spline function of a user-specified order.
+      enum:
+        - spline
+    SeriesSpecFrom_derivatives:
+      description: Interpolate with the derivative of order 1.
+      enum:
+        - from_derivatives
+    SeriesSpecPchip:
+      description: Interpolate with a piecewise cubic spline function.
+      enum:
+        - pchip
+    SeriesSpecAkima:
+      description: >-
+        Interpolate with a non-smoothing spline of order 2, called Akima
+        interpolation.
+      enum:
+        - akima
   securitySchemes:
     waylayApiKeySecret:
       type: http

@@ -2,28 +2,30 @@
 
 The start of the time window for which results will be returned. One of the [time line](https://docs.waylay.io/#/api/query/?id=time-line-properties)  specifiers.
 
-## Properties
+**Source:** `waylay.services.queries.models.time_window_from`
 
-Name | Type | Description | Notes
------------- | ------------- | ------------- | -------------
+
+
+## Union Type (One Of)
+
+This type allows one of the following:
+
+Type | Description
+------------ | -------------
+**datetime** | A date or date-time in [ISO8601](https://en.wikipedia.org/wiki/ISO_8601#Combined_date_and_time_representations) format. When no timezone is specified, the UTC timezone is assumed (`+00:00`)
+**int** | Absolute timestamp milliseconds in unix epoch since 1970-01-01.
+**str** | Specifies a timestamp before _now_ as a period in [ISO8601 duration](https://en.wikipedia.org/wiki/ISO_8601#Durations) format.
 
 ## Example
 
 ```python
 from waylay.services.queries.models.time_window_from import TimeWindowFrom
 
-# TODO update the JSON string below
-json = "{}"
-# create an instance of TimeWindowFrom from a JSON string
-time_window_from_instance = TimeWindowFrom.from_json(json)
-# print the JSON string representation of the object
-print TimeWindowFrom.to_json()
-
-# convert the object into a dict
-time_window_from_dict = time_window_from_instance.to_dict()
-# create an instance of TimeWindowFrom from a dict
-time_window_from_form_dict = time_window_from.from_dict(time_window_from_dict)
+# Use any of the accepted types (see table above)
+my_time_window_from: TimeWindowFrom = ...
 ```
+
+
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 
 

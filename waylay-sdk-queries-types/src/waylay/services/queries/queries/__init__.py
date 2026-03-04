@@ -1,4 +1,3 @@
-# coding: utf-8
 """Waylay Query: timeseries queries (v1 protocol): Query Parameters.
 
 This code was generated from the OpenAPI documentation of 'Waylay Query: timeseries queries (v1 protocol)'

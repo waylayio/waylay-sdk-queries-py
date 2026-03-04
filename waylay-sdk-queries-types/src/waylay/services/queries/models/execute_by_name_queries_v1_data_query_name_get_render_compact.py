@@ -1,0 +1,20 @@
+"""Waylay Query: timeseries queries (v1 protocol) models.
+
+This code was generated from the OpenAPI documentation of 'Waylay Query: timeseries queries (v1 protocol)'
+
+Do not edit the class manually.
+
+"""
+
+from __future__ import annotations
+
+from enum import Enum
+
+
+class ExecuteByNameQueriesV1DataQueryNameGetRenderCOMPACT(str, Enum):
+    """Render rows of timestamp and values. Show column headers.  ###### options - `iso_timestamp`: `False` - `header_array`: `row` - `roll_up`: `False` - `data_axis`: `column`."""
+
+    COMPACT = "COMPACT"
+
+    def __str__(self) -> str:
+        return str(self.value)

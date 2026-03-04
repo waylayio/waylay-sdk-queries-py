@@ -2,6 +2,11 @@
 
 Aggregation Alignment Options.  Specifies how the aggregation grid is aligned.
 
+**Source:** `waylay.services.queries.models.alignment`
+
+
+
+
 ## Properties
 
 Name | Type | Description | Notes
@@ -11,23 +16,25 @@ Name | Type | Description | Notes
 **freq** | [**AlignmentGridInterval**](AlignmentGridInterval.md) |  | [optional] 
 **timezone** | [**AlignmentTimezone**](AlignmentTimezone.md) |  | [optional] 
 
+
 ## Example
 
 ```python
 from waylay.services.queries.models.alignment import Alignment
 
-# TODO update the JSON string below
-json = "{}"
-# create an instance of Alignment from a JSON string
-alignment_instance = Alignment.from_json(json)
-# print the JSON string representation of the object
-print Alignment.to_json()
+alignment = Alignment(at=..., shift=..., freq=..., timezone=...)
 
-# convert the object into a dict
-alignment_dict = alignment_instance.to_dict()
-# create an instance of Alignment from a dict
-alignment_form_dict = alignment.from_dict(alignment_dict)
+# Create from JSON
+alignment = Alignment.from_json(
+    '{ "at": ..., "shift": ..., "freq": ..., "timezone": ... }'
+)
+
+# Export to dictionary
+alignment_dict = alignment.to_dict()
 ```
+
+
+
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 
 

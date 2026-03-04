@@ -2,6 +2,11 @@
 
 Individual (info/warning/error) message in a response.
 
+**Source:** `waylay.services.queries.models.message`
+
+
+
+
 ## Properties
 
 Name | Type | Description | Notes
@@ -11,23 +16,25 @@ Name | Type | Description | Notes
 **level** | [**MessageLevel**](MessageLevel.md) |  | [optional] [default to MessageLevel.INFO]
 **args** | **Dict[str, object]** |  | [optional] 
 
+
 ## Example
 
 ```python
 from waylay.services.queries.models.message import Message
 
-# TODO update the JSON string below
-json = "{}"
-# create an instance of Message from a JSON string
-message_instance = Message.from_json(json)
-# print the JSON string representation of the object
-print Message.to_json()
+message = Message(code=..., message=..., level=..., args=...)
 
-# convert the object into a dict
-message_dict = message_instance.to_dict()
-# create an instance of Message from a dict
-message_form_dict = message.from_dict(message_dict)
+# Create from JSON
+message = Message.from_json(
+    '{ "code": ..., "message": ..., "level": ..., "args": ... }'
+)
+
+# Export to dictionary
+message_dict = message.to_dict()
 ```
+
+
+
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 
 

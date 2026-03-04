@@ -1,0 +1,20 @@
+"""Waylay Query: timeseries queries (v1 protocol) models.
+
+This code was generated from the OpenAPI documentation of 'Waylay Query: timeseries queries (v1 protocol)'
+
+Do not edit the class manually.
+
+"""
+
+from __future__ import annotations
+
+from enum import Enum
+
+
+class RenderSERIES(str, Enum):
+    """Render timestamps and each series (column) as a values array. Show column headers.  ###### options - `iso_timestamp`: `False` - `header_array`: `row` - `data_axis`: `row` - `roll_up`: `True` - `include_window_spec`: `True`."""
+
+    SERIES = "SERIES"
+
+    def __str__(self) -> str:
+        return str(self.value)

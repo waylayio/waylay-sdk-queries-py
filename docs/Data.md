@@ -1,28 +1,29 @@
 # Data
 
 
-## Properties
+**Source:** `waylay.services.queries.models.data`
 
-Name | Type | Description | Notes
------------- | ------------- | ------------- | -------------
+
+
+## Union Type (One Of)
+
+This type allows one of the following:
+
+Type | Description
+------------ | -------------
+**object** | Values for the series whose attributes corresponds with the key. Keyed by sub-levels.
+[**Datum**](Datum.md) | -
 
 ## Example
 
 ```python
 from waylay.services.queries.models.data import Data
 
-# TODO update the JSON string below
-json = "{}"
-# create an instance of Data from a JSON string
-data_instance = Data.from_json(json)
-# print the JSON string representation of the object
-print Data.to_json()
-
-# convert the object into a dict
-data_dict = data_instance.to_dict()
-# create an instance of Data from a dict
-data_form_dict = data.from_dict(data_dict)
+# Use any of the accepted types (see table above)
+my_data: Data = ...
 ```
+
+
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 
 

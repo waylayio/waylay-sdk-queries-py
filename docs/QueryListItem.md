@@ -2,6 +2,11 @@
 
 Listing of a query definition item.
 
+**Source:** `waylay.services.queries.models.query_list_item`
+
+
+
+
 ## Properties
 
 Name | Type | Description | Notes
@@ -11,23 +16,25 @@ Name | Type | Description | Notes
 **name** | **str** | Name of the stored query definition. | 
 **meta** | **Dict[str, object]** | User metadata for the query definition. | [optional] 
 
+
 ## Example
 
 ```python
 from waylay.services.queries.models.query_list_item import QueryListItem
 
-# TODO update the JSON string below
-json = "{}"
-# create an instance of QueryListItem from a JSON string
-query_list_item_instance = QueryListItem.from_json(json)
-# print the JSON string representation of the object
-print QueryListItem.to_json()
+query_list_item = QueryListItem(links=..., attrs=..., name=..., meta=...)
 
-# convert the object into a dict
-query_list_item_dict = query_list_item_instance.to_dict()
-# create an instance of QueryListItem from a dict
-query_list_item_form_dict = query_list_item.from_dict(query_list_item_dict)
+# Create from JSON
+query_list_item = QueryListItem.from_json(
+    '{ "_links": ..., "attrs": ..., "name": ..., "meta": ... }'
+)
+
+# Export to dictionary
+query_list_item_dict = query_list_item.to_dict()
 ```
+
+
+
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 
 

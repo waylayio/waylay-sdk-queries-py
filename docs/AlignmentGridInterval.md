@@ -2,28 +2,29 @@
 
  Defines the grid used to align the aggregation window. The window will align at whole-unit multiples of this interval.  For intervals like `PT1D`, that are timezone-dependent, use the  `align.timezone` to fix the absolute timestamp of the grid boundaries.  If not specified, defaults to the `freq` aggregation interval. 
 
-## Properties
+**Source:** `waylay.services.queries.models.alignment_grid_interval`
 
-Name | Type | Description | Notes
------------- | ------------- | ------------- | -------------
+
+
+## Union Type (One Of)
+
+This type allows one of the following:
+
+Type | Description
+------------ | -------------
+**str** | A period in [ISO8601 duration](https://en.wikipedia.org/wiki/ISO_8601#Durations) format.
+[**AlignmentInferred**](AlignmentInferred.md) | -
 
 ## Example
 
 ```python
 from waylay.services.queries.models.alignment_grid_interval import AlignmentGridInterval
 
-# TODO update the JSON string below
-json = "{}"
-# create an instance of AlignmentGridInterval from a JSON string
-alignment_grid_interval_instance = AlignmentGridInterval.from_json(json)
-# print the JSON string representation of the object
-print AlignmentGridInterval.to_json()
-
-# convert the object into a dict
-alignment_grid_interval_dict = alignment_grid_interval_instance.to_dict()
-# create an instance of AlignmentGridInterval from a dict
-alignment_grid_interval_form_dict = alignment_grid_interval.from_dict(alignment_grid_interval_dict)
+# Use any of the accepted types (see table above)
+my_alignment_grid_interval: AlignmentGridInterval = ...
 ```
+
+
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 
 

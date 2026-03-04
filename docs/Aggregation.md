@@ -2,28 +2,36 @@
 
 Aggregation method for a series in the query.
 
-## Properties
+**Source:** `waylay.services.queries.models.aggregation`
 
-Name | Type | Description | Notes
------------- | ------------- | ------------- | -------------
+
+
+## Union Type (One Of)
+
+This type allows one of the following:
+
+Type | Description
+------------ | -------------
+[**QueryInputFirst**](QueryInputFirst.md) | -
+[**QueryInputLast**](QueryInputLast.md) | -
+[**QueryInputMean**](QueryInputMean.md) | -
+[**QueryInputMedian**](QueryInputMedian.md) | -
+[**QueryInputSum**](QueryInputSum.md) | -
+[**QueryInputCount**](QueryInputCount.md) | -
+[**QueryInputStd**](QueryInputStd.md) | -
+[**QueryInputMax**](QueryInputMax.md) | -
+[**QueryInputMin**](QueryInputMin.md) | -
 
 ## Example
 
 ```python
 from waylay.services.queries.models.aggregation import Aggregation
 
-# TODO update the JSON string below
-json = "{}"
-# create an instance of Aggregation from a JSON string
-aggregation_instance = Aggregation.from_json(json)
-# print the JSON string representation of the object
-print Aggregation.to_json()
-
-# convert the object into a dict
-aggregation_dict = aggregation_instance.to_dict()
-# create an instance of Aggregation from a dict
-aggregation_form_dict = aggregation.from_dict(aggregation_dict)
+# Use any of the accepted types (see table above)
+my_aggregation: Aggregation = ...
 ```
+
+
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 
 

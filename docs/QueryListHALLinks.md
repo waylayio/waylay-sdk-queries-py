@@ -2,6 +2,11 @@
 
 HAL Links for a query entity.
 
+**Source:** `waylay.services.queries.models.query_list_hal_links`
+
+
+
+
 ## Properties
 
 Name | Type | Description | Notes
@@ -12,23 +17,27 @@ Name | Type | Description | Notes
 **next** | [**HALLink**](HALLink.md) |  | [optional] 
 **last** | [**HALLink**](HALLink.md) |  | [optional] 
 
+
 ## Example
 
 ```python
 from waylay.services.queries.models.query_list_hal_links import QueryListHALLinks
 
-# TODO update the JSON string below
-json = "{}"
-# create an instance of QueryListHALLinks from a JSON string
-query_list_hal_links_instance = QueryListHALLinks.from_json(json)
-# print the JSON string representation of the object
-print QueryListHALLinks.to_json()
+query_list_hal_links = QueryListHALLinks(
+    var_self=..., first=..., prev=..., next=..., last=...
+)
 
-# convert the object into a dict
-query_list_hal_links_dict = query_list_hal_links_instance.to_dict()
-# create an instance of QueryListHALLinks from a dict
-query_list_hal_links_form_dict = query_list_hal_links.from_dict(query_list_hal_links_dict)
+# Create from JSON
+query_list_hal_links = QueryListHALLinks.from_json(
+    '{ "self": ..., "first": ..., "prev": ..., "next": ..., "last": ... }'
+)
+
+# Export to dictionary
+query_list_hal_links_dict = query_list_hal_links.to_dict()
 ```
+
+
+
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 
 

@@ -28,8 +28,6 @@ Alternatively, you can install support for this _queries_ service only, installi
 ## Usage
 
 ```python
-from pprint import pprint
-
 # Import the waylay-client from the waylay-sdk-core package
 from waylay.sdk.client import WaylayClient
 from waylay.sdk.api.api_exceptions import ApiError
@@ -46,20 +44,19 @@ try:
     api_response = await waylay_client.queries.execute_queries.execute(
         # query parameters:
         query = {
-            'resource': '13efb488-75ac-4dac-828a-d49c5c2ebbfc'
-            'metric': 'temperature'
+            'resource': '13efb488-75ac-4dac-828a-d49c5c2ebbfc',
+            'metric': 'temperature',
         },
         # json data: use a generated model or a json-serializable python data structure (dict, list)
-        json = waylay.services.queries.QueryInput() # QueryInput | 
+        json = waylay.services.queries.QueryInput(), # QueryInput | 
         headers = {
             'accept': 'accept_example',
         },
     )
-    print("The response of queries.execute_queries.execute:\n")
-    pprint(api_response)
+    print(f"Response: {api_response}")
 except ApiError as e:
     print("Exception when calling queries.execute_queries.execute: %s\n" % e)
 ```
 
 
-For more information, please visit the [Waylay API documentation](https://docs.waylay.io/#/api/?id=software-development-kits).
+For more information, please visit the [Waylay API documentation](https://docs.waylay.io/#/api/sdk/waylay-sdk/).

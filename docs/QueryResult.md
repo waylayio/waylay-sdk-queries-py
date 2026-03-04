@@ -2,6 +2,11 @@
 
 A json data response.  Uses the format as specified by the `render` options of the request (defaults to `COMPACT_WS`). '
 
+**Source:** `waylay.services.queries.models.query_result`
+
+
+
+
 ## Properties
 
 Name | Type | Description | Notes
@@ -10,23 +15,23 @@ Name | Type | Description | Notes
 **query** | [**QueryOutput**](QueryOutput.md) |  | 
 **messages** | [**List[QueryExecutionMessage]**](QueryExecutionMessage.md) |  | 
 
+
 ## Example
 
 ```python
 from waylay.services.queries.models.query_result import QueryResult
 
-# TODO update the JSON string below
-json = "{}"
-# create an instance of QueryResult from a JSON string
-query_result_instance = QueryResult.from_json(json)
-# print the JSON string representation of the object
-print QueryResult.to_json()
+query_result = QueryResult(data=..., query=..., messages=...)
 
-# convert the object into a dict
-query_result_dict = query_result_instance.to_dict()
-# create an instance of QueryResult from a dict
-query_result_form_dict = query_result.from_dict(query_result_dict)
+# Create from JSON
+query_result = QueryResult.from_json('{ "data": ..., "query": ..., "messages": ... }')
+
+# Export to dictionary
+query_result_dict = query_result.to_dict()
 ```
+
+
+
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 
 

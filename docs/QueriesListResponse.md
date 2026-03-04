@@ -2,6 +2,11 @@
 
 Listing of named queries, with paging links.
 
+**Source:** `waylay.services.queries.models.queries_list_response`
+
+
+
+
 ## Properties
 
 Name | Type | Description | Notes
@@ -14,23 +19,33 @@ Name | Type | Description | Notes
 **total_count** | **int** | Total number of query definitions matching the filter. | [optional] 
 **links** | [**QueryListHALLinks**](QueryListHALLinks.md) |  | 
 
+
 ## Example
 
 ```python
 from waylay.services.queries.models.queries_list_response import QueriesListResponse
 
-# TODO update the JSON string below
-json = "{}"
-# create an instance of QueriesListResponse from a JSON string
-queries_list_response_instance = QueriesListResponse.from_json(json)
-# print the JSON string representation of the object
-print QueriesListResponse.to_json()
+queries_list_response = QueriesListResponse(
+    messages=...,
+    queries=...,
+    count=...,
+    offset=...,
+    limit=...,
+    total_count=...,
+    links=...,
+)
 
-# convert the object into a dict
-queries_list_response_dict = queries_list_response_instance.to_dict()
-# create an instance of QueriesListResponse from a dict
-queries_list_response_form_dict = queries_list_response.from_dict(queries_list_response_dict)
+# Create from JSON
+queries_list_response = QueriesListResponse.from_json(
+    '{ "messages": ..., "queries": ..., "count": ..., "offset": ..., "limit": ..., "total_count": ..., "_links": ... }'
+)
+
+# Export to dictionary
+queries_list_response_dict = queries_list_response.to_dict()
 ```
+
+
+
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 
 
