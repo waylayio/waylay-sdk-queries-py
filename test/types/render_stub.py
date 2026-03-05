@@ -26,7 +26,7 @@ render_model_schema = json.loads(
   "type" : "object",
   "properties" : {
     "mode" : {
-      "$ref" : "#/components/schemas/Render_mode"
+      "$ref" : "#/components/schemas/execute_query_queries_v1_data_post_render_parameter"
     },
     "roll_up" : {
       "title" : "Roll Up",

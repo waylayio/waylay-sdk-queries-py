@@ -41,6 +41,10 @@ execute_query_queries_v1_data_post_aggregation_model_schema = json.loads(
   }, {
     "$ref" : "#/components/schemas/ExecuteQueryQueriesV1DataPostAggregationCount"
   }, {
+    "$ref" : "#/components/schemas/ExecuteQueryQueriesV1DataPostAggregationCount-numeric"
+  }, {
+    "$ref" : "#/components/schemas/ExecuteQueryQueriesV1DataPostAggregationCount-non-numeric"
+  }, {
     "$ref" : "#/components/schemas/ExecuteQueryQueriesV1DataPostAggregationStd"
   }, {
     "$ref" : "#/components/schemas/ExecuteQueryQueriesV1DataPostAggregationMax"

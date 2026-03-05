@@ -22,7 +22,7 @@ except ImportError:
 
 column_data_set_model_schema = json.loads(
     r"""{
-  "required" : [ "data", "rows" ],
+  "required" : [ "column_names", "data", "rows" ],
   "type" : "object",
   "properties" : {
     "attributes" : {
@@ -40,6 +40,14 @@ column_data_set_model_schema = json.loads(
       "description" : "Header Attributes for the index data.\n\nThe initial string-valued headers (normally `resource`, `metric`,`aggregation`) indicate that row to contain series attributes.\n\nThe remaining object-valued row headers contain the index data.",
       "items" : {
         "$ref" : "#/components/schemas/Row_Headers_inner"
+      }
+    },
+    "column_names" : {
+      "title" : "Column names",
+      "type" : "array",
+      "description" : "Short names for the columns in the data set.\nThese names are the `name` alias if given in the series specification, otherwise is composed of the `resource`, `metric` and `aggregation` attributes, concatenated with the `render.key_separator` (default `.`) as separator.",
+      "items" : {
+        "type" : "string"
       }
     },
     "data" : {

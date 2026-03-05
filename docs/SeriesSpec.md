@@ -15,7 +15,7 @@ Name | Type | Description | Notes
 **resource** | **str** | Resource id for the series, required unless it is specified as a query default. | [optional] 
 **metric** | **str** | Metric name for the series, required unless it is specified as a query default. | [optional] 
 **aggregration** | [**Aggregration**](Aggregration.md) |  | [optional] 
-**interpolation** | [**Interpolation**](Interpolation.md) |  | [optional] 
+**interpolation** | [**InterpolationSpecification**](InterpolationSpecification.md) |  | [optional] 
 
 
 ## Example

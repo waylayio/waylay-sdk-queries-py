@@ -29,6 +29,12 @@ from waylay.sdk.api.api_exceptions import ApiError
 waylay_client = WaylayClient.from_profile()
 
 # Note that the typed model classes for responses/parameters/... are only available when `waylay-sdk-queries-types` is installed
+from waylay.services.queries.models.execute_query_queries_v1_data_post_interpolation_parameter import (
+    ExecuteQueryQueriesV1DataPostInterpolationParameter,
+)
+from waylay.services.queries.models.execute_query_queries_v1_data_post_render_parameter import (
+    ExecuteQueryQueriesV1DataPostRenderParameter,
+)
 from waylay.services.queries.models.query_result import QueryResult
 
 try:
@@ -40,6 +46,8 @@ try:
         query={
             "resource": "13efb488-75ac-4dac-828a-d49c5c2ebbfc",
             "metric": "temperature",
+            "interpolation": "pad",
+            "render": "HEADER_ROW",
         },
         headers={
             "accept": "accept_example",
@@ -62,14 +70,14 @@ Name     | Type  | API binding   | Description   | Notes
 **query** | [QueryParamTypes](Operation.md#req_arg_query) \| **None** | URL query parameter |  | 
 **query['resource']** (dict) <br> **query.resource** (Query) | **str** | query parameter `"resource"` | Default Resource Override. | [optional] 
 **query['metric']** (dict) <br> **query.metric** (Query) | **str** | query parameter `"metric"` | Default Metric Override. | [optional] 
-**query['aggregation']** (dict) <br> **query.aggregation** (Query) | **ExecuteByNameQueriesV1DataQueryNameGetAggregation** | query parameter `"aggregation"` |  | [optional] 
-**query['interpolation']** (dict) <br> **query.interpolation** (Query) | [**ExecuteByNameQueriesV1DataQueryNameGetInterpolation**](ExecuteByNameQueriesV1DataQueryNameGetInterpolation.md) | query parameter `"interpolation"` |  | [optional] 
-**query['freq']** (dict) <br> **query.freq** (Query) | **ExecuteByNameQueriesV1DataQueryNameGetFreq** | query parameter `"freq"` | Override for the &#x60;freq&#x60; query attribute. | [optional] 
-**query['from']** (dict) <br> **query.var_from** (Query) | **ExecuteByNameQueriesV1DataQueryNameGetFrom** | query parameter `"from"` |  | [optional] 
-**query['until']** (dict) <br> **query.until** (Query) | **ExecuteByNameQueriesV1DataQueryNameGetUntil** | query parameter `"until"` |  | [optional] 
-**query['window']** (dict) <br> **query.window** (Query) | **ExecuteByNameQueriesV1DataQueryNameGetWindow** | query parameter `"window"` |  | [optional] 
+**query['aggregation']** (dict) <br> **query.aggregation** (Query) | **ExecuteByNameAggregation** | query parameter `"aggregation"` |  | [optional] 
+**query['interpolation']** (dict) <br> **query.interpolation** (Query) | [**ExecuteQueryQueriesV1DataPostInterpolationParameter**](ExecuteQueryQueriesV1DataPostInterpolationParameter.md) | query parameter `"interpolation"` |  | [optional] 
+**query['freq']** (dict) <br> **query.freq** (Query) | **ExecuteByNameFreq** | query parameter `"freq"` | Override for the &#x60;freq&#x60; query attribute. | [optional] 
+**query['from']** (dict) <br> **query.var_from** (Query) | **ExecuteByNameFrom** | query parameter `"from"` |  | [optional] 
+**query['until']** (dict) <br> **query.until** (Query) | **ExecuteByNameUntil** | query parameter `"until"` |  | [optional] 
+**query['window']** (dict) <br> **query.window** (Query) | **ExecuteByNameWindow** | query parameter `"window"` |  | [optional] 
 **query['periods']** (dict) <br> **query.periods** (Query) | **int** | query parameter `"periods"` |  | [optional] 
-**query['render']** (dict) <br> **query.render** (Query) | [**ExecuteByNameQueriesV1DataQueryNameGetRender**](ExecuteByNameQueriesV1DataQueryNameGetRender.md) | query parameter `"render"` |  | [optional] 
+**query['render']** (dict) <br> **query.render** (Query) | [**ExecuteQueryQueriesV1DataPostRenderParameter**](ExecuteQueryQueriesV1DataPostRenderParameter.md) | query parameter `"render"` |  | [optional] 
 **headers** | [HeaderTypes](Operation.md#req_headers) | request headers |  | 
 **headers['accept']** | **str** | request header `"accept"`  | Use a &#39;text/csv&#39; accept header to get CSV formatted results. | [optional] 
 
@@ -103,7 +111,7 @@ str | False _(default)_ | **`Any`** | If any other string value for the selected
 
 Execute Query
 
-Execute a timeseries query.  Executes the timeseries query specified in the request body, after applying any overrides from the url parameters.
+Execute a timeseries query.  Executes the timeseries query specified in the request body, after applying any overrides from the url parameters.  Note that string values in the query body can contain `{var_name}` placeholders. These will get replaced with by `var_name` bindings in the query body for that variable.  ```json {     \"station_id\": \"29758\",     \"resource\": \"weather_station_{station_id}\",     ... } ``` results in using a `weather_station_29758` resource.
 
 ### Example
 
@@ -116,6 +124,12 @@ from waylay.sdk.api.api_exceptions import ApiError
 waylay_client = WaylayClient.from_profile()
 
 # Note that the typed model classes for responses/parameters/... are only available when `waylay-sdk-queries-types` is installed
+from waylay.services.queries.models.execute_query_queries_v1_data_post_interpolation_parameter import (
+    ExecuteQueryQueriesV1DataPostInterpolationParameter,
+)
+from waylay.services.queries.models.execute_query_queries_v1_data_post_render_parameter import (
+    ExecuteQueryQueriesV1DataPostRenderParameter,
+)
 from waylay.services.queries.models.query_input import QueryInput
 from waylay.services.queries.models.query_result import QueryResult
 
@@ -127,6 +141,8 @@ try:
         query={
             "resource": "13efb488-75ac-4dac-828a-d49c5c2ebbfc",
             "metric": "temperature",
+            "interpolation": "pad",
+            "render": "HEADER_ROW",
         },
         # json data: use a generated model or a json-serializable python data structure (dict, list)
         json=waylay.services.queries.QueryInput(),  # QueryInput |
@@ -152,13 +168,13 @@ Name     | Type  | API binding   | Description   | Notes
 **query['resource']** (dict) <br> **query.resource** (Query) | **str** | query parameter `"resource"` | Default Resource Override. | [optional] 
 **query['metric']** (dict) <br> **query.metric** (Query) | **str** | query parameter `"metric"` | Default Metric Override. | [optional] 
 **query['aggregation']** (dict) <br> **query.aggregation** (Query) | **ExecuteQueryQueriesV1DataPostAggregation** | query parameter `"aggregation"` |  | [optional] 
-**query['interpolation']** (dict) <br> **query.interpolation** (Query) | [**ExecuteQueryQueriesV1DataPostInterpolation**](ExecuteQueryQueriesV1DataPostInterpolation.md) | query parameter `"interpolation"` |  | [optional] 
+**query['interpolation']** (dict) <br> **query.interpolation** (Query) | [**ExecuteQueryQueriesV1DataPostInterpolationParameter**](ExecuteQueryQueriesV1DataPostInterpolationParameter.md) | query parameter `"interpolation"` |  | [optional] 
 **query['freq']** (dict) <br> **query.freq** (Query) | **ExecuteQueryQueriesV1DataPostFreq** | query parameter `"freq"` | Override for the &#x60;freq&#x60; query attribute. | [optional] 
 **query['from']** (dict) <br> **query.var_from** (Query) | **ExecuteQueryQueriesV1DataPostFrom** | query parameter `"from"` |  | [optional] 
 **query['until']** (dict) <br> **query.until** (Query) | **ExecuteQueryQueriesV1DataPostUntil** | query parameter `"until"` |  | [optional] 
 **query['window']** (dict) <br> **query.window** (Query) | **ExecuteQueryQueriesV1DataPostWindow** | query parameter `"window"` |  | [optional] 
 **query['periods']** (dict) <br> **query.periods** (Query) | **int** | query parameter `"periods"` |  | [optional] 
-**query['render']** (dict) <br> **query.render** (Query) | [**ExecuteQueryQueriesV1DataPostRender**](ExecuteQueryQueriesV1DataPostRender.md) | query parameter `"render"` |  | [optional] 
+**query['render']** (dict) <br> **query.render** (Query) | [**ExecuteQueryQueriesV1DataPostRenderParameter**](ExecuteQueryQueriesV1DataPostRenderParameter.md) | query parameter `"render"` |  | [optional] 
 **headers** | [HeaderTypes](Operation.md#req_headers) | request headers |  | 
 **headers['accept']** | **str** | request header `"accept"`  | Use a &#39;text/csv&#39; accept header to get CSV formatted results. | [optional] 
 

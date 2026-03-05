@@ -15,6 +15,7 @@ Name | Type | Description | Notes
 **window_spec** | [**DataSetWindow**](DataSetWindow.md) |  | [optional] 
 **data_axis** | [**ColumnDataSetDataAxis**](ColumnDataSetDataAxis.md) |  | [optional] [default to ColumnDataSetDataAxis.ROW]
 **rows** | [**List[RowHeadersInner]**](RowHeadersInner.md) | Header Attributes for the index data.  The initial string-valued headers (normally &#x60;resource&#x60;, &#x60;metric&#x60;,&#x60;aggregation&#x60;) indicate that row to contain series attributes.  The remaining object-valued row headers contain the index data. | 
+**column_names** | **List[str]** | Short names for the columns in the data set. These names are the &#x60;name&#x60; alias if given in the series specification, otherwise is composed of the &#x60;resource&#x60;, &#x60;metric&#x60; and &#x60;aggregation&#x60; attributes, concatenated with the &#x60;render.key_separator&#x60; (default &#x60;.&#x60;) as separator. | 
 **data** | **List[List[Datum]]** | All metric observation values for a single series. Prefixed by the series attributes. | 
 
 
@@ -24,12 +25,12 @@ Name | Type | Description | Notes
 from waylay.services.queries.models.column_data_set import ColumnDataSet
 
 column_data_set = ColumnDataSet(
-    attributes=..., window_spec=..., data_axis=..., rows=..., data=...
+    attributes=..., window_spec=..., data_axis=..., rows=..., column_names=..., data=...
 )
 
 # Create from JSON
 column_data_set = ColumnDataSet.from_json(
-    '{ "attributes": ..., "window_spec": ..., "data_axis": ..., "rows": ..., "data": ... }'
+    '{ "attributes": ..., "window_spec": ..., "data_axis": ..., "rows": ..., "column_names": ..., "data": ... }'
 )
 
 # Export to dictionary

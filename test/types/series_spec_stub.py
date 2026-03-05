@@ -47,7 +47,7 @@ series_spec_model_schema = json.loads(
       "$ref" : "#/components/schemas/Aggregration"
     },
     "interpolation" : {
-      "$ref" : "#/components/schemas/Interpolation"
+      "$ref" : "#/components/schemas/Interpolation_Specification_"
     }
   },
   "additionalProperties" : true,

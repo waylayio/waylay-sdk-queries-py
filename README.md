@@ -5,7 +5,7 @@ Execute and store queries on the Waylay timeseries.
 Protocol version: v1.
 
 This Python package is automatically generated based on the 
-Waylay Queries OpenAPI specification (API version: 0.6.5)
+Waylay Queries OpenAPI specification (API version: 0.6.8)
 For more information, please visit [the openapi specification](https://docs.waylay.io/openapi/public/redocly/queries.html).
 
 It consists of two sub-packages that are both plugins for the waylay-sdk-core package.
@@ -38,6 +38,12 @@ from waylay.sdk.api.api_exceptions import ApiError
 waylay_client = WaylayClient.from_profile()
 
 # Note that the typed model classes for responses/parameters/... are only available when `waylay-sdk-queries-types` is installed
+from waylay.services.queries.models.execute_query_queries_v1_data_post_interpolation_parameter import (
+    ExecuteQueryQueriesV1DataPostInterpolationParameter,
+)
+from waylay.services.queries.models.execute_query_queries_v1_data_post_render_parameter import (
+    ExecuteQueryQueriesV1DataPostRenderParameter,
+)
 from waylay.services.queries.models.query_input import QueryInput
 from waylay.services.queries.models.query_result import QueryResult
 
@@ -49,6 +55,8 @@ try:
         query={
             "resource": "13efb488-75ac-4dac-828a-d49c5c2ebbfc",
             "metric": "temperature",
+            "interpolation": "pad",
+            "render": "HEADER_ROW",
         },
         # json data: use a generated model or a json-serializable python data structure (dict, list)
         json=waylay.services.queries.QueryInput(),  # QueryInput |
@@ -73,9 +81,9 @@ SDK Path | Method | HTTP request | Description
 **waylay_client.queries.execute_queries** | [**execute_by_name**](docs/ExecuteQueriesApi.md#execute_by_name) | **GET** /queries/v1/data/{query_name} | Execute Named Query
 **waylay_client.queries.execute_queries** | [**execute**](docs/ExecuteQueriesApi.md#execute) | **POST** /queries/v1/data | Execute Query
  | | |
-**waylay_client.queries.named_queries** | [**create**](docs/NamedQueriesApi.md#create) | **POST** /queries/v1/query | Create Query
 **waylay_client.queries.named_queries** | [**get**](docs/NamedQueriesApi.md#get) | **GET** /queries/v1/query/{query_name} | Get Query
 **waylay_client.queries.named_queries** | [**list**](docs/NamedQueriesApi.md#list) | **GET** /queries/v1/query | List Queries
+**waylay_client.queries.named_queries** | [**post**](docs/NamedQueriesApi.md#post) | **POST** /queries/v1/query | Post Query
 **waylay_client.queries.named_queries** | [**remove**](docs/NamedQueriesApi.md#remove) | **DELETE** /queries/v1/query/{query_name} | Remove Query
 **waylay_client.queries.named_queries** | [**update**](docs/NamedQueriesApi.md#update) | **PUT** /queries/v1/query/{query_name} | Update Query
  | | |
@@ -121,52 +129,56 @@ SDK Path | Method | HTTP request | Description
  - [DefaultAggregation](docs/DefaultAggregation.md)
  - [DefaultAggregation1](docs/DefaultAggregation1.md)
  - [DefaultInterpolation](docs/DefaultInterpolation.md)
+ - [DefaultInterpolation1](docs/DefaultInterpolation1.md)
+ - [DefaultInterpolation1AnyOf](docs/DefaultInterpolation1AnyOf.md)
  - [DefaultInterpolationAnyOf](docs/DefaultInterpolationAnyOf.md)
  - [DeleteResponse](docs/DeleteResponse.md)
  - [EmbeddingsValue](docs/EmbeddingsValue.md)
- - [ExecuteByNameQueriesV1DataQueryNameGetAggregation](docs/ExecuteByNameQueriesV1DataQueryNameGetAggregation.md)
- - [ExecuteByNameQueriesV1DataQueryNameGetAggregationCount](docs/ExecuteByNameQueriesV1DataQueryNameGetAggregationCount.md)
- - [ExecuteByNameQueriesV1DataQueryNameGetAggregationFirst](docs/ExecuteByNameQueriesV1DataQueryNameGetAggregationFirst.md)
- - [ExecuteByNameQueriesV1DataQueryNameGetAggregationLast](docs/ExecuteByNameQueriesV1DataQueryNameGetAggregationLast.md)
- - [ExecuteByNameQueriesV1DataQueryNameGetAggregationMax](docs/ExecuteByNameQueriesV1DataQueryNameGetAggregationMax.md)
- - [ExecuteByNameQueriesV1DataQueryNameGetAggregationMean](docs/ExecuteByNameQueriesV1DataQueryNameGetAggregationMean.md)
- - [ExecuteByNameQueriesV1DataQueryNameGetAggregationMedian](docs/ExecuteByNameQueriesV1DataQueryNameGetAggregationMedian.md)
- - [ExecuteByNameQueriesV1DataQueryNameGetAggregationMin](docs/ExecuteByNameQueriesV1DataQueryNameGetAggregationMin.md)
- - [ExecuteByNameQueriesV1DataQueryNameGetAggregationStd](docs/ExecuteByNameQueriesV1DataQueryNameGetAggregationStd.md)
- - [ExecuteByNameQueriesV1DataQueryNameGetAggregationSum](docs/ExecuteByNameQueriesV1DataQueryNameGetAggregationSum.md)
- - [ExecuteByNameQueriesV1DataQueryNameGetFreq](docs/ExecuteByNameQueriesV1DataQueryNameGetFreq.md)
- - [ExecuteByNameQueriesV1DataQueryNameGetFreqInferred](docs/ExecuteByNameQueriesV1DataQueryNameGetFreqInferred.md)
- - [ExecuteByNameQueriesV1DataQueryNameGetFrom](docs/ExecuteByNameQueriesV1DataQueryNameGetFrom.md)
- - [ExecuteByNameQueriesV1DataQueryNameGetInterpolation](docs/ExecuteByNameQueriesV1DataQueryNameGetInterpolation.md)
- - [ExecuteByNameQueriesV1DataQueryNameGetInterpolationAkima](docs/ExecuteByNameQueriesV1DataQueryNameGetInterpolationAkima.md)
- - [ExecuteByNameQueriesV1DataQueryNameGetInterpolationBackfill](docs/ExecuteByNameQueriesV1DataQueryNameGetInterpolationBackfill.md)
- - [ExecuteByNameQueriesV1DataQueryNameGetInterpolationCubic](docs/ExecuteByNameQueriesV1DataQueryNameGetInterpolationCubic.md)
- - [ExecuteByNameQueriesV1DataQueryNameGetInterpolationFixed](docs/ExecuteByNameQueriesV1DataQueryNameGetInterpolationFixed.md)
- - [ExecuteByNameQueriesV1DataQueryNameGetInterpolationFromDerivatives](docs/ExecuteByNameQueriesV1DataQueryNameGetInterpolationFromDerivatives.md)
- - [ExecuteByNameQueriesV1DataQueryNameGetInterpolationLinear](docs/ExecuteByNameQueriesV1DataQueryNameGetInterpolationLinear.md)
- - [ExecuteByNameQueriesV1DataQueryNameGetInterpolationNearest](docs/ExecuteByNameQueriesV1DataQueryNameGetInterpolationNearest.md)
- - [ExecuteByNameQueriesV1DataQueryNameGetInterpolationPad](docs/ExecuteByNameQueriesV1DataQueryNameGetInterpolationPad.md)
- - [ExecuteByNameQueriesV1DataQueryNameGetInterpolationPchip](docs/ExecuteByNameQueriesV1DataQueryNameGetInterpolationPchip.md)
- - [ExecuteByNameQueriesV1DataQueryNameGetInterpolationPolynomial](docs/ExecuteByNameQueriesV1DataQueryNameGetInterpolationPolynomial.md)
- - [ExecuteByNameQueriesV1DataQueryNameGetInterpolationQuadratic](docs/ExecuteByNameQueriesV1DataQueryNameGetInterpolationQuadratic.md)
- - [ExecuteByNameQueriesV1DataQueryNameGetInterpolationSlinear](docs/ExecuteByNameQueriesV1DataQueryNameGetInterpolationSlinear.md)
- - [ExecuteByNameQueriesV1DataQueryNameGetInterpolationSpline](docs/ExecuteByNameQueriesV1DataQueryNameGetInterpolationSpline.md)
- - [ExecuteByNameQueriesV1DataQueryNameGetInterpolationZero](docs/ExecuteByNameQueriesV1DataQueryNameGetInterpolationZero.md)
- - [ExecuteByNameQueriesV1DataQueryNameGetRender](docs/ExecuteByNameQueriesV1DataQueryNameGetRender.md)
- - [ExecuteByNameQueriesV1DataQueryNameGetRenderCOMPACT](docs/ExecuteByNameQueriesV1DataQueryNameGetRenderCOMPACT.md)
- - [ExecuteByNameQueriesV1DataQueryNameGetRenderCOMPACTWS](docs/ExecuteByNameQueriesV1DataQueryNameGetRenderCOMPACTWS.md)
- - [ExecuteByNameQueriesV1DataQueryNameGetRenderCSV](docs/ExecuteByNameQueriesV1DataQueryNameGetRenderCSV.md)
- - [ExecuteByNameQueriesV1DataQueryNameGetRenderFLATDICT](docs/ExecuteByNameQueriesV1DataQueryNameGetRenderFLATDICT.md)
- - [ExecuteByNameQueriesV1DataQueryNameGetRenderHEADERCOLUMN](docs/ExecuteByNameQueriesV1DataQueryNameGetRenderHEADERCOLUMN.md)
- - [ExecuteByNameQueriesV1DataQueryNameGetRenderHEADERROW](docs/ExecuteByNameQueriesV1DataQueryNameGetRenderHEADERROW.md)
- - [ExecuteByNameQueriesV1DataQueryNameGetRenderHIERDICT](docs/ExecuteByNameQueriesV1DataQueryNameGetRenderHIERDICT.md)
- - [ExecuteByNameQueriesV1DataQueryNameGetRenderMETRICFLATDICT](docs/ExecuteByNameQueriesV1DataQueryNameGetRenderMETRICFLATDICT.md)
- - [ExecuteByNameQueriesV1DataQueryNameGetRenderSERIES](docs/ExecuteByNameQueriesV1DataQueryNameGetRenderSERIES.md)
- - [ExecuteByNameQueriesV1DataQueryNameGetRenderUPLOAD](docs/ExecuteByNameQueriesV1DataQueryNameGetRenderUPLOAD.md)
- - [ExecuteByNameQueriesV1DataQueryNameGetUntil](docs/ExecuteByNameQueriesV1DataQueryNameGetUntil.md)
- - [ExecuteByNameQueriesV1DataQueryNameGetWindow](docs/ExecuteByNameQueriesV1DataQueryNameGetWindow.md)
+ - [ExecuteByNameAggregation](docs/ExecuteByNameAggregation.md)
+ - [ExecuteByNameAggregationCount](docs/ExecuteByNameAggregationCount.md)
+ - [ExecuteByNameAggregationCountNonNumeric](docs/ExecuteByNameAggregationCountNonNumeric.md)
+ - [ExecuteByNameAggregationCountNumeric](docs/ExecuteByNameAggregationCountNumeric.md)
+ - [ExecuteByNameAggregationFirst](docs/ExecuteByNameAggregationFirst.md)
+ - [ExecuteByNameAggregationLast](docs/ExecuteByNameAggregationLast.md)
+ - [ExecuteByNameAggregationMax](docs/ExecuteByNameAggregationMax.md)
+ - [ExecuteByNameAggregationMean](docs/ExecuteByNameAggregationMean.md)
+ - [ExecuteByNameAggregationMedian](docs/ExecuteByNameAggregationMedian.md)
+ - [ExecuteByNameAggregationMin](docs/ExecuteByNameAggregationMin.md)
+ - [ExecuteByNameAggregationStd](docs/ExecuteByNameAggregationStd.md)
+ - [ExecuteByNameAggregationSum](docs/ExecuteByNameAggregationSum.md)
+ - [ExecuteByNameFreq](docs/ExecuteByNameFreq.md)
+ - [ExecuteByNameFreqInferred](docs/ExecuteByNameFreqInferred.md)
+ - [ExecuteByNameFrom](docs/ExecuteByNameFrom.md)
+ - [ExecuteByNameInterpolationAkima](docs/ExecuteByNameInterpolationAkima.md)
+ - [ExecuteByNameInterpolationBackfill](docs/ExecuteByNameInterpolationBackfill.md)
+ - [ExecuteByNameInterpolationCubic](docs/ExecuteByNameInterpolationCubic.md)
+ - [ExecuteByNameInterpolationFixed](docs/ExecuteByNameInterpolationFixed.md)
+ - [ExecuteByNameInterpolationFromDerivatives](docs/ExecuteByNameInterpolationFromDerivatives.md)
+ - [ExecuteByNameInterpolationLinear](docs/ExecuteByNameInterpolationLinear.md)
+ - [ExecuteByNameInterpolationNearest](docs/ExecuteByNameInterpolationNearest.md)
+ - [ExecuteByNameInterpolationPad](docs/ExecuteByNameInterpolationPad.md)
+ - [ExecuteByNameInterpolationPchip](docs/ExecuteByNameInterpolationPchip.md)
+ - [ExecuteByNameInterpolationPolynomial](docs/ExecuteByNameInterpolationPolynomial.md)
+ - [ExecuteByNameInterpolationQuadratic](docs/ExecuteByNameInterpolationQuadratic.md)
+ - [ExecuteByNameInterpolationSlinear](docs/ExecuteByNameInterpolationSlinear.md)
+ - [ExecuteByNameInterpolationSpline](docs/ExecuteByNameInterpolationSpline.md)
+ - [ExecuteByNameInterpolationZero](docs/ExecuteByNameInterpolationZero.md)
+ - [ExecuteByNameRenderCOMPACT](docs/ExecuteByNameRenderCOMPACT.md)
+ - [ExecuteByNameRenderCOMPACTWS](docs/ExecuteByNameRenderCOMPACTWS.md)
+ - [ExecuteByNameRenderCSV](docs/ExecuteByNameRenderCSV.md)
+ - [ExecuteByNameRenderFLATDICT](docs/ExecuteByNameRenderFLATDICT.md)
+ - [ExecuteByNameRenderHEADERCOLUMN](docs/ExecuteByNameRenderHEADERCOLUMN.md)
+ - [ExecuteByNameRenderHEADERROW](docs/ExecuteByNameRenderHEADERROW.md)
+ - [ExecuteByNameRenderHIERDICT](docs/ExecuteByNameRenderHIERDICT.md)
+ - [ExecuteByNameRenderMETRICFLATDICT](docs/ExecuteByNameRenderMETRICFLATDICT.md)
+ - [ExecuteByNameRenderSERIES](docs/ExecuteByNameRenderSERIES.md)
+ - [ExecuteByNameRenderUPLOAD](docs/ExecuteByNameRenderUPLOAD.md)
+ - [ExecuteByNameUntil](docs/ExecuteByNameUntil.md)
+ - [ExecuteByNameWindow](docs/ExecuteByNameWindow.md)
  - [ExecuteQueryQueriesV1DataPostAggregation](docs/ExecuteQueryQueriesV1DataPostAggregation.md)
  - [ExecuteQueryQueriesV1DataPostAggregationCount](docs/ExecuteQueryQueriesV1DataPostAggregationCount.md)
+ - [ExecuteQueryQueriesV1DataPostAggregationCountNonNumeric](docs/ExecuteQueryQueriesV1DataPostAggregationCountNonNumeric.md)
+ - [ExecuteQueryQueriesV1DataPostAggregationCountNumeric](docs/ExecuteQueryQueriesV1DataPostAggregationCountNumeric.md)
  - [ExecuteQueryQueriesV1DataPostAggregationFirst](docs/ExecuteQueryQueriesV1DataPostAggregationFirst.md)
  - [ExecuteQueryQueriesV1DataPostAggregationLast](docs/ExecuteQueryQueriesV1DataPostAggregationLast.md)
  - [ExecuteQueryQueriesV1DataPostAggregationMax](docs/ExecuteQueryQueriesV1DataPostAggregationMax.md)
@@ -178,7 +190,6 @@ SDK Path | Method | HTTP request | Description
  - [ExecuteQueryQueriesV1DataPostFreq](docs/ExecuteQueryQueriesV1DataPostFreq.md)
  - [ExecuteQueryQueriesV1DataPostFreqInferred](docs/ExecuteQueryQueriesV1DataPostFreqInferred.md)
  - [ExecuteQueryQueriesV1DataPostFrom](docs/ExecuteQueryQueriesV1DataPostFrom.md)
- - [ExecuteQueryQueriesV1DataPostInterpolation](docs/ExecuteQueryQueriesV1DataPostInterpolation.md)
  - [ExecuteQueryQueriesV1DataPostInterpolationAkima](docs/ExecuteQueryQueriesV1DataPostInterpolationAkima.md)
  - [ExecuteQueryQueriesV1DataPostInterpolationBackfill](docs/ExecuteQueryQueriesV1DataPostInterpolationBackfill.md)
  - [ExecuteQueryQueriesV1DataPostInterpolationCubic](docs/ExecuteQueryQueriesV1DataPostInterpolationCubic.md)
@@ -187,13 +198,13 @@ SDK Path | Method | HTTP request | Description
  - [ExecuteQueryQueriesV1DataPostInterpolationLinear](docs/ExecuteQueryQueriesV1DataPostInterpolationLinear.md)
  - [ExecuteQueryQueriesV1DataPostInterpolationNearest](docs/ExecuteQueryQueriesV1DataPostInterpolationNearest.md)
  - [ExecuteQueryQueriesV1DataPostInterpolationPad](docs/ExecuteQueryQueriesV1DataPostInterpolationPad.md)
+ - [ExecuteQueryQueriesV1DataPostInterpolationParameter](docs/ExecuteQueryQueriesV1DataPostInterpolationParameter.md)
  - [ExecuteQueryQueriesV1DataPostInterpolationPchip](docs/ExecuteQueryQueriesV1DataPostInterpolationPchip.md)
  - [ExecuteQueryQueriesV1DataPostInterpolationPolynomial](docs/ExecuteQueryQueriesV1DataPostInterpolationPolynomial.md)
  - [ExecuteQueryQueriesV1DataPostInterpolationQuadratic](docs/ExecuteQueryQueriesV1DataPostInterpolationQuadratic.md)
  - [ExecuteQueryQueriesV1DataPostInterpolationSlinear](docs/ExecuteQueryQueriesV1DataPostInterpolationSlinear.md)
  - [ExecuteQueryQueriesV1DataPostInterpolationSpline](docs/ExecuteQueryQueriesV1DataPostInterpolationSpline.md)
  - [ExecuteQueryQueriesV1DataPostInterpolationZero](docs/ExecuteQueryQueriesV1DataPostInterpolationZero.md)
- - [ExecuteQueryQueriesV1DataPostRender](docs/ExecuteQueryQueriesV1DataPostRender.md)
  - [ExecuteQueryQueriesV1DataPostRenderCOMPACT](docs/ExecuteQueryQueriesV1DataPostRenderCOMPACT.md)
  - [ExecuteQueryQueriesV1DataPostRenderCOMPACTWS](docs/ExecuteQueryQueriesV1DataPostRenderCOMPACTWS.md)
  - [ExecuteQueryQueriesV1DataPostRenderCSV](docs/ExecuteQueryQueriesV1DataPostRenderCSV.md)
@@ -202,6 +213,7 @@ SDK Path | Method | HTTP request | Description
  - [ExecuteQueryQueriesV1DataPostRenderHEADERROW](docs/ExecuteQueryQueriesV1DataPostRenderHEADERROW.md)
  - [ExecuteQueryQueriesV1DataPostRenderHIERDICT](docs/ExecuteQueryQueriesV1DataPostRenderHIERDICT.md)
  - [ExecuteQueryQueriesV1DataPostRenderMETRICFLATDICT](docs/ExecuteQueryQueriesV1DataPostRenderMETRICFLATDICT.md)
+ - [ExecuteQueryQueriesV1DataPostRenderParameter](docs/ExecuteQueryQueriesV1DataPostRenderParameter.md)
  - [ExecuteQueryQueriesV1DataPostRenderSERIES](docs/ExecuteQueryQueriesV1DataPostRenderSERIES.md)
  - [ExecuteQueryQueriesV1DataPostRenderUPLOAD](docs/ExecuteQueryQueriesV1DataPostRenderUPLOAD.md)
  - [ExecuteQueryQueriesV1DataPostUntil](docs/ExecuteQueryQueriesV1DataPostUntil.md)
@@ -214,10 +226,15 @@ SDK Path | Method | HTTP request | Description
  - [HTTPValidationError](docs/HTTPValidationError.md)
  - [HeaderArrayOption](docs/HeaderArrayOption.md)
  - [Hierarchical](docs/Hierarchical.md)
- - [Interpolation](docs/Interpolation.md)
  - [InterpolationMethod](docs/InterpolationMethod.md)
+ - [InterpolationMethod1](docs/InterpolationMethod1.md)
+ - [InterpolationMethod2](docs/InterpolationMethod2.md)
+ - [InterpolationMethod3](docs/InterpolationMethod3.md)
  - [InterpolationParameter](docs/InterpolationParameter.md)
  - [InterpolationSpec](docs/InterpolationSpec.md)
+ - [InterpolationSpec1](docs/InterpolationSpec1.md)
+ - [InterpolationSpec2](docs/InterpolationSpec2.md)
+ - [InterpolationSpec3](docs/InterpolationSpec3.md)
  - [InterpolationSpecAkima](docs/InterpolationSpecAkima.md)
  - [InterpolationSpecBackfill](docs/InterpolationSpecBackfill.md)
  - [InterpolationSpecCubic](docs/InterpolationSpecCubic.md)
@@ -232,6 +249,8 @@ SDK Path | Method | HTTP request | Description
  - [InterpolationSpecSlinear](docs/InterpolationSpecSlinear.md)
  - [InterpolationSpecSpline](docs/InterpolationSpecSpline.md)
  - [InterpolationSpecZero](docs/InterpolationSpecZero.md)
+ - [InterpolationSpecification](docs/InterpolationSpecification.md)
+ - [InterpolationSpecificationAnyOf](docs/InterpolationSpecificationAnyOf.md)
  - [LinksValue](docs/LinksValue.md)
  - [LocationInner](docs/LocationInner.md)
  - [Message](docs/Message.md)
@@ -250,6 +269,8 @@ SDK Path | Method | HTTP request | Description
  - [QueryInputAkima](docs/QueryInputAkima.md)
  - [QueryInputBackfill](docs/QueryInputBackfill.md)
  - [QueryInputCount](docs/QueryInputCount.md)
+ - [QueryInputCountNonNumeric](docs/QueryInputCountNonNumeric.md)
+ - [QueryInputCountNumeric](docs/QueryInputCountNumeric.md)
  - [QueryInputCubic](docs/QueryInputCubic.md)
  - [QueryInputFirst](docs/QueryInputFirst.md)
  - [QueryInputFixed](docs/QueryInputFixed.md)
@@ -277,6 +298,8 @@ SDK Path | Method | HTTP request | Description
  - [QueryOutputAkima](docs/QueryOutputAkima.md)
  - [QueryOutputBackfill](docs/QueryOutputBackfill.md)
  - [QueryOutputCount](docs/QueryOutputCount.md)
+ - [QueryOutputCountNonNumeric](docs/QueryOutputCountNonNumeric.md)
+ - [QueryOutputCountNumeric](docs/QueryOutputCountNumeric.md)
  - [QueryOutputCubic](docs/QueryOutputCubic.md)
  - [QueryOutputFirst](docs/QueryOutputFirst.md)
  - [QueryOutputFixed](docs/QueryOutputFixed.md)
@@ -323,6 +346,8 @@ SDK Path | Method | HTTP request | Description
  - [SeriesSpecAkima](docs/SeriesSpecAkima.md)
  - [SeriesSpecBackfill](docs/SeriesSpecBackfill.md)
  - [SeriesSpecCount](docs/SeriesSpecCount.md)
+ - [SeriesSpecCountNonNumeric](docs/SeriesSpecCountNonNumeric.md)
+ - [SeriesSpecCountNumeric](docs/SeriesSpecCountNumeric.md)
  - [SeriesSpecCubic](docs/SeriesSpecCubic.md)
  - [SeriesSpecFirst](docs/SeriesSpecFirst.md)
  - [SeriesSpecFixed](docs/SeriesSpecFixed.md)

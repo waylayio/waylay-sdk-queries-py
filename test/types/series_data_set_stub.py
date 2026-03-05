@@ -22,7 +22,7 @@ except ImportError:
 
 series_data_set_model_schema = json.loads(
     r"""{
-  "required" : [ "columns", "data" ],
+  "required" : [ "column_names", "columns", "data" ],
   "type" : "object",
   "properties" : {
     "attributes" : {
@@ -45,6 +45,14 @@ series_data_set_model_schema = json.loads(
         "const" : "timestamp",
         "title" : "Unix epoch milliseconds timestamp."
       } ]
+    },
+    "column_names" : {
+      "title" : "Column names",
+      "type" : "array",
+      "description" : "Short names for the columns in the data set.\nThese names are the `name` alias if given in the series specification, otherwise is composed of the `resource`, `metric` and `aggregation` attributes, concatenated with the `render.key_separator` (default `.`) as separator.",
+      "items" : {
+        "type" : "string"
+      }
     },
     "data" : {
       "title" : "Data",

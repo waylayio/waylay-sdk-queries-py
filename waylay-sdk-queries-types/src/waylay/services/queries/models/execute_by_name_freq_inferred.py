@@ -1,0 +1,20 @@
+"""Waylay Query: timeseries queries (v1 protocol) models.
+
+This code was generated from the OpenAPI documentation of 'Waylay Query: timeseries queries (v1 protocol)'
+
+Do not edit the class manually.
+
+"""
+
+from __future__ import annotations
+
+from enum import Enum
+
+
+class ExecuteByNameFreqInferred(str, Enum):
+    """When `inferred` is specified, the frequency of aggregation will be inferred from the main/first time series. This can be used to regularize the time series."""
+
+    INFERRED = "inferred"
+
+    def __str__(self) -> str:
+        return str(self.value)

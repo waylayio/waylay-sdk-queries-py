@@ -17,6 +17,8 @@ Type | Description
 [**ExecuteQueryQueriesV1DataPostAggregationMedian**](ExecuteQueryQueriesV1DataPostAggregationMedian.md) | -
 [**ExecuteQueryQueriesV1DataPostAggregationSum**](ExecuteQueryQueriesV1DataPostAggregationSum.md) | -
 [**ExecuteQueryQueriesV1DataPostAggregationCount**](ExecuteQueryQueriesV1DataPostAggregationCount.md) | -
+[**ExecuteQueryQueriesV1DataPostAggregationCountNumeric**](ExecuteQueryQueriesV1DataPostAggregationCountNumeric.md) | -
+[**ExecuteQueryQueriesV1DataPostAggregationCountNonNumeric**](ExecuteQueryQueriesV1DataPostAggregationCountNonNumeric.md) | -
 [**ExecuteQueryQueriesV1DataPostAggregationStd**](ExecuteQueryQueriesV1DataPostAggregationStd.md) | -
 [**ExecuteQueryQueriesV1DataPostAggregationMax**](ExecuteQueryQueriesV1DataPostAggregationMax.md) | -
 [**ExecuteQueryQueriesV1DataPostAggregationMin**](ExecuteQueryQueriesV1DataPostAggregationMin.md) | -

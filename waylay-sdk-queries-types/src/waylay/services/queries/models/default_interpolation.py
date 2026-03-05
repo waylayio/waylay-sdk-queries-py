@@ -11,7 +11,7 @@ from __future__ import annotations
 from typing import TypeAlias
 
 from ..models.default_interpolation_any_of import DefaultInterpolationAnyOf
-from ..models.interpolation_spec import InterpolationSpec
+from ..models.interpolation_spec1 import InterpolationSpec1
 
-DefaultInterpolation: TypeAlias = DefaultInterpolationAnyOf | InterpolationSpec
+DefaultInterpolation: TypeAlias = InterpolationSpec1 | DefaultInterpolationAnyOf
 """Default Interpolation method for the series (if aggregated).."""

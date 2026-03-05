@@ -39,6 +39,10 @@ aggregration_model_schema = json.loads(
   }, {
     "$ref" : "#/components/schemas/SeriesSpecCount"
   }, {
+    "$ref" : "#/components/schemas/SeriesSpecCount-numeric"
+  }, {
+    "$ref" : "#/components/schemas/SeriesSpecCount-non-numeric"
+  }, {
     "$ref" : "#/components/schemas/SeriesSpecStd"
   }, {
     "$ref" : "#/components/schemas/SeriesSpecMax"
