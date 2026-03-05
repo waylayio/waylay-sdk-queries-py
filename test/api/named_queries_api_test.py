@@ -51,49 +51,6 @@ def test_registered(waylay_client: WaylayClient):
     assert isinstance(waylay_client.queries.named_queries, NamedQueriesApi)
 
 
-def _create_set_mock_response(httpx_mock: HTTPXMock, gateway_url: str):
-    mock_response = QueryResponseStub.create_json()
-    httpx_mock_kwargs = {
-        "method": "POST",
-        "url": re.compile(f"^{gateway_url}/queries/v1/query(\\?.*)?"),
-        "content": json.dumps(mock_response, default=str),
-        "status_code": 200,
-    }
-    httpx_mock.add_response(**httpx_mock_kwargs)
-
-
-@pytest.mark.asyncio
-@pytest.mark.skipif(not MODELS_AVAILABLE, reason="Types not installed.")
-async def test_create(service: QueriesService, gateway_url: str, httpx_mock: HTTPXMock):
-    """Test case for create
-    Create Query
-    """
-    # set path params
-    kwargs = {
-        "json": QueryEntityInputStub.create_instance(),
-    }
-    _create_set_mock_response(httpx_mock, gateway_url)
-    resp = await service.named_queries.create(**kwargs)
-    check_type(resp, QueryResponse)
-
-
-@pytest.mark.asyncio
-@pytest.mark.skipif(MODELS_AVAILABLE, reason="Types installed.")
-async def test_create_without_types(
-    service: QueriesService, gateway_url: str, httpx_mock: HTTPXMock
-):
-    """Test case for create with models not installed
-    Create Query
-    """
-    # set path params
-    kwargs = {
-        "json": QueryEntityInputStub.create_json(),
-    }
-    _create_set_mock_response(httpx_mock, gateway_url)
-    resp = await service.named_queries.create(**kwargs)
-    check_type(resp, Model)
-
-
 def _get_set_mock_response(httpx_mock: HTTPXMock, gateway_url: str, query_name: str):
     mock_response = QueryResponseStub.create_json()
     httpx_mock_kwargs = {
@@ -186,6 +143,49 @@ async def test_list_without_types(
     }
     _list_set_mock_response(httpx_mock, gateway_url)
     resp = await service.named_queries.list(**kwargs)
+    check_type(resp, Model)
+
+
+def _post_set_mock_response(httpx_mock: HTTPXMock, gateway_url: str):
+    mock_response = QueryResponseStub.create_json()
+    httpx_mock_kwargs = {
+        "method": "POST",
+        "url": re.compile(f"^{gateway_url}/queries/v1/query(\\?.*)?"),
+        "content": json.dumps(mock_response, default=str),
+        "status_code": 200,
+    }
+    httpx_mock.add_response(**httpx_mock_kwargs)
+
+
+@pytest.mark.asyncio
+@pytest.mark.skipif(not MODELS_AVAILABLE, reason="Types not installed.")
+async def test_post(service: QueriesService, gateway_url: str, httpx_mock: HTTPXMock):
+    """Test case for post
+    Post Query
+    """
+    # set path params
+    kwargs = {
+        "json": QueryEntityInputStub.create_instance(),
+    }
+    _post_set_mock_response(httpx_mock, gateway_url)
+    resp = await service.named_queries.post(**kwargs)
+    check_type(resp, QueryResponse)
+
+
+@pytest.mark.asyncio
+@pytest.mark.skipif(MODELS_AVAILABLE, reason="Types installed.")
+async def test_post_without_types(
+    service: QueriesService, gateway_url: str, httpx_mock: HTTPXMock
+):
+    """Test case for post with models not installed
+    Post Query
+    """
+    # set path params
+    kwargs = {
+        "json": QueryEntityInputStub.create_json(),
+    }
+    _post_set_mock_response(httpx_mock, gateway_url)
+    resp = await service.named_queries.post(**kwargs)
     check_type(resp, Model)
 
 

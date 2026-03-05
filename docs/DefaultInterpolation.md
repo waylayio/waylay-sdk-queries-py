@@ -12,8 +12,8 @@ This type allows any of the following:
 
 Type | Description
 ------------ | -------------
+[**InterpolationSpec1**](InterpolationSpec1.md) | -
 [**DefaultInterpolationAnyOf**](DefaultInterpolationAnyOf.md) | -
-[**InterpolationSpec**](InterpolationSpec.md) | -
 
 ## Example
 

@@ -18,27 +18,11 @@ from waylay.sdk.api._models import Model
 from waylay.services.queries.api import ExecuteQueriesApi
 from waylay.services.queries.service import QueriesService
 
-from ..types.execute_by_name_queries_v1_data_query_name_get_aggregation_stub import (
-    ExecuteByNameQueriesV1DataQueryNameGetAggregationStub,
-)
-from ..types.execute_by_name_queries_v1_data_query_name_get_freq_stub import (
-    ExecuteByNameQueriesV1DataQueryNameGetFreqStub,
-)
-from ..types.execute_by_name_queries_v1_data_query_name_get_from_stub import (
-    ExecuteByNameQueriesV1DataQueryNameGetFromStub,
-)
-from ..types.execute_by_name_queries_v1_data_query_name_get_interpolation_stub import (
-    ExecuteByNameQueriesV1DataQueryNameGetInterpolationStub,
-)
-from ..types.execute_by_name_queries_v1_data_query_name_get_render_stub import (
-    ExecuteByNameQueriesV1DataQueryNameGetRenderStub,
-)
-from ..types.execute_by_name_queries_v1_data_query_name_get_until_stub import (
-    ExecuteByNameQueriesV1DataQueryNameGetUntilStub,
-)
-from ..types.execute_by_name_queries_v1_data_query_name_get_window_stub import (
-    ExecuteByNameQueriesV1DataQueryNameGetWindowStub,
-)
+from ..types.execute_by_name_aggregation_stub import ExecuteByNameAggregationStub
+from ..types.execute_by_name_freq_stub import ExecuteByNameFreqStub
+from ..types.execute_by_name_from_stub import ExecuteByNameFromStub
+from ..types.execute_by_name_until_stub import ExecuteByNameUntilStub
+from ..types.execute_by_name_window_stub import ExecuteByNameWindowStub
 from ..types.execute_query_queries_v1_data_post_aggregation_stub import (
     ExecuteQueryQueriesV1DataPostAggregationStub,
 )
@@ -47,12 +31,6 @@ from ..types.execute_query_queries_v1_data_post_freq_stub import (
 )
 from ..types.execute_query_queries_v1_data_post_from_stub import (
     ExecuteQueryQueriesV1DataPostFromStub,
-)
-from ..types.execute_query_queries_v1_data_post_interpolation_stub import (
-    ExecuteQueryQueriesV1DataPostInterpolationStub,
-)
-from ..types.execute_query_queries_v1_data_post_render_stub import (
-    ExecuteQueryQueriesV1DataPostRenderStub,
 )
 from ..types.execute_query_queries_v1_data_post_until_stub import (
     ExecuteQueryQueriesV1DataPostUntilStub,
@@ -118,14 +96,14 @@ async def test_execute_by_name(
         "query": ExecuteByNameQuery(
             resource="13efb488-75ac-4dac-828a-d49c5c2ebbfc",
             metric="temperature",
-            aggregation=ExecuteByNameQueriesV1DataQueryNameGetAggregationStub.create_json(),
-            interpolation=ExecuteByNameQueriesV1DataQueryNameGetInterpolationStub.create_json(),
-            freq=ExecuteByNameQueriesV1DataQueryNameGetFreqStub.create_json(),
-            var_from=ExecuteByNameQueriesV1DataQueryNameGetFromStub.create_json(),
-            until=ExecuteByNameQueriesV1DataQueryNameGetUntilStub.create_json(),
-            window=ExecuteByNameQueriesV1DataQueryNameGetWindowStub.create_json(),
+            aggregation=ExecuteByNameAggregationStub.create_json(),
+            interpolation="pad",
+            freq=ExecuteByNameFreqStub.create_json(),
+            var_from=ExecuteByNameFromStub.create_json(),
+            until=ExecuteByNameUntilStub.create_json(),
+            window=ExecuteByNameWindowStub.create_json(),
             periods=56,
-            render=ExecuteByNameQueriesV1DataQueryNameGetRenderStub.create_json(),
+            render="HEADER_ROW",
         ),
     }
     _execute_by_name_set_mock_response(httpx_mock, gateway_url, quote(str(query_name)))
@@ -148,14 +126,14 @@ async def test_execute_by_name_without_types(
         "query": {
             "resource": "13efb488-75ac-4dac-828a-d49c5c2ebbfc",
             "metric": "temperature",
-            "aggregation": ExecuteByNameQueriesV1DataQueryNameGetAggregationStub.create_json(),
-            "interpolation": ExecuteByNameQueriesV1DataQueryNameGetInterpolationStub.create_json(),
-            "freq": ExecuteByNameQueriesV1DataQueryNameGetFreqStub.create_json(),
-            "from": ExecuteByNameQueriesV1DataQueryNameGetFromStub.create_json(),
-            "until": ExecuteByNameQueriesV1DataQueryNameGetUntilStub.create_json(),
-            "window": ExecuteByNameQueriesV1DataQueryNameGetWindowStub.create_json(),
+            "aggregation": ExecuteByNameAggregationStub.create_json(),
+            "interpolation": "pad",
+            "freq": ExecuteByNameFreqStub.create_json(),
+            "from": ExecuteByNameFromStub.create_json(),
+            "until": ExecuteByNameUntilStub.create_json(),
+            "window": ExecuteByNameWindowStub.create_json(),
             "periods": 56,
-            "render": ExecuteByNameQueriesV1DataQueryNameGetRenderStub.create_json(),
+            "render": "HEADER_ROW",
         },
     }
     _execute_by_name_set_mock_response(httpx_mock, gateway_url, quote(str(query_name)))
@@ -189,13 +167,13 @@ async def test_execute(
             resource="13efb488-75ac-4dac-828a-d49c5c2ebbfc",
             metric="temperature",
             aggregation=ExecuteQueryQueriesV1DataPostAggregationStub.create_json(),
-            interpolation=ExecuteQueryQueriesV1DataPostInterpolationStub.create_json(),
+            interpolation="pad",
             freq=ExecuteQueryQueriesV1DataPostFreqStub.create_json(),
             var_from=ExecuteQueryQueriesV1DataPostFromStub.create_json(),
             until=ExecuteQueryQueriesV1DataPostUntilStub.create_json(),
             window=ExecuteQueryQueriesV1DataPostWindowStub.create_json(),
             periods=56,
-            render=ExecuteQueryQueriesV1DataPostRenderStub.create_json(),
+            render="HEADER_ROW",
         ),
         "json": QueryInputStub.create_instance(),
     }
@@ -218,13 +196,13 @@ async def test_execute_without_types(
             "resource": "13efb488-75ac-4dac-828a-d49c5c2ebbfc",
             "metric": "temperature",
             "aggregation": ExecuteQueryQueriesV1DataPostAggregationStub.create_json(),
-            "interpolation": ExecuteQueryQueriesV1DataPostInterpolationStub.create_json(),
+            "interpolation": "pad",
             "freq": ExecuteQueryQueriesV1DataPostFreqStub.create_json(),
             "from": ExecuteQueryQueriesV1DataPostFromStub.create_json(),
             "until": ExecuteQueryQueriesV1DataPostUntilStub.create_json(),
             "window": ExecuteQueryQueriesV1DataPostWindowStub.create_json(),
             "periods": 56,
-            "render": ExecuteQueryQueriesV1DataPostRenderStub.create_json(),
+            "render": "HEADER_ROW",
         },
         "json": QueryInputStub.create_json(),
     }

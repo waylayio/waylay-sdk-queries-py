@@ -70,6 +70,11 @@ query_input_model_schema = json.loads(
     },
     "render" : {
       "$ref" : "#/components/schemas/Render"
+    },
+    "lookback" : {
+      "title" : "Lookback option.",
+      "type" : "boolean",
+      "description" : "If enabled, the **last-known value** for each of the series will be taken into account in the result. \nFor **unaggregated** series, that value will be included as is (with a timestamp before the result window).\nFor **aggregated** series, that value will be used at the first timestamp, but only if\n * no aggregated value on the first timestamp could be computed\n * and the aggregation is compatible with the value, i.e. in mean, min, max, first, last, median"
     }
   },
   "additionalProperties" : true,

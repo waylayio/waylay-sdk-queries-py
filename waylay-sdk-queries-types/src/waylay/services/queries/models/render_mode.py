@@ -8,18 +8,22 @@ Do not edit the class manually.
 
 from __future__ import annotations
 
-from typing import TypeAlias
+from enum import Enum
 
-from ..models.render_compact import RenderCOMPACT
-from ..models.render_compactws import RenderCOMPACTWS
-from ..models.render_csv import RenderCSV
-from ..models.render_flatdict import RenderFLATDICT
-from ..models.render_headercolumn import RenderHEADERCOLUMN
-from ..models.render_headerrow import RenderHEADERROW
-from ..models.render_hierdict import RenderHIERDICT
-from ..models.render_metricflatdict import RenderMETRICFLATDICT
-from ..models.render_series import RenderSERIES
-from ..models.render_upload import RenderUPLOAD
 
-RenderMode: TypeAlias = RenderHEADERROW | RenderCOMPACT | RenderCOMPACTWS | RenderSERIES | RenderHEADERCOLUMN | RenderFLATDICT | RenderHIERDICT | RenderMETRICFLATDICT | RenderUPLOAD | RenderCSV
-"""RenderMode."""
+class RenderMode(str, Enum):
+    """Render mode configuration keys.."""
+
+    HEADER_ROW = "HEADER_ROW"
+    COMPACT = "COMPACT"
+    SERIES = "SERIES"
+    HEADER_COLUMN = "HEADER_COLUMN"
+    FLAT_DICT = "FLAT_DICT"
+    HIER_DICT = "HIER_DICT"
+    METRIC_FLAT_DICT = "METRIC_FLAT_DICT"
+    UPLOAD = "UPLOAD"
+    COMPACT_WS = "COMPACT_WS"
+    CSV = "CSV"
+
+    def __str__(self) -> str:
+        return str(self.value)

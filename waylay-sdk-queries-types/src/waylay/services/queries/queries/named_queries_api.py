@@ -18,21 +18,6 @@ from pydantic import (
 from waylay.sdk.api._models import BaseModel as WaylayBaseModel
 
 
-def _create_query_alias_for(field_name: str) -> str:
-    return field_name
-
-
-class CreateQuery(WaylayBaseModel):
-    """Model for `create` query parameters."""
-
-    model_config = ConfigDict(
-        protected_namespaces=(),
-        extra="allow",
-        alias_generator=_create_query_alias_for,
-        populate_by_name=True,
-    )
-
-
 def _get_query_alias_for(field_name: str) -> str:
     return field_name
 
@@ -82,6 +67,21 @@ class ListQuery(WaylayBaseModel):
         protected_namespaces=(),
         extra="allow",
         alias_generator=_list_query_alias_for,
+        populate_by_name=True,
+    )
+
+
+def _post_query_alias_for(field_name: str) -> str:
+    return field_name
+
+
+class PostQuery(WaylayBaseModel):
+    """Model for `post` query parameters."""
+
+    model_config = ConfigDict(
+        protected_namespaces=(),
+        extra="allow",
+        alias_generator=_post_query_alias_for,
         populate_by_name=True,
     )
 

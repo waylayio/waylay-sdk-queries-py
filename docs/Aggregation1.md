@@ -18,6 +18,8 @@ Type | Description
 [**QueryOutputMedian**](QueryOutputMedian.md) | -
 [**QueryOutputSum**](QueryOutputSum.md) | -
 [**QueryOutputCount**](QueryOutputCount.md) | -
+[**QueryOutputCountNumeric**](QueryOutputCountNumeric.md) | -
+[**QueryOutputCountNonNumeric**](QueryOutputCountNonNumeric.md) | -
 [**QueryOutputStd**](QueryOutputStd.md) | -
 [**QueryOutputMax**](QueryOutputMax.md) | -
 [**QueryOutputMin**](QueryOutputMin.md) | -

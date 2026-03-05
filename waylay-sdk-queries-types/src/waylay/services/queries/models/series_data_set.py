@@ -11,6 +11,7 @@ from __future__ import annotations
 from pydantic import (
     ConfigDict,
     Field,
+    StrictStr,
 )
 from waylay.sdk.api._models import BaseModel as WaylayBaseModel
 
@@ -29,6 +30,9 @@ class SeriesDataSet(WaylayBaseModel):
     data_axis: ColumnDataSetDataAxis | None = ColumnDataSetDataAxis.ROW
     columns: list[ColumnHeadersInner] = Field(
         description="Header Attributes for the column data.  The initial string-valued headers (normally a single `timestamp`) indicate that column to contain row index data (i.e. timestamps).  The remaining object-valued column headers identify and describe the actual series data."
+    )
+    column_names: list[StrictStr] = Field(
+        description="Short names for the columns in the data set. These names are the `name` alias if given in the series specification, otherwise is composed of the `resource`, `metric` and `aggregation` attributes, concatenated with the `render.key_separator` (default `.`) as separator."
     )
     data: list[list[Datum]]
 

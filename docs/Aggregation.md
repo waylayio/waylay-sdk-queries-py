@@ -18,6 +18,8 @@ Type | Description
 [**QueryInputMedian**](QueryInputMedian.md) | -
 [**QueryInputSum**](QueryInputSum.md) | -
 [**QueryInputCount**](QueryInputCount.md) | -
+[**QueryInputCountNumeric**](QueryInputCountNumeric.md) | -
+[**QueryInputCountNonNumeric**](QueryInputCountNonNumeric.md) | -
 [**QueryInputStd**](QueryInputStd.md) | -
 [**QueryInputMax**](QueryInputMax.md) | -
 [**QueryInputMin**](QueryInputMin.md) | -

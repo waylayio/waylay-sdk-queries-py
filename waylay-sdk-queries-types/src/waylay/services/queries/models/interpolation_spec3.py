@@ -1,0 +1,34 @@
+"""Waylay Query: timeseries queries (v1 protocol) models.
+
+This code was generated from the OpenAPI documentation of 'Waylay Query: timeseries queries (v1 protocol)'
+
+Do not edit the class manually.
+
+"""
+
+from __future__ import annotations
+
+from pydantic import (
+    ConfigDict,
+    Field,
+    StrictInt,
+)
+from waylay.sdk.api._models import BaseModel as WaylayBaseModel
+
+from ..models.interpolation_method3 import InterpolationMethod3
+from ..models.interpolation_parameter import InterpolationParameter
+
+
+class InterpolationSpec3(WaylayBaseModel):
+    """Defines whether, and how to treat missing values.  This can occur in two circumstances when aggregating (setting a sample frequency): * missing values: if there are missing (or invalid) values stored for a given freq-interval, \"interpolation\" specifies how to compute these. * down-sampling: when the specified freq is smaller than the series’ actual frequency. \"interpolation\" specifies how to compute intermediate values.."""
+
+    method: InterpolationMethod3
+    value: InterpolationParameter | None = None
+    order: StrictInt | None = Field(
+        default=None,
+        description="Optional order parameter for the interpolation method (see method description).",
+    )
+
+    model_config = ConfigDict(
+        populate_by_name=True, protected_namespaces=(), extra="allow"
+    )

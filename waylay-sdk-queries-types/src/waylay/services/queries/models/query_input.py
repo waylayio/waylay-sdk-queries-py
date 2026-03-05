@@ -11,6 +11,7 @@ from __future__ import annotations
 from pydantic import (
     ConfigDict,
     Field,
+    StrictBool,
     StrictInt,
     StrictStr,
 )
@@ -52,6 +53,10 @@ class QueryInput(WaylayBaseModel):
         description="List of series specifications. When not specified, a single default series specification is assumed(`[{}]`, using the default `metric`,`resource`, ... ).",
     )
     render: Render | None = None
+    lookback: StrictBool | None = Field(
+        default=None,
+        description="If enabled, the **last-known value** for each of the series will be taken into account in the result.  For **unaggregated** series, that value will be included as is (with a timestamp before the result window). For **aggregated** series, that value will be used at the first timestamp, but only if  * no aggregated value on the first timestamp could be computed  * and the aggregation is compatible with the value, i.e. in mean, min, max, first, last, median",
+    )
 
     model_config = ConfigDict(
         populate_by_name=True, protected_namespaces=(), extra="allow"

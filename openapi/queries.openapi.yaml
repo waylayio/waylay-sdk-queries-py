@@ -7,7 +7,7 @@ info:
 
 
     Protocol version: v1.'
-  version: 0.6.5
+  version: 0.6.8
 paths:
   /queries/v1:
     get:
@@ -33,12 +33,13 @@ paths:
       tags:
       - Execute Queries
       summary: Execute Query
-      description: 'Execute a timeseries query.
-
-
-        Executes the timeseries query specified in the request body,
-
-        after applying any overrides from the url parameters.'
+      description: "Execute a timeseries query.\n\nExecutes the timeseries query specified\
+        \ in the request body,\nafter applying any overrides from the url parameters.\n\
+        \nNote that string values in the query body can contain `{var_name}` placeholders.\n\
+        These will get replaced with by `var_name` bindings\nin the query body for\
+        \ that variable.\n\n```json\n{\n    \"station_id\": \"29758\",\n    \"resource\"\
+        : \"weather_station_{station_id}\",\n    ...\n}\n```\nresults in using a `weather_station_29758`\
+        \ resource."
       operationId: execute_query_queries_v1_data_post
       parameters:
       - name: resource
@@ -93,6 +94,12 @@ paths:
           - const: count
             title: Count
             description: Use the count of observations in the sample interval.
+          - const: count-numeric
+            title: Count Numeric
+            description: Use the count of numeric observations in the sample interval.
+          - const: count-non-numeric
+            title: Count Non-numeric
+            description: Use the count of non-numeric observations in the sample interval.
           - const: std
             title: Standard Deviation
             description: Use the standard deviation of all observations in the sample
@@ -112,66 +119,61 @@ paths:
         in: query
         required: false
         schema:
-          anyOf:
-          - $ref: '#/components/schemas/InterpolationMethod'
-            title: Interpolation Override.
-            oneOf:
-            - const: pad
-              title: pad
-              description: Interpolate with the value of the first observed point.
-                This method also extrapolates.
-            - const: fixed
-              title: fixed
-              description: Interpolate with a fixed, user-specified value. This method
-                also extrapolates.
-            - const: backfill
-              title: backfill
-              description: Same as pad, but using the last observed value. This method
-                also extrapolates
-            - const: linear
-              title: linear
-              description: Linearly go from the first observed value of the gap to
-                the last observed oneThis method also extrapolates
-            - const: nearest
-              title: nearest
-              description: Use the value that is closest in time.
-            - const: zero
-              title: zero
-              description: Interpolate with a spline function of order 0, which is
-                a piecewise polynomial.
-            - const: slinear
-              title: slinear
-              description: Interpolate with a spline function of order 1, which is
-                a piecewise polynomial.
-            - const: quadratic
-              title: quadratic
-              description: Interpolate with a spline function of order 2, which is
-                a piecewise polynomial.
-            - const: cubic
-              title: cubic
-              description: Interpolate with a spline function of order 3, which is
-                a piecewise polynomial.
-            - const: polynomial
-              title: polynomial
-              description: Interpolate with a polynomial of the lowest possible degree
-                passing trough the data points.
-            - const: spline
-              title: spline
-              description: Interpolate with a spline function of a user-specified
-                order.
-            - const: from_derivatives
-              title: from_derivatives
-              description: Interpolate with the derivative of order 1.
-            - const: pchip
-              title: pchip
-              description: Interpolate with a piecewise cubic spline function.
-            - const: akima
-              title: akima
-              description: Interpolate with a non-smoothing spline of order 2, called
-                Akima interpolation.
-          - $ref: '#/components/schemas/InterpolationSpec'
-            title: Interpolation Override.
-          title: Interpolation
+          $ref: '#/components/schemas/InterpolationMethod'
+          title: Interpolation Override.
+          oneOf:
+          - const: pad
+            title: pad
+            description: Interpolate with the value of the first observed point. This
+              method also extrapolates.
+          - const: fixed
+            title: fixed
+            description: Interpolate with a fixed, user-specified value. This method
+              also extrapolates.
+          - const: backfill
+            title: backfill
+            description: Same as pad, but using the last observed value. This method
+              also extrapolates
+          - const: linear
+            title: linear
+            description: Linearly go from the first observed value of the gap to the
+              last observed oneThis method also extrapolates
+          - const: nearest
+            title: nearest
+            description: Use the value that is closest in time.
+          - const: zero
+            title: zero
+            description: Interpolate with a spline function of order 0, which is a
+              piecewise polynomial.
+          - const: slinear
+            title: slinear
+            description: Interpolate with a spline function of order 1, which is a
+              piecewise polynomial.
+          - const: quadratic
+            title: quadratic
+            description: Interpolate with a spline function of order 2, which is a
+              piecewise polynomial.
+          - const: cubic
+            title: cubic
+            description: Interpolate with a spline function of order 3, which is a
+              piecewise polynomial.
+          - const: polynomial
+            title: polynomial
+            description: Interpolate with a polynomial of the lowest possible degree
+              passing trough the data points.
+          - const: spline
+            title: spline
+            description: Interpolate with a spline function of a user-specified order.
+          - const: from_derivatives
+            title: from_derivatives
+            description: Interpolate with the derivative of order 1.
+          - const: pchip
+            title: pchip
+            description: Interpolate with a piecewise cubic spline function.
+          - const: akima
+            title: akima
+            description: Interpolate with a non-smoothing spline of order 2, called
+              Akima interpolation.
       - name: freq
         in: query
         required: false
@@ -270,165 +272,160 @@ paths:
         in: query
         required: false
         schema:
-          anyOf:
-          - $ref: '#/components/schemas/_RenderMode'
-            title: Render Mode
-            oneOf:
-            - const: HEADER_ROW
-              description: 'Render rows of timestamp and values. Show column headers.
-                Includes an iso timestamp.
+          $ref: '#/components/schemas/_RenderMode'
+          title: Render Mode
+          oneOf:
+          - const: HEADER_ROW
+            description: 'Render rows of timestamp and values. Show column headers.
+              Includes an iso timestamp.
 
 
-                ###### options
+              ###### options
 
-                - `iso_timestamp`: `True`
+              - `iso_timestamp`: `True`
 
-                - `header_array`: `row`
+              - `header_array`: `row`
 
-                - `roll_up`: `False`
+              - `roll_up`: `False`
 
-                - `data_axis`: `column`'
-              type: string
-            - const: COMPACT
-              description: 'Render rows of timestamp and values. Show column headers.
-
-
-                ###### options
-
-                - `iso_timestamp`: `False`
-
-                - `header_array`: `row`
-
-                - `roll_up`: `False`
-
-                - `data_axis`: `column`'
-              type: string
-            - const: COMPACT_WS
-              description: 'Render rows of timestamp and values. Show column headers.
-                Show the time window attributes.
+              - `data_axis`: `column`'
+            type: string
+          - const: COMPACT
+            description: 'Render rows of timestamp and values. Show column headers.
 
 
-                ###### options
+              ###### options
 
-                - `iso_timestamp`: `False`
+              - `iso_timestamp`: `False`
 
-                - `header_array`: `row`
+              - `header_array`: `row`
 
-                - `roll_up`: `False`
+              - `roll_up`: `False`
 
-                - `data_axis`: `column`
-
-                - `include_window_spec`: `True`'
-              type: string
-            - const: SERIES
-              description: 'Render timestamps and each series (column) as a values
-                array. Show column headers.
+              - `data_axis`: `column`'
+            type: string
+          - const: COMPACT_WS
+            description: 'Render rows of timestamp and values. Show column headers.
+              Show the time window attributes.
 
 
-                ###### options
+              ###### options
 
-                - `iso_timestamp`: `False`
+              - `iso_timestamp`: `False`
 
-                - `header_array`: `row`
+              - `header_array`: `row`
 
-                - `data_axis`: `row`
+              - `roll_up`: `False`
 
-                - `roll_up`: `True`
+              - `data_axis`: `column`
 
-                - `include_window_spec`: `True`'
-              type: string
-            - const: HEADER_COLUMN
-              description: 'Renders row index in `rows`, and each series as a values
-                array.
-
-
-                The series are prefixed by their series attributes.The `rows` index
-                is prefixed by the labels for these attributes.
+              - `include_window_spec`: `True`'
+            type: string
+          - const: SERIES
+            description: 'Render timestamps and each series (column) as a values array.
+              Show column headers.
 
 
-                ###### options
+              ###### options
 
-                - `iso_timestamp`: `True`
+              - `iso_timestamp`: `False`
 
-                - `header_array`: `column`
+              - `header_array`: `row`
 
-                - `roll_up`: `False`
+              - `data_axis`: `row`
 
-                - `data_axis`: `row`'
-              type: string
-            - const: FLAT_DICT
-              description: 'Render an object for each observation. Uses flattened
-                keys.
+              - `roll_up`: `True`
 
-
-                ###### options
-
-                - `iso_timestamp`: `True`
-
-                - `hierarchical`: `False`
-
-                - `show_levels`: `True`
-
-                - `roll_up`: `False`'
-              type: string
-            - const: HIER_DICT
-              description: 'Render an hierarchical object for each observation. Shows
-                an iso timestamp.
+              - `include_window_spec`: `True`'
+            type: string
+          - const: HEADER_COLUMN
+            description: 'Renders row index in `rows`, and each series as a values
+              array.
 
 
-                ###### options
-
-                - `iso_timestamp`: `True`
-
-                - `hierarchical`: `True`
-
-                - `show_levels`: `True`
-
-                - `roll_up`: `True`'
-              type: string
-            - const: METRIC_FLAT_DICT
-              description: 'Render an object with metric keys for each observation.
-                Shows an iso timestamp.
+              The series are prefixed by their series attributes.The `rows` index
+              is prefixed by the labels for these attributes.
 
 
-                ###### options
+              ###### options
 
-                - `iso_timestamp`: `True`
+              - `iso_timestamp`: `True`
 
-                - `hierarchical`: `[''metric'']`
+              - `header_array`: `column`
 
-                - `show_levels`: `False`
+              - `roll_up`: `False`
 
-                - `roll_up`: `True`
-
-                - `key_skip_empty`: `True`'
-              type: string
-            - const: UPLOAD
-              description: 'Render in an object format compatible with the `/data/v1/events`
-                upload.
+              - `data_axis`: `row`'
+            type: string
+          - const: FLAT_DICT
+            description: 'Render an object for each observation. Uses flattened keys.
 
 
-                ###### options
+              ###### options
 
-                - `iso_timestamp`: `False`
+              - `iso_timestamp`: `True`
 
-                - `hierarchical`: `False`
+              - `hierarchical`: `False`
 
-                - `show_levels`: `False`
+              - `show_levels`: `True`
 
-                - `roll_up`: `True`'
-              type: string
-            - const: CSV
-              description: 'Render in csv format with row headers.
+              - `roll_up`: `False`'
+            type: string
+          - const: HIER_DICT
+            description: 'Render an hierarchical object for each observation. Shows
+              an iso timestamp.
 
 
-                ###### options
+              ###### options
 
-                - `iso_timestamp`: `False`'
-              type: string
-          - $ref: '#/components/schemas/Render'
-            title: Render Override.
-          title: Render
+              - `iso_timestamp`: `True`
+
+              - `hierarchical`: `True`
+
+              - `show_levels`: `True`
+
+              - `roll_up`: `True`'
+            type: string
+          - const: METRIC_FLAT_DICT
+            description: 'Render an object with metric keys for each observation.
+              Shows an iso timestamp.
+
+
+              ###### options
+
+              - `iso_timestamp`: `True`
+
+              - `hierarchical`: `[''metric'']`
+
+              - `show_levels`: `False`
+
+              - `roll_up`: `True`
+
+              - `key_skip_empty`: `True`'
+            type: string
+          - const: UPLOAD
+            description: 'Render in an object format compatible with the `/data/v1/events`
+              upload.
+
+
+              ###### options
+
+              - `iso_timestamp`: `False`
+
+              - `hierarchical`: `False`
+
+              - `show_levels`: `False`
+
+              - `roll_up`: `True`'
+            type: string
+          - const: CSV
+            description: 'Render in csv format with row headers.
+
+
+              ###### options
+
+              - `iso_timestamp`: `False`'
+            type: string
       - name: accept
         in: header
         required: false
@@ -457,7 +454,12 @@ paths:
                   summary: Query response example for `?render=DEFAULT`
                   value:
                     data:
-                    - columns:
+                    - column_names:
+                      - 06e267b9-8714-4c58-ac53-df6a291b59dc.temperature.max
+                      - 06e267b9-8714-4c58-ac53-df6a291b59dc.humidity.mean
+                      - 7f33317b-a45e-4b0a-94a2-9bbbdc746cc1.temperature.max
+                      - 7f33317b-a45e-4b0a-94a2-9bbbdc746cc1.humidity.mean
+                      columns:
                       - timestamp
                       - resource: 06e267b9-8714-4c58-ac53-df6a291b59dc
                         metric: temperature
@@ -1550,7 +1552,12 @@ paths:
                   summary: Query response example for `?render=HEADER_COLUMN`
                   value:
                     data:
-                    - rows:
+                    - column_names:
+                      - 06e267b9-8714-4c58-ac53-df6a291b59dc.temperature.max
+                      - 06e267b9-8714-4c58-ac53-df6a291b59dc.humidity.mean
+                      - 7f33317b-a45e-4b0a-94a2-9bbbdc746cc1.temperature.max
+                      - 7f33317b-a45e-4b0a-94a2-9bbbdc746cc1.humidity.mean
+                      rows:
                       - resource
                       - metric
                       - aggregation
@@ -1752,6 +1759,11 @@ paths:
                       - resource: 7f33317b-a45e-4b0a-94a2-9bbbdc746cc1
                         metric: humidity
                         aggregation: mean
+                      column_names:
+                      - 06e267b9-8714-4c58-ac53-df6a291b59dc.temperature.max
+                      - 06e267b9-8714-4c58-ac53-df6a291b59dc.humidity.mean
+                      - 7f33317b-a45e-4b0a-94a2-9bbbdc746cc1.temperature.max
+                      - 7f33317b-a45e-4b0a-94a2-9bbbdc746cc1.humidity.mean
                       data:
                       - - 1717977600000
                         - 1718006400000
@@ -1907,13 +1919,11 @@ paths:
             text/csv:
               schema:
                 title: CSV timeseries data response.
-                description: 'A CSV representation of the query result,
-
-                  - the first `timestamp` column contains event   timestamp in iso
-                  format
-
-                  - remaining columns contain the (aggregated or non-aggregated)  series
-                  values, using a `{resource_id}/{metric}`   or `{resource_id}/{metric}/{aggregation}`  header.'
+                description: "A CSV representation of the query result,\n- the first\
+                  \ `timestamp` column contains event   timestamp in iso format\n\
+                  - remaining columns contain the (aggregated or non-aggregated) series\
+                  \ values, using a header `{resource_id}/{metric}`, `{resource_id}/{metric}/{aggregation}`,\
+                  \ or \u2014if specified- the series  `{name}`."
         '422':
           description: Validation Error
           content:
@@ -1932,7 +1942,7 @@ paths:
         Retrieves a stored query definition by name,
 
         applies overrides from the url parameters, and executes it.'
-      operationId: executeByName_queries_v1_data__query_name__get
+      operationId: executeByName
       parameters:
       - name: query_name
         in: path
@@ -1992,6 +2002,12 @@ paths:
           - const: count
             title: Count
             description: Use the count of observations in the sample interval.
+          - const: count-numeric
+            title: Count Numeric
+            description: Use the count of numeric observations in the sample interval.
+          - const: count-non-numeric
+            title: Count Non-numeric
+            description: Use the count of non-numeric observations in the sample interval.
           - const: std
             title: Standard Deviation
             description: Use the standard deviation of all observations in the sample
@@ -2011,66 +2027,61 @@ paths:
         in: query
         required: false
         schema:
-          anyOf:
-          - $ref: '#/components/schemas/InterpolationMethod'
-            title: Interpolation Override.
-            oneOf:
-            - const: pad
-              title: pad
-              description: Interpolate with the value of the first observed point.
-                This method also extrapolates.
-            - const: fixed
-              title: fixed
-              description: Interpolate with a fixed, user-specified value. This method
-                also extrapolates.
-            - const: backfill
-              title: backfill
-              description: Same as pad, but using the last observed value. This method
-                also extrapolates
-            - const: linear
-              title: linear
-              description: Linearly go from the first observed value of the gap to
-                the last observed oneThis method also extrapolates
-            - const: nearest
-              title: nearest
-              description: Use the value that is closest in time.
-            - const: zero
-              title: zero
-              description: Interpolate with a spline function of order 0, which is
-                a piecewise polynomial.
-            - const: slinear
-              title: slinear
-              description: Interpolate with a spline function of order 1, which is
-                a piecewise polynomial.
-            - const: quadratic
-              title: quadratic
-              description: Interpolate with a spline function of order 2, which is
-                a piecewise polynomial.
-            - const: cubic
-              title: cubic
-              description: Interpolate with a spline function of order 3, which is
-                a piecewise polynomial.
-            - const: polynomial
-              title: polynomial
-              description: Interpolate with a polynomial of the lowest possible degree
-                passing trough the data points.
-            - const: spline
-              title: spline
-              description: Interpolate with a spline function of a user-specified
-                order.
-            - const: from_derivatives
-              title: from_derivatives
-              description: Interpolate with the derivative of order 1.
-            - const: pchip
-              title: pchip
-              description: Interpolate with a piecewise cubic spline function.
-            - const: akima
-              title: akima
-              description: Interpolate with a non-smoothing spline of order 2, called
-                Akima interpolation.
-          - $ref: '#/components/schemas/InterpolationSpec'
-            title: Interpolation Override.
-          title: Interpolation
+          $ref: '#/components/schemas/InterpolationMethod'
+          title: Interpolation Override.
+          oneOf:
+          - const: pad
+            title: pad
+            description: Interpolate with the value of the first observed point. This
+              method also extrapolates.
+          - const: fixed
+            title: fixed
+            description: Interpolate with a fixed, user-specified value. This method
+              also extrapolates.
+          - const: backfill
+            title: backfill
+            description: Same as pad, but using the last observed value. This method
+              also extrapolates
+          - const: linear
+            title: linear
+            description: Linearly go from the first observed value of the gap to the
+              last observed oneThis method also extrapolates
+          - const: nearest
+            title: nearest
+            description: Use the value that is closest in time.
+          - const: zero
+            title: zero
+            description: Interpolate with a spline function of order 0, which is a
+              piecewise polynomial.
+          - const: slinear
+            title: slinear
+            description: Interpolate with a spline function of order 1, which is a
+              piecewise polynomial.
+          - const: quadratic
+            title: quadratic
+            description: Interpolate with a spline function of order 2, which is a
+              piecewise polynomial.
+          - const: cubic
+            title: cubic
+            description: Interpolate with a spline function of order 3, which is a
+              piecewise polynomial.
+          - const: polynomial
+            title: polynomial
+            description: Interpolate with a polynomial of the lowest possible degree
+              passing trough the data points.
+          - const: spline
+            title: spline
+            description: Interpolate with a spline function of a user-specified order.
+          - const: from_derivatives
+            title: from_derivatives
+            description: Interpolate with the derivative of order 1.
+          - const: pchip
+            title: pchip
+            description: Interpolate with a piecewise cubic spline function.
+          - const: akima
+            title: akima
+            description: Interpolate with a non-smoothing spline of order 2, called
+              Akima interpolation.
       - name: freq
         in: query
         required: false
@@ -2169,165 +2180,160 @@ paths:
         in: query
         required: false
         schema:
-          anyOf:
-          - $ref: '#/components/schemas/_RenderMode'
-            title: Render Mode
-            oneOf:
-            - const: HEADER_ROW
-              description: 'Render rows of timestamp and values. Show column headers.
-                Includes an iso timestamp.
+          $ref: '#/components/schemas/_RenderMode'
+          title: Render Mode
+          oneOf:
+          - const: HEADER_ROW
+            description: 'Render rows of timestamp and values. Show column headers.
+              Includes an iso timestamp.
 
 
-                ###### options
+              ###### options
 
-                - `iso_timestamp`: `True`
+              - `iso_timestamp`: `True`
 
-                - `header_array`: `row`
+              - `header_array`: `row`
 
-                - `roll_up`: `False`
+              - `roll_up`: `False`
 
-                - `data_axis`: `column`'
-              type: string
-            - const: COMPACT
-              description: 'Render rows of timestamp and values. Show column headers.
-
-
-                ###### options
-
-                - `iso_timestamp`: `False`
-
-                - `header_array`: `row`
-
-                - `roll_up`: `False`
-
-                - `data_axis`: `column`'
-              type: string
-            - const: COMPACT_WS
-              description: 'Render rows of timestamp and values. Show column headers.
-                Show the time window attributes.
+              - `data_axis`: `column`'
+            type: string
+          - const: COMPACT
+            description: 'Render rows of timestamp and values. Show column headers.
 
 
-                ###### options
+              ###### options
 
-                - `iso_timestamp`: `False`
+              - `iso_timestamp`: `False`
 
-                - `header_array`: `row`
+              - `header_array`: `row`
 
-                - `roll_up`: `False`
+              - `roll_up`: `False`
 
-                - `data_axis`: `column`
-
-                - `include_window_spec`: `True`'
-              type: string
-            - const: SERIES
-              description: 'Render timestamps and each series (column) as a values
-                array. Show column headers.
+              - `data_axis`: `column`'
+            type: string
+          - const: COMPACT_WS
+            description: 'Render rows of timestamp and values. Show column headers.
+              Show the time window attributes.
 
 
-                ###### options
+              ###### options
 
-                - `iso_timestamp`: `False`
+              - `iso_timestamp`: `False`
 
-                - `header_array`: `row`
+              - `header_array`: `row`
 
-                - `data_axis`: `row`
+              - `roll_up`: `False`
 
-                - `roll_up`: `True`
+              - `data_axis`: `column`
 
-                - `include_window_spec`: `True`'
-              type: string
-            - const: HEADER_COLUMN
-              description: 'Renders row index in `rows`, and each series as a values
-                array.
-
-
-                The series are prefixed by their series attributes.The `rows` index
-                is prefixed by the labels for these attributes.
+              - `include_window_spec`: `True`'
+            type: string
+          - const: SERIES
+            description: 'Render timestamps and each series (column) as a values array.
+              Show column headers.
 
 
-                ###### options
+              ###### options
 
-                - `iso_timestamp`: `True`
+              - `iso_timestamp`: `False`
 
-                - `header_array`: `column`
+              - `header_array`: `row`
 
-                - `roll_up`: `False`
+              - `data_axis`: `row`
 
-                - `data_axis`: `row`'
-              type: string
-            - const: FLAT_DICT
-              description: 'Render an object for each observation. Uses flattened
-                keys.
+              - `roll_up`: `True`
 
-
-                ###### options
-
-                - `iso_timestamp`: `True`
-
-                - `hierarchical`: `False`
-
-                - `show_levels`: `True`
-
-                - `roll_up`: `False`'
-              type: string
-            - const: HIER_DICT
-              description: 'Render an hierarchical object for each observation. Shows
-                an iso timestamp.
+              - `include_window_spec`: `True`'
+            type: string
+          - const: HEADER_COLUMN
+            description: 'Renders row index in `rows`, and each series as a values
+              array.
 
 
-                ###### options
-
-                - `iso_timestamp`: `True`
-
-                - `hierarchical`: `True`
-
-                - `show_levels`: `True`
-
-                - `roll_up`: `True`'
-              type: string
-            - const: METRIC_FLAT_DICT
-              description: 'Render an object with metric keys for each observation.
-                Shows an iso timestamp.
+              The series are prefixed by their series attributes.The `rows` index
+              is prefixed by the labels for these attributes.
 
 
-                ###### options
+              ###### options
 
-                - `iso_timestamp`: `True`
+              - `iso_timestamp`: `True`
 
-                - `hierarchical`: `[''metric'']`
+              - `header_array`: `column`
 
-                - `show_levels`: `False`
+              - `roll_up`: `False`
 
-                - `roll_up`: `True`
-
-                - `key_skip_empty`: `True`'
-              type: string
-            - const: UPLOAD
-              description: 'Render in an object format compatible with the `/data/v1/events`
-                upload.
+              - `data_axis`: `row`'
+            type: string
+          - const: FLAT_DICT
+            description: 'Render an object for each observation. Uses flattened keys.
 
 
-                ###### options
+              ###### options
 
-                - `iso_timestamp`: `False`
+              - `iso_timestamp`: `True`
 
-                - `hierarchical`: `False`
+              - `hierarchical`: `False`
 
-                - `show_levels`: `False`
+              - `show_levels`: `True`
 
-                - `roll_up`: `True`'
-              type: string
-            - const: CSV
-              description: 'Render in csv format with row headers.
+              - `roll_up`: `False`'
+            type: string
+          - const: HIER_DICT
+            description: 'Render an hierarchical object for each observation. Shows
+              an iso timestamp.
 
 
-                ###### options
+              ###### options
 
-                - `iso_timestamp`: `False`'
-              type: string
-          - $ref: '#/components/schemas/Render'
-            title: Render Override.
-          title: Render
+              - `iso_timestamp`: `True`
+
+              - `hierarchical`: `True`
+
+              - `show_levels`: `True`
+
+              - `roll_up`: `True`'
+            type: string
+          - const: METRIC_FLAT_DICT
+            description: 'Render an object with metric keys for each observation.
+              Shows an iso timestamp.
+
+
+              ###### options
+
+              - `iso_timestamp`: `True`
+
+              - `hierarchical`: `[''metric'']`
+
+              - `show_levels`: `False`
+
+              - `roll_up`: `True`
+
+              - `key_skip_empty`: `True`'
+            type: string
+          - const: UPLOAD
+            description: 'Render in an object format compatible with the `/data/v1/events`
+              upload.
+
+
+              ###### options
+
+              - `iso_timestamp`: `False`
+
+              - `hierarchical`: `False`
+
+              - `show_levels`: `False`
+
+              - `roll_up`: `True`'
+            type: string
+          - const: CSV
+            description: 'Render in csv format with row headers.
+
+
+              ###### options
+
+              - `iso_timestamp`: `False`'
+            type: string
       - name: accept
         in: header
         required: false
@@ -2350,7 +2356,12 @@ paths:
                   summary: Query response example for `?render=DEFAULT`
                   value:
                     data:
-                    - columns:
+                    - column_names:
+                      - 06e267b9-8714-4c58-ac53-df6a291b59dc.temperature.max
+                      - 06e267b9-8714-4c58-ac53-df6a291b59dc.humidity.mean
+                      - 7f33317b-a45e-4b0a-94a2-9bbbdc746cc1.temperature.max
+                      - 7f33317b-a45e-4b0a-94a2-9bbbdc746cc1.humidity.mean
+                      columns:
                       - timestamp
                       - resource: 06e267b9-8714-4c58-ac53-df6a291b59dc
                         metric: temperature
@@ -3443,7 +3454,12 @@ paths:
                   summary: Query response example for `?render=HEADER_COLUMN`
                   value:
                     data:
-                    - rows:
+                    - column_names:
+                      - 06e267b9-8714-4c58-ac53-df6a291b59dc.temperature.max
+                      - 06e267b9-8714-4c58-ac53-df6a291b59dc.humidity.mean
+                      - 7f33317b-a45e-4b0a-94a2-9bbbdc746cc1.temperature.max
+                      - 7f33317b-a45e-4b0a-94a2-9bbbdc746cc1.humidity.mean
+                      rows:
                       - resource
                       - metric
                       - aggregation
@@ -3645,6 +3661,11 @@ paths:
                       - resource: 7f33317b-a45e-4b0a-94a2-9bbbdc746cc1
                         metric: humidity
                         aggregation: mean
+                      column_names:
+                      - 06e267b9-8714-4c58-ac53-df6a291b59dc.temperature.max
+                      - 06e267b9-8714-4c58-ac53-df6a291b59dc.humidity.mean
+                      - 7f33317b-a45e-4b0a-94a2-9bbbdc746cc1.temperature.max
+                      - 7f33317b-a45e-4b0a-94a2-9bbbdc746cc1.humidity.mean
                       data:
                       - - 1717977600000
                         - 1718006400000
@@ -3800,13 +3821,11 @@ paths:
             text/csv:
               schema:
                 title: CSV timeseries data response.
-                description: 'A CSV representation of the query result,
-
-                  - the first `timestamp` column contains event   timestamp in iso
-                  format
-
-                  - remaining columns contain the (aggregated or non-aggregated)  series
-                  values, using a `{resource_id}/{metric}`   or `{resource_id}/{metric}/{aggregation}`  header.'
+                description: "A CSV representation of the query result,\n- the first\
+                  \ `timestamp` column contains event   timestamp in iso format\n\
+                  - remaining columns contain the (aggregated or non-aggregated) series\
+                  \ values, using a header `{resource_id}/{metric}`, `{resource_id}/{metric}/{aggregation}`,\
+                  \ or \u2014if specified- the series  `{name}`."
         '422':
           description: Validation Error
           content:
@@ -3900,9 +3919,9 @@ paths:
     post:
       tags:
       - Named Queries
-      summary: Create Query
+      summary: Post Query
       description: Create a new named query.
-      operationId: create_query_queries_v1_query_post
+      operationId: post_query_queries_v1_query_post
       requestBody:
         required: true
         content:
@@ -4214,6 +4233,16 @@ components:
 
 
             The remaining object-valued row headers contain the index data.'
+        column_names:
+          items:
+            type: string
+          type: array
+          title: Column names
+          description: 'Short names for the columns in the data set.
+
+            These names are the `name` alias if given in the series specification,
+            otherwise is composed of the `resource`, `metric` and `aggregation` attributes,
+            concatenated with the `render.key_separator` (default `.`) as separator.'
         data:
           items:
             items:
@@ -4227,6 +4256,7 @@ components:
       type: object
       required:
       - rows
+      - column_names
       - data
       title: ColumnDataSet
       description: 'Column-oriented dataset with rows header.
@@ -4727,6 +4757,13 @@ components:
             - const: count
               title: Count
               description: Use the count of observations in the sample interval.
+            - const: count-numeric
+              title: Count Numeric
+              description: Use the count of numeric observations in the sample interval.
+            - const: count-non-numeric
+              title: Count Non-numeric
+              description: Use the count of non-numeric observations in the sample
+                interval.
             - const: std
               title: Standard Deviation
               description: Use the standard deviation of all observations in the sample
@@ -4772,6 +4809,14 @@ components:
                 - const: count
                   title: Count
                   description: Use the count of observations in the sample interval.
+                - const: count-numeric
+                  title: Count Numeric
+                  description: Use the count of numeric observations in the sample
+                    interval.
+                - const: count-non-numeric
+                  title: Count Non-numeric
+                  description: Use the count of non-numeric observations in the sample
+                    interval.
                 - const: std
                   title: Standard Deviation
                   description: Use the standard deviation of all observations in the
@@ -4821,6 +4866,14 @@ components:
                 - const: count
                   title: Count
                   description: Use the count of observations in the sample interval.
+                - const: count-numeric
+                  title: Count Numeric
+                  description: Use the count of numeric observations in the sample
+                    interval.
+                - const: count-non-numeric
+                  title: Count Non-numeric
+                  description: Use the count of non-numeric observations in the sample
+                    interval.
                 - const: std
                   title: Standard Deviation
                   description: Use the standard deviation of all observations in the
@@ -4866,6 +4919,14 @@ components:
                     - const: count
                       title: Count
                       description: Use the count of observations in the sample interval.
+                    - const: count-numeric
+                      title: Count Numeric
+                      description: Use the count of numeric observations in the sample
+                        interval.
+                    - const: count-non-numeric
+                      title: Count Non-numeric
+                      description: Use the count of non-numeric observations in the
+                        sample interval.
                     - const: std
                       title: Standard Deviation
                       description: Use the standard deviation of all observations
@@ -4921,6 +4982,14 @@ components:
                     - const: count
                       title: Count
                       description: Use the count of observations in the sample interval.
+                    - const: count-numeric
+                      title: Count Numeric
+                      description: Use the count of numeric observations in the sample
+                        interval.
+                    - const: count-non-numeric
+                      title: Count Non-numeric
+                      description: Use the count of non-numeric observations in the
+                        sample interval.
                     - const: std
                       title: Standard Deviation
                       description: Use the standard deviation of all observations
@@ -4967,6 +5036,14 @@ components:
                           title: Count
                           description: Use the count of observations in the sample
                             interval.
+                        - const: count-numeric
+                          title: Count Numeric
+                          description: Use the count of numeric observations in the
+                            sample interval.
+                        - const: count-non-numeric
+                          title: Count Non-numeric
+                          description: Use the count of non-numeric observations in
+                            the sample interval.
                         - const: std
                           title: Standard Deviation
                           description: Use the standard deviation of all observations
@@ -5004,8 +5081,89 @@ components:
           description: Default aggregation method(s) for the series in the query.
         interpolation:
           anyOf:
-          - $ref: '#/components/schemas/InterpolationMethod'
-            oneOf:
+          - properties:
+              method:
+                oneOf:
+                - const: pad
+                  title: pad
+                  description: Interpolate with the value of the first observed point.
+                    This method also extrapolates.
+                - const: fixed
+                  title: fixed
+                  description: Interpolate with a fixed, user-specified value. This
+                    method also extrapolates.
+                - const: backfill
+                  title: backfill
+                  description: Same as pad, but using the last observed value. This
+                    method also extrapolates
+                - const: linear
+                  title: linear
+                  description: Linearly go from the first observed value of the gap
+                    to the last observed oneThis method also extrapolates
+                - const: nearest
+                  title: nearest
+                  description: Use the value that is closest in time.
+                - const: zero
+                  title: zero
+                  description: Interpolate with a spline function of order 0, which
+                    is a piecewise polynomial.
+                - const: slinear
+                  title: slinear
+                  description: Interpolate with a spline function of order 1, which
+                    is a piecewise polynomial.
+                - const: quadratic
+                  title: quadratic
+                  description: Interpolate with a spline function of order 2, which
+                    is a piecewise polynomial.
+                - const: cubic
+                  title: cubic
+                  description: Interpolate with a spline function of order 3, which
+                    is a piecewise polynomial.
+                - const: polynomial
+                  title: polynomial
+                  description: Interpolate with a polynomial of the lowest possible
+                    degree passing trough the data points.
+                - const: spline
+                  title: spline
+                  description: Interpolate with a spline function of a user-specified
+                    order.
+                - const: from_derivatives
+                  title: from_derivatives
+                  description: Interpolate with the derivative of order 1.
+                - const: pchip
+                  title: pchip
+                  description: Interpolate with a piecewise cubic spline function.
+                - const: akima
+                  title: akima
+                  description: Interpolate with a non-smoothing spline of order 2,
+                    called Akima interpolation.
+                type: string
+                title: Interpolation method
+              value:
+                anyOf:
+                - type: number
+                - type: integer
+                title: Interpolation parameter
+                description: Optional parameter value for the interpolation method
+                  (see method description).
+              order:
+                type: integer
+                title: Interpolation order
+                description: Optional order parameter for the interpolation method
+                  (see method description).
+            additionalProperties: true
+            type: object
+            required:
+            - method
+            title: InterpolationSpec
+            description: "Defines whether, and how to treat missing values.\n\nThis\
+              \ can occur in two circumstances when aggregating (setting a sample\
+              \ frequency):\n* missing values: if there are missing (or invalid) values\
+              \ stored for\na given freq-interval,\n\"interpolation\" specifies how\
+              \ to compute these.\n* down-sampling: when the specified freq is smaller\
+              \ than the series\u2019\nactual frequency.\n\"interpolation\" specifies\
+              \ how to compute intermediate values."
+          - oneOf:
             - const: pad
               title: pad
               description: Interpolate with the value of the first observed point.
@@ -5059,9 +5217,6 @@ components:
               title: akima
               description: Interpolate with a non-smoothing spline of order 2, called
                 Akima interpolation.
-            title: Interpolation Method
-          - $ref: '#/components/schemas/InterpolationSpec'
-            title: Interpolation specification.
           title: Default Interpolation
           description: Default Interpolation method for the series (if aggregated).
         freq:
@@ -5163,6 +5318,16 @@ components:
             ... ).
         render:
           $ref: '#/components/schemas/Render'
+        lookback:
+          type: boolean
+          title: Lookback option.
+          description: "If enabled, the **last-known value** for each of the series\
+            \ will be taken into account in the result. \nFor **unaggregated** series,\
+            \ that value will be included as is (with a timestamp before the result\
+            \ window).\nFor **aggregated** series, that value will be used at the\
+            \ first timestamp, but only if\n * no aggregated value on the first timestamp\
+            \ could be computed\n * and the aggregation is compatible with the value,\
+            \ i.e. in mean, min, max, first, last, median"
       additionalProperties: true
       type: object
       title: Query
@@ -5207,6 +5372,13 @@ components:
             - const: count
               title: Count
               description: Use the count of observations in the sample interval.
+            - const: count-numeric
+              title: Count Numeric
+              description: Use the count of numeric observations in the sample interval.
+            - const: count-non-numeric
+              title: Count Non-numeric
+              description: Use the count of non-numeric observations in the sample
+                interval.
             - const: std
               title: Standard Deviation
               description: Use the standard deviation of all observations in the sample
@@ -5252,6 +5424,14 @@ components:
                 - const: count
                   title: Count
                   description: Use the count of observations in the sample interval.
+                - const: count-numeric
+                  title: Count Numeric
+                  description: Use the count of numeric observations in the sample
+                    interval.
+                - const: count-non-numeric
+                  title: Count Non-numeric
+                  description: Use the count of non-numeric observations in the sample
+                    interval.
                 - const: std
                   title: Standard Deviation
                   description: Use the standard deviation of all observations in the
@@ -5301,6 +5481,14 @@ components:
                 - const: count
                   title: Count
                   description: Use the count of observations in the sample interval.
+                - const: count-numeric
+                  title: Count Numeric
+                  description: Use the count of numeric observations in the sample
+                    interval.
+                - const: count-non-numeric
+                  title: Count Non-numeric
+                  description: Use the count of non-numeric observations in the sample
+                    interval.
                 - const: std
                   title: Standard Deviation
                   description: Use the standard deviation of all observations in the
@@ -5346,6 +5534,14 @@ components:
                     - const: count
                       title: Count
                       description: Use the count of observations in the sample interval.
+                    - const: count-numeric
+                      title: Count Numeric
+                      description: Use the count of numeric observations in the sample
+                        interval.
+                    - const: count-non-numeric
+                      title: Count Non-numeric
+                      description: Use the count of non-numeric observations in the
+                        sample interval.
                     - const: std
                       title: Standard Deviation
                       description: Use the standard deviation of all observations
@@ -5401,6 +5597,14 @@ components:
                     - const: count
                       title: Count
                       description: Use the count of observations in the sample interval.
+                    - const: count-numeric
+                      title: Count Numeric
+                      description: Use the count of numeric observations in the sample
+                        interval.
+                    - const: count-non-numeric
+                      title: Count Non-numeric
+                      description: Use the count of non-numeric observations in the
+                        sample interval.
                     - const: std
                       title: Standard Deviation
                       description: Use the standard deviation of all observations
@@ -5447,6 +5651,14 @@ components:
                           title: Count
                           description: Use the count of observations in the sample
                             interval.
+                        - const: count-numeric
+                          title: Count Numeric
+                          description: Use the count of numeric observations in the
+                            sample interval.
+                        - const: count-non-numeric
+                          title: Count Non-numeric
+                          description: Use the count of non-numeric observations in
+                            the sample interval.
                         - const: std
                           title: Standard Deviation
                           description: Use the standard deviation of all observations
@@ -5484,8 +5696,89 @@ components:
           description: Default aggregation method(s) for the series in the query.
         interpolation:
           anyOf:
-          - $ref: '#/components/schemas/InterpolationMethod'
-            oneOf:
+          - properties:
+              method:
+                oneOf:
+                - const: pad
+                  title: pad
+                  description: Interpolate with the value of the first observed point.
+                    This method also extrapolates.
+                - const: fixed
+                  title: fixed
+                  description: Interpolate with a fixed, user-specified value. This
+                    method also extrapolates.
+                - const: backfill
+                  title: backfill
+                  description: Same as pad, but using the last observed value. This
+                    method also extrapolates
+                - const: linear
+                  title: linear
+                  description: Linearly go from the first observed value of the gap
+                    to the last observed oneThis method also extrapolates
+                - const: nearest
+                  title: nearest
+                  description: Use the value that is closest in time.
+                - const: zero
+                  title: zero
+                  description: Interpolate with a spline function of order 0, which
+                    is a piecewise polynomial.
+                - const: slinear
+                  title: slinear
+                  description: Interpolate with a spline function of order 1, which
+                    is a piecewise polynomial.
+                - const: quadratic
+                  title: quadratic
+                  description: Interpolate with a spline function of order 2, which
+                    is a piecewise polynomial.
+                - const: cubic
+                  title: cubic
+                  description: Interpolate with a spline function of order 3, which
+                    is a piecewise polynomial.
+                - const: polynomial
+                  title: polynomial
+                  description: Interpolate with a polynomial of the lowest possible
+                    degree passing trough the data points.
+                - const: spline
+                  title: spline
+                  description: Interpolate with a spline function of a user-specified
+                    order.
+                - const: from_derivatives
+                  title: from_derivatives
+                  description: Interpolate with the derivative of order 1.
+                - const: pchip
+                  title: pchip
+                  description: Interpolate with a piecewise cubic spline function.
+                - const: akima
+                  title: akima
+                  description: Interpolate with a non-smoothing spline of order 2,
+                    called Akima interpolation.
+                type: string
+                title: Interpolation method
+              value:
+                anyOf:
+                - type: number
+                - type: integer
+                title: Interpolation parameter
+                description: Optional parameter value for the interpolation method
+                  (see method description).
+              order:
+                type: integer
+                title: Interpolation order
+                description: Optional order parameter for the interpolation method
+                  (see method description).
+            additionalProperties: true
+            type: object
+            required:
+            - method
+            title: InterpolationSpec
+            description: "Defines whether, and how to treat missing values.\n\nThis\
+              \ can occur in two circumstances when aggregating (setting a sample\
+              \ frequency):\n* missing values: if there are missing (or invalid) values\
+              \ stored for\na given freq-interval,\n\"interpolation\" specifies how\
+              \ to compute these.\n* down-sampling: when the specified freq is smaller\
+              \ than the series\u2019\nactual frequency.\n\"interpolation\" specifies\
+              \ how to compute intermediate values."
+          - oneOf:
             - const: pad
               title: pad
               description: Interpolate with the value of the first observed point.
@@ -5539,9 +5832,6 @@ components:
               title: akima
               description: Interpolate with a non-smoothing spline of order 2, called
                 Akima interpolation.
-            title: Interpolation Method
-          - $ref: '#/components/schemas/InterpolationSpec'
-            title: Interpolation specification.
           title: Default Interpolation
           description: Default Interpolation method for the series (if aggregated).
         freq:
@@ -5643,6 +5933,16 @@ components:
             ... ).
         render:
           $ref: '#/components/schemas/Render'
+        lookback:
+          type: boolean
+          title: Lookback option.
+          description: "If enabled, the **last-known value** for each of the series\
+            \ will be taken into account in the result. \nFor **unaggregated** series,\
+            \ that value will be included as is (with a timestamp before the result\
+            \ window).\nFor **aggregated** series, that value will be used at the\
+            \ first timestamp, but only if\n * no aggregated value on the first timestamp\
+            \ could be computed\n * and the aggregation is compatible with the value,\
+            \ i.e. in mean, min, max, first, last, median"
       additionalProperties: true
       type: object
       title: Query
@@ -6148,6 +6448,16 @@ components:
 
             The remaining object-valued column headers identify and describe the actual
             series data.'
+        column_names:
+          items:
+            type: string
+          type: array
+          title: Column names
+          description: 'Short names for the columns in the data set.
+
+            These names are the `name` alias if given in the series specification,
+            otherwise is composed of the `resource`, `metric` and `aggregation` attributes,
+            concatenated with the `render.key_separator` (default `.`) as separator.'
         data:
           items:
             prefixItems:
@@ -6163,6 +6473,7 @@ components:
       type: object
       required:
       - columns
+      - column_names
       - data
       title: RowDataSet
       description: 'Row-oriented dataset.
@@ -6226,6 +6537,16 @@ components:
 
             The remaining object-valued column headers identify and describe the actual
             series data.'
+        column_names:
+          items:
+            type: string
+          type: array
+          title: Column names
+          description: 'Short names for the columns in the data set.
+
+            These names are the `name` alias if given in the series specification,
+            otherwise is composed of the `resource`, `metric` and `aggregation` attributes,
+            concatenated with the `render.key_separator` (default `.`) as separator.'
         data:
           prefixItems:
           - items:
@@ -6245,6 +6566,7 @@ components:
       type: object
       required:
       - columns
+      - column_names
       - data
       title: SeriesDataSet
       description: 'Column-oriented dataset.
@@ -6305,6 +6627,12 @@ components:
           - const: count
             title: Count
             description: Use the count of observations in the sample interval.
+          - const: count-numeric
+            title: Count Numeric
+            description: Use the count of numeric observations in the sample interval.
+          - const: count-non-numeric
+            title: Count Non-numeric
+            description: Use the count of non-numeric observations in the sample interval.
           - const: std
             title: Standard Deviation
             description: Use the standard deviation of all observations in the sample
@@ -6326,8 +6654,89 @@ components:
             the query default is used.
         interpolation:
           anyOf:
-          - $ref: '#/components/schemas/InterpolationMethod'
-            oneOf:
+          - properties:
+              method:
+                oneOf:
+                - const: pad
+                  title: pad
+                  description: Interpolate with the value of the first observed point.
+                    This method also extrapolates.
+                - const: fixed
+                  title: fixed
+                  description: Interpolate with a fixed, user-specified value. This
+                    method also extrapolates.
+                - const: backfill
+                  title: backfill
+                  description: Same as pad, but using the last observed value. This
+                    method also extrapolates
+                - const: linear
+                  title: linear
+                  description: Linearly go from the first observed value of the gap
+                    to the last observed oneThis method also extrapolates
+                - const: nearest
+                  title: nearest
+                  description: Use the value that is closest in time.
+                - const: zero
+                  title: zero
+                  description: Interpolate with a spline function of order 0, which
+                    is a piecewise polynomial.
+                - const: slinear
+                  title: slinear
+                  description: Interpolate with a spline function of order 1, which
+                    is a piecewise polynomial.
+                - const: quadratic
+                  title: quadratic
+                  description: Interpolate with a spline function of order 2, which
+                    is a piecewise polynomial.
+                - const: cubic
+                  title: cubic
+                  description: Interpolate with a spline function of order 3, which
+                    is a piecewise polynomial.
+                - const: polynomial
+                  title: polynomial
+                  description: Interpolate with a polynomial of the lowest possible
+                    degree passing trough the data points.
+                - const: spline
+                  title: spline
+                  description: Interpolate with a spline function of a user-specified
+                    order.
+                - const: from_derivatives
+                  title: from_derivatives
+                  description: Interpolate with the derivative of order 1.
+                - const: pchip
+                  title: pchip
+                  description: Interpolate with a piecewise cubic spline function.
+                - const: akima
+                  title: akima
+                  description: Interpolate with a non-smoothing spline of order 2,
+                    called Akima interpolation.
+                type: string
+                title: Interpolation method
+              value:
+                anyOf:
+                - type: number
+                - type: integer
+                title: Interpolation parameter
+                description: Optional parameter value for the interpolation method
+                  (see method description).
+              order:
+                type: integer
+                title: Interpolation order
+                description: Optional order parameter for the interpolation method
+                  (see method description).
+            additionalProperties: true
+            type: object
+            required:
+            - method
+            title: InterpolationSpec
+            description: "Defines whether, and how to treat missing values.\n\nThis\
+              \ can occur in two circumstances when aggregating (setting a sample\
+              \ frequency):\n* missing values: if there are missing (or invalid) values\
+              \ stored for\na given freq-interval,\n\"interpolation\" specifies how\
+              \ to compute these.\n* down-sampling: when the specified freq is smaller\
+              \ than the series\u2019\nactual frequency.\n\"interpolation\" specifies\
+              \ how to compute intermediate values."
+          - oneOf:
             - const: pad
               title: pad
               description: Interpolate with the value of the first observed point.
@@ -6381,10 +6790,7 @@ components:
               title: akima
               description: Interpolate with a non-smoothing spline of order 2, called
                 Akima interpolation.
-            title: Interpolation Method
-          - $ref: '#/components/schemas/InterpolationSpec'
-            title: Interpolation specification.
-          title: Interpolation
+          title: Interpolation Specification.
       additionalProperties: true
       type: object
       title: SeriesSpec

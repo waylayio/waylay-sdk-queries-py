@@ -22,7 +22,10 @@ except ImportError:
 
 render_mode_model_schema = json.loads(
     r"""{
-  "$ref" : "#/components/schemas/_RenderMode"
+  "title" : "_RenderMode",
+  "type" : "string",
+  "description" : "Render mode configuration keys.",
+  "enum" : [ "HEADER_ROW", "COMPACT", "SERIES", "HEADER_COLUMN", "FLAT_DICT", "HIER_DICT", "METRIC_FLAT_DICT", "UPLOAD", "COMPACT_WS", "CSV" ]
 }
 """,
     object_hook=with_example_provider,

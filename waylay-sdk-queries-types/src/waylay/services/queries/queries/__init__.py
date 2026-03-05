@@ -2,7 +2,7 @@
 
 This code was generated from the OpenAPI documentation of 'Waylay Query: timeseries queries (v1 protocol)'
 
-version: 0.6.5
+version: 0.6.8
 
  Execute and store queries on the Waylay timeseries.  Protocol version: v1.
 

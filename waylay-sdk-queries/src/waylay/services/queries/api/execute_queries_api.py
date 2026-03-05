@@ -175,21 +175,21 @@ class ExecuteQueriesApi(WithApiClient):
         :param query['metric'] (dict) <br> query.metric (Query) : Default Metric Override.
         :type query['metric']: str
         :param query['aggregation'] (dict) <br> query.aggregation (Query) :
-        :type query['aggregation']: ExecuteByNameQueriesV1DataQueryNameGetAggregation
+        :type query['aggregation']: ExecuteByNameAggregation
         :param query['interpolation'] (dict) <br> query.interpolation (Query) :
-        :type query['interpolation']: ExecuteByNameQueriesV1DataQueryNameGetInterpolation
+        :type query['interpolation']: ExecuteQueryQueriesV1DataPostInterpolationParameter
         :param query['freq'] (dict) <br> query.freq (Query) : Override for the `freq` query attribute.
-        :type query['freq']: ExecuteByNameQueriesV1DataQueryNameGetFreq
+        :type query['freq']: ExecuteByNameFreq
         :param query['from'] (dict) <br> query.var_from (Query) :
-        :type query['from']: ExecuteByNameQueriesV1DataQueryNameGetFrom
+        :type query['from']: ExecuteByNameFrom
         :param query['until'] (dict) <br> query.until (Query) :
-        :type query['until']: ExecuteByNameQueriesV1DataQueryNameGetUntil
+        :type query['until']: ExecuteByNameUntil
         :param query['window'] (dict) <br> query.window (Query) :
-        :type query['window']: ExecuteByNameQueriesV1DataQueryNameGetWindow
+        :type query['window']: ExecuteByNameWindow
         :param query['periods'] (dict) <br> query.periods (Query) :
         :type query['periods']: int
         :param query['render'] (dict) <br> query.render (Query) :
-        :type query['render']: ExecuteByNameQueriesV1DataQueryNameGetRender
+        :type query['render']: ExecuteQueryQueriesV1DataPostRenderParameter
         :param raw_response: If true, return the http Response object instead of returning an api model object, or throwing an ApiError.
         :param select_path: Denotes the json path applied to the response object before returning it.
                 Set it to the empty string `""` to receive the full response object.
@@ -335,7 +335,7 @@ class ExecuteQueriesApi(WithApiClient):
     ) -> QueryResult | T | Response | Model:
         """Execute Query.
 
-        Execute a timeseries query.  Executes the timeseries query specified in the request body, after applying any overrides from the url parameters.
+        Execute a timeseries query.  Executes the timeseries query specified in the request body, after applying any overrides from the url parameters.  Note that string values in the query body can contain `{var_name}` placeholders. These will get replaced with by `var_name` bindings in the query body for that variable.  ```json {     \"station_id\": \"29758\",     \"resource\": \"weather_station_{station_id}\",     ... } ``` results in using a `weather_station_29758` resource.
         :param json: The json request body.
         :type json: QueryInput, optional
         :param query: URL Query parameters.
@@ -347,7 +347,7 @@ class ExecuteQueriesApi(WithApiClient):
         :param query['aggregation'] (dict) <br> query.aggregation (Query) :
         :type query['aggregation']: ExecuteQueryQueriesV1DataPostAggregation
         :param query['interpolation'] (dict) <br> query.interpolation (Query) :
-        :type query['interpolation']: ExecuteQueryQueriesV1DataPostInterpolation
+        :type query['interpolation']: ExecuteQueryQueriesV1DataPostInterpolationParameter
         :param query['freq'] (dict) <br> query.freq (Query) : Override for the `freq` query attribute.
         :type query['freq']: ExecuteQueryQueriesV1DataPostFreq
         :param query['from'] (dict) <br> query.var_from (Query) :
@@ -359,7 +359,7 @@ class ExecuteQueriesApi(WithApiClient):
         :param query['periods'] (dict) <br> query.periods (Query) :
         :type query['periods']: int
         :param query['render'] (dict) <br> query.render (Query) :
-        :type query['render']: ExecuteQueryQueriesV1DataPostRender
+        :type query['render']: ExecuteQueryQueriesV1DataPostRenderParameter
         :param raw_response: If true, return the http Response object instead of returning an api model object, or throwing an ApiError.
         :param select_path: Denotes the json path applied to the response object before returning it.
                 Set it to the empty string `""` to receive the full response object.

@@ -5,7 +5,7 @@ Execute and store queries on the Waylay timeseries.
 Protocol version: v1.
 
 This Python package is automatically generated based on the 
-Waylay Queries OpenAPI specification (API version: 0.6.5)
+Waylay Queries OpenAPI specification (API version: 0.6.8)
 For more information, please visit [the openapi specification](https://docs.waylay.io/openapi/public/redocly/queries.html).
 
 It is considered an extension of the waylay-sdk-queries package, and it consists of the typed model classes for all path params, query params, body params and responses for each of the api methods in `waylay-sdk-queries`.
@@ -36,6 +36,8 @@ from waylay.sdk.api.api_exceptions import ApiError
 waylay_client = WaylayClient.from_profile()
 
 # Note that the typed model classes for responses/parameters/... are only available when `waylay-sdk-queries-types` is installed
+from waylay.services.queries.models.execute_query_queries_v1_data_post_interpolation_parameter import ExecuteQueryQueriesV1DataPostInterpolationParameter
+from waylay.services.queries.models.execute_query_queries_v1_data_post_render_parameter import ExecuteQueryQueriesV1DataPostRenderParameter
 from waylay.services.queries.models.query_input import QueryInput
 from waylay.services.queries.models.query_result import QueryResult
 try:
@@ -46,6 +48,8 @@ try:
         query = {
             'resource': '13efb488-75ac-4dac-828a-d49c5c2ebbfc',
             'metric': 'temperature',
+            'interpolation': 'pad',
+            'render': 'HEADER_ROW',
         },
         # json data: use a generated model or a json-serializable python data structure (dict, list)
         json = waylay.services.queries.QueryInput(), # QueryInput | 

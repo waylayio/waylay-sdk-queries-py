@@ -24,7 +24,35 @@ except ImportError:
 
 default_interpolation_any_of_model_schema = json.loads(
     r"""{
-  "$ref" : "#/components/schemas/InterpolationMethod"
+  "oneOf" : [ {
+    "$ref" : "#/components/schemas/Query-InputPad"
+  }, {
+    "$ref" : "#/components/schemas/Query-InputFixed"
+  }, {
+    "$ref" : "#/components/schemas/Query-InputBackfill"
+  }, {
+    "$ref" : "#/components/schemas/Query-InputLinear"
+  }, {
+    "$ref" : "#/components/schemas/Query-InputNearest"
+  }, {
+    "$ref" : "#/components/schemas/Query-InputZero"
+  }, {
+    "$ref" : "#/components/schemas/Query-InputSlinear"
+  }, {
+    "$ref" : "#/components/schemas/Query-InputQuadratic"
+  }, {
+    "$ref" : "#/components/schemas/Query-InputCubic"
+  }, {
+    "$ref" : "#/components/schemas/Query-InputPolynomial"
+  }, {
+    "$ref" : "#/components/schemas/Query-InputSpline"
+  }, {
+    "$ref" : "#/components/schemas/Query-InputFrom_derivatives"
+  }, {
+    "$ref" : "#/components/schemas/Query-InputPchip"
+  }, {
+    "$ref" : "#/components/schemas/Query-InputAkima"
+  } ]
 }
 """,
     object_hook=with_example_provider,

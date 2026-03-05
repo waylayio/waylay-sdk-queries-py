@@ -6,7 +6,7 @@ info:
     Execute and store queries on the Waylay timeseries.
 
     Protocol version: v1.
-  version: 0.6.5
+  version: 0.6.8
 paths:
   /queries/v1:
     get:
@@ -37,11 +37,34 @@ paths:
       tags:
         - Execute Queries
       summary: Execute Query
-      description: |-
+      description: >-
         Execute a timeseries query.
 
+
         Executes the timeseries query specified in the request body,
+
         after applying any overrides from the url parameters.
+
+
+        Note that string values in the query body can contain `{var_name}`
+        placeholders.
+
+        These will get replaced with by `var_name` bindings
+
+        in the query body for that variable.
+
+
+        ```json
+
+        {
+            "station_id": "29758",
+            "resource": "weather_station_{station_id}",
+            ...
+        }
+
+        ```
+
+        results in using a `weather_station_29758` resource.
       operationId: execute_query_queries_v1_data_post
       parameters:
         - name: resource
@@ -76,8 +99,38 @@ paths:
           in: query
           required: false
           schema:
-            $ref: '#/components/schemas/ExecuteQueryQueriesV1DataPostInterpolation'
-          x-showExample: false
+            $ref: '#/components/schemas/InterpolationMethod'
+            title: Interpolation Override.
+            oneOf:
+              - $ref: >-
+                  #/components/schemas/ExecuteQueryQueriesV1DataPostInterpolationPad
+              - $ref: >-
+                  #/components/schemas/ExecuteQueryQueriesV1DataPostInterpolationFixed
+              - $ref: >-
+                  #/components/schemas/ExecuteQueryQueriesV1DataPostInterpolationBackfill
+              - $ref: >-
+                  #/components/schemas/ExecuteQueryQueriesV1DataPostInterpolationLinear
+              - $ref: >-
+                  #/components/schemas/ExecuteQueryQueriesV1DataPostInterpolationNearest
+              - $ref: >-
+                  #/components/schemas/ExecuteQueryQueriesV1DataPostInterpolationZero
+              - $ref: >-
+                  #/components/schemas/ExecuteQueryQueriesV1DataPostInterpolationSlinear
+              - $ref: >-
+                  #/components/schemas/ExecuteQueryQueriesV1DataPostInterpolationQuadratic
+              - $ref: >-
+                  #/components/schemas/ExecuteQueryQueriesV1DataPostInterpolationCubic
+              - $ref: >-
+                  #/components/schemas/ExecuteQueryQueriesV1DataPostInterpolationPolynomial
+              - $ref: >-
+                  #/components/schemas/ExecuteQueryQueriesV1DataPostInterpolationSpline
+              - $ref: >-
+                  #/components/schemas/ExecuteQueryQueriesV1DataPostInterpolationFrom_derivatives
+              - $ref: >-
+                  #/components/schemas/ExecuteQueryQueriesV1DataPostInterpolationPchip
+              - $ref: >-
+                  #/components/schemas/ExecuteQueryQueriesV1DataPostInterpolationAkima
+          x-showExample: true
         - name: freq
           in: query
           required: false
@@ -114,8 +167,27 @@ paths:
           in: query
           required: false
           schema:
-            $ref: '#/components/schemas/ExecuteQueryQueriesV1DataPostRender'
-          x-showExample: false
+            $ref: '#/components/schemas/_RenderMode'
+            title: Render Mode
+            oneOf:
+              - $ref: >-
+                  #/components/schemas/ExecuteQueryQueriesV1DataPostRenderHEADER_ROW
+              - $ref: >-
+                  #/components/schemas/ExecuteQueryQueriesV1DataPostRenderCOMPACT
+              - $ref: >-
+                  #/components/schemas/ExecuteQueryQueriesV1DataPostRenderCOMPACT_WS
+              - $ref: '#/components/schemas/ExecuteQueryQueriesV1DataPostRenderSERIES'
+              - $ref: >-
+                  #/components/schemas/ExecuteQueryQueriesV1DataPostRenderHEADER_COLUMN
+              - $ref: >-
+                  #/components/schemas/ExecuteQueryQueriesV1DataPostRenderFLAT_DICT
+              - $ref: >-
+                  #/components/schemas/ExecuteQueryQueriesV1DataPostRenderHIER_DICT
+              - $ref: >-
+                  #/components/schemas/ExecuteQueryQueriesV1DataPostRenderMETRIC_FLAT_DICT
+              - $ref: '#/components/schemas/ExecuteQueryQueriesV1DataPostRenderUPLOAD'
+              - $ref: '#/components/schemas/ExecuteQueryQueriesV1DataPostRenderCSV'
+          x-showExample: true
         - name: accept
           in: header
           required: false
@@ -141,7 +213,12 @@ paths:
                   summary: Query response example for `?render=DEFAULT`
                   value:
                     data:
-                      - columns:
+                      - column_names:
+                          - 06e267b9-8714-4c58-ac53-df6a291b59dc.temperature.max
+                          - 06e267b9-8714-4c58-ac53-df6a291b59dc.humidity.mean
+                          - 7f33317b-a45e-4b0a-94a2-9bbbdc746cc1.temperature.max
+                          - 7f33317b-a45e-4b0a-94a2-9bbbdc746cc1.humidity.mean
+                        columns:
                           - timestamp
                           - resource: 06e267b9-8714-4c58-ac53-df6a291b59dc
                             metric: temperature
@@ -1249,7 +1326,12 @@ paths:
                   summary: Query response example for `?render=HEADER_COLUMN`
                   value:
                     data:
-                      - rows:
+                      - column_names:
+                          - 06e267b9-8714-4c58-ac53-df6a291b59dc.temperature.max
+                          - 06e267b9-8714-4c58-ac53-df6a291b59dc.humidity.mean
+                          - 7f33317b-a45e-4b0a-94a2-9bbbdc746cc1.temperature.max
+                          - 7f33317b-a45e-4b0a-94a2-9bbbdc746cc1.humidity.mean
+                        rows:
                           - resource
                           - metric
                           - aggregation
@@ -1454,6 +1536,11 @@ paths:
                           - resource: 7f33317b-a45e-4b0a-94a2-9bbbdc746cc1
                             metric: humidity
                             aggregation: mean
+                        column_names:
+                          - 06e267b9-8714-4c58-ac53-df6a291b59dc.temperature.max
+                          - 06e267b9-8714-4c58-ac53-df6a291b59dc.humidity.mean
+                          - 7f33317b-a45e-4b0a-94a2-9bbbdc746cc1.temperature.max
+                          - 7f33317b-a45e-4b0a-94a2-9bbbdc746cc1.humidity.mean
                         data:
                           - - 1717977600000
                             - 1718006400000
@@ -1618,10 +1705,10 @@ paths:
                   - the first `timestamp` column contains event   timestamp in
                   iso format
 
-                  - remaining columns contain the (aggregated or
-                  non-aggregated)  series values, using a
-                  `{resource_id}/{metric}`   or
-                  `{resource_id}/{metric}/{aggregation}`  header.
+                  - remaining columns contain the (aggregated or non-aggregated)
+                  series values, using a header `{resource_id}/{metric}`,
+                  `{resource_id}/{metric}/{aggregation}`, or —if specified- the
+                  series  `{name}`.
         '422':
           description: Validation Error
           content:
@@ -1645,7 +1732,7 @@ paths:
 
         Retrieves a stored query definition by name,
         applies overrides from the url parameters, and executes it.
-      operationId: executeByName_queries_v1_data__query_name__get
+      operationId: executeByName
       parameters:
         - name: query_name
           in: path
@@ -1680,40 +1767,55 @@ paths:
           in: query
           required: false
           schema:
-            $ref: >-
-              #/components/schemas/ExecuteByNameQueriesV1DataQueryNameGetAggregation
+            $ref: '#/components/schemas/ExecuteByNameAggregation'
           x-showExample: false
         - name: interpolation
           in: query
           required: false
           schema:
-            $ref: >-
-              #/components/schemas/ExecuteByNameQueriesV1DataQueryNameGetInterpolation
-          x-showExample: false
+            $ref: '#/components/schemas/InterpolationMethod'
+            title: Interpolation Override.
+            oneOf:
+              - $ref: '#/components/schemas/ExecuteByNameInterpolationPad'
+              - $ref: '#/components/schemas/ExecuteByNameInterpolationFixed'
+              - $ref: '#/components/schemas/ExecuteByNameInterpolationBackfill'
+              - $ref: '#/components/schemas/ExecuteByNameInterpolationLinear'
+              - $ref: '#/components/schemas/ExecuteByNameInterpolationNearest'
+              - $ref: '#/components/schemas/ExecuteByNameInterpolationZero'
+              - $ref: '#/components/schemas/ExecuteByNameInterpolationSlinear'
+              - $ref: '#/components/schemas/ExecuteByNameInterpolationQuadratic'
+              - $ref: '#/components/schemas/ExecuteByNameInterpolationCubic'
+              - $ref: '#/components/schemas/ExecuteByNameInterpolationPolynomial'
+              - $ref: '#/components/schemas/ExecuteByNameInterpolationSpline'
+              - $ref: >-
+                  #/components/schemas/ExecuteByNameInterpolationFrom_derivatives
+              - $ref: '#/components/schemas/ExecuteByNameInterpolationPchip'
+              - $ref: '#/components/schemas/ExecuteByNameInterpolationAkima'
+          x-showExample: true
         - name: freq
           in: query
           required: false
           schema:
-            $ref: '#/components/schemas/ExecuteByNameQueriesV1DataQueryNameGetFreq'
+            $ref: '#/components/schemas/ExecuteByNameFreq'
           description: Override for the `freq` query attribute.
           x-showExample: false
         - name: from
           in: query
           required: false
           schema:
-            $ref: '#/components/schemas/ExecuteByNameQueriesV1DataQueryNameGetFrom'
+            $ref: '#/components/schemas/ExecuteByNameFrom'
           x-showExample: false
         - name: until
           in: query
           required: false
           schema:
-            $ref: '#/components/schemas/ExecuteByNameQueriesV1DataQueryNameGetUntil'
+            $ref: '#/components/schemas/ExecuteByNameUntil'
           x-showExample: false
         - name: window
           in: query
           required: false
           schema:
-            $ref: '#/components/schemas/ExecuteByNameQueriesV1DataQueryNameGetWindow'
+            $ref: '#/components/schemas/ExecuteByNameWindow'
           x-showExample: false
         - name: periods
           in: query
@@ -1726,13 +1828,25 @@ paths:
           in: query
           required: false
           schema:
-            $ref: '#/components/schemas/ExecuteByNameQueriesV1DataQueryNameGetRender'
-          x-showExample: false
+            $ref: '#/components/schemas/_RenderMode'
+            title: Render Mode
+            oneOf:
+              - $ref: '#/components/schemas/ExecuteByNameRenderHEADER_ROW'
+              - $ref: '#/components/schemas/ExecuteByNameRenderCOMPACT'
+              - $ref: '#/components/schemas/ExecuteByNameRenderCOMPACT_WS'
+              - $ref: '#/components/schemas/ExecuteByNameRenderSERIES'
+              - $ref: '#/components/schemas/ExecuteByNameRenderHEADER_COLUMN'
+              - $ref: '#/components/schemas/ExecuteByNameRenderFLAT_DICT'
+              - $ref: '#/components/schemas/ExecuteByNameRenderHIER_DICT'
+              - $ref: '#/components/schemas/ExecuteByNameRenderMETRIC_FLAT_DICT'
+              - $ref: '#/components/schemas/ExecuteByNameRenderUPLOAD'
+              - $ref: '#/components/schemas/ExecuteByNameRenderCSV'
+          x-showExample: true
         - name: accept
           in: header
           required: false
           schema:
-            $ref: '#/components/schemas/ExecuteByNameQueriesV1DataQueryNameGetAccept'
+            $ref: '#/components/schemas/ExecuteByNameAccept'
           description: Use a 'text/csv' accept header to get CSV formatted results.
           x-showExample: false
       responses:
@@ -1747,7 +1861,12 @@ paths:
                   summary: Query response example for `?render=DEFAULT`
                   value:
                     data:
-                      - columns:
+                      - column_names:
+                          - 06e267b9-8714-4c58-ac53-df6a291b59dc.temperature.max
+                          - 06e267b9-8714-4c58-ac53-df6a291b59dc.humidity.mean
+                          - 7f33317b-a45e-4b0a-94a2-9bbbdc746cc1.temperature.max
+                          - 7f33317b-a45e-4b0a-94a2-9bbbdc746cc1.humidity.mean
+                        columns:
                           - timestamp
                           - resource: 06e267b9-8714-4c58-ac53-df6a291b59dc
                             metric: temperature
@@ -2855,7 +2974,12 @@ paths:
                   summary: Query response example for `?render=HEADER_COLUMN`
                   value:
                     data:
-                      - rows:
+                      - column_names:
+                          - 06e267b9-8714-4c58-ac53-df6a291b59dc.temperature.max
+                          - 06e267b9-8714-4c58-ac53-df6a291b59dc.humidity.mean
+                          - 7f33317b-a45e-4b0a-94a2-9bbbdc746cc1.temperature.max
+                          - 7f33317b-a45e-4b0a-94a2-9bbbdc746cc1.humidity.mean
+                        rows:
                           - resource
                           - metric
                           - aggregation
@@ -3060,6 +3184,11 @@ paths:
                           - resource: 7f33317b-a45e-4b0a-94a2-9bbbdc746cc1
                             metric: humidity
                             aggregation: mean
+                        column_names:
+                          - 06e267b9-8714-4c58-ac53-df6a291b59dc.temperature.max
+                          - 06e267b9-8714-4c58-ac53-df6a291b59dc.humidity.mean
+                          - 7f33317b-a45e-4b0a-94a2-9bbbdc746cc1.temperature.max
+                          - 7f33317b-a45e-4b0a-94a2-9bbbdc746cc1.humidity.mean
                         data:
                           - - 1717977600000
                             - 1718006400000
@@ -3224,10 +3353,10 @@ paths:
                   - the first `timestamp` column contains event   timestamp in
                   iso format
 
-                  - remaining columns contain the (aggregated or
-                  non-aggregated)  series values, using a
-                  `{resource_id}/{metric}`   or
-                  `{resource_id}/{metric}/{aggregation}`  header.
+                  - remaining columns contain the (aggregated or non-aggregated)
+                  series values, using a header `{resource_id}/{metric}`,
+                  `{resource_id}/{metric}/{aggregation}`, or —if specified- the
+                  series  `{name}`.
         '422':
           description: Validation Error
           content:
@@ -3340,9 +3469,9 @@ paths:
     post:
       tags:
         - Named Queries
-      summary: Create Query
+      summary: Post Query
       description: Create a new named query.
-      operationId: create_query_queries_v1_query_post
+      operationId: post_query_queries_v1_query_post
       requestBody:
         required: true
         content:
@@ -3364,7 +3493,7 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
       security:
         - waylayApiKeySecret: []
-      x-py-method: create
+      x-py-method: post
       x-consumes-multipart: false
       x-consumes-urlencoded: false
       x-consumes-json: true
@@ -3672,6 +3801,18 @@ components:
 
 
             The remaining object-valued row headers contain the index data.
+        column_names:
+          items:
+            type: string
+          type: array
+          title: Column names
+          description: >-
+            Short names for the columns in the data set.
+
+            These names are the `name` alias if given in the series
+            specification, otherwise is composed of the `resource`, `metric` and
+            `aggregation` attributes, concatenated with the
+            `render.key_separator` (default `.`) as separator.
         data:
           items:
             items:
@@ -3686,6 +3827,7 @@ components:
       type: object
       required:
         - rows
+        - column_names
         - data
       description: |-
         Column-oriented dataset with rows header.
@@ -4130,6 +4272,8 @@ components:
                 - $ref: '#/components/schemas/Query-InputMedian'
                 - $ref: '#/components/schemas/Query-InputSum'
                 - $ref: '#/components/schemas/Query-InputCount'
+                - $ref: '#/components/schemas/Query-InputCount-numeric'
+                - $ref: '#/components/schemas/Query-InputCount-non-numeric'
                 - $ref: '#/components/schemas/Query-InputStd'
                 - $ref: '#/components/schemas/Query-InputMax'
                 - $ref: '#/components/schemas/Query-InputMin'
@@ -4152,6 +4296,8 @@ components:
                       - $ref: '#/components/schemas/Query-InputMedian'
                       - $ref: '#/components/schemas/Query-InputSum'
                       - $ref: '#/components/schemas/Query-InputCount'
+                      - $ref: '#/components/schemas/Query-InputCount-numeric'
+                      - $ref: '#/components/schemas/Query-InputCount-non-numeric'
                       - $ref: '#/components/schemas/Query-InputStd'
                       - $ref: '#/components/schemas/Query-InputMax'
                       - $ref: '#/components/schemas/Query-InputMin'
@@ -4178,6 +4324,8 @@ components:
                       - $ref: '#/components/schemas/Query-InputMedian'
                       - $ref: '#/components/schemas/Query-InputSum'
                       - $ref: '#/components/schemas/Query-InputCount'
+                      - $ref: '#/components/schemas/Query-InputCount-numeric'
+                      - $ref: '#/components/schemas/Query-InputCount-non-numeric'
                       - $ref: '#/components/schemas/Query-InputStd'
                       - $ref: '#/components/schemas/Query-InputMax'
                       - $ref: '#/components/schemas/Query-InputMin'
@@ -4200,6 +4348,9 @@ components:
                             - $ref: '#/components/schemas/Query-InputMedian'
                             - $ref: '#/components/schemas/Query-InputSum'
                             - $ref: '#/components/schemas/Query-InputCount'
+                            - $ref: '#/components/schemas/Query-InputCount-numeric'
+                            - $ref: >-
+                                #/components/schemas/Query-InputCount-non-numeric
                             - $ref: '#/components/schemas/Query-InputStd'
                             - $ref: '#/components/schemas/Query-InputMax'
                             - $ref: '#/components/schemas/Query-InputMin'
@@ -4232,6 +4383,9 @@ components:
                             - $ref: '#/components/schemas/Query-InputMedian'
                             - $ref: '#/components/schemas/Query-InputSum'
                             - $ref: '#/components/schemas/Query-InputCount'
+                            - $ref: '#/components/schemas/Query-InputCount-numeric'
+                            - $ref: >-
+                                #/components/schemas/Query-InputCount-non-numeric
                             - $ref: '#/components/schemas/Query-InputStd'
                             - $ref: '#/components/schemas/Query-InputMax'
                             - $ref: '#/components/schemas/Query-InputMin'
@@ -4254,6 +4408,10 @@ components:
                                   - $ref: '#/components/schemas/Query-InputMedian'
                                   - $ref: '#/components/schemas/Query-InputSum'
                                   - $ref: '#/components/schemas/Query-InputCount'
+                                  - $ref: >-
+                                      #/components/schemas/Query-InputCount-numeric
+                                  - $ref: >-
+                                      #/components/schemas/Query-InputCount-non-numeric
                                   - $ref: '#/components/schemas/Query-InputStd'
                                   - $ref: '#/components/schemas/Query-InputMax'
                                   - $ref: '#/components/schemas/Query-InputMin'
@@ -4283,8 +4441,65 @@ components:
           description: Default aggregation method(s) for the series in the query.
         interpolation:
           anyOf:
-            - $ref: '#/components/schemas/InterpolationMethod'
-              oneOf:
+            - properties:
+                method:
+                  oneOf:
+                    - $ref: '#/components/schemas/Query-InputPad'
+                    - $ref: '#/components/schemas/Query-InputFixed'
+                    - $ref: '#/components/schemas/Query-InputBackfill'
+                    - $ref: '#/components/schemas/Query-InputLinear'
+                    - $ref: '#/components/schemas/Query-InputNearest'
+                    - $ref: '#/components/schemas/Query-InputZero'
+                    - $ref: '#/components/schemas/Query-InputSlinear'
+                    - $ref: '#/components/schemas/Query-InputQuadratic'
+                    - $ref: '#/components/schemas/Query-InputCubic'
+                    - $ref: '#/components/schemas/Query-InputPolynomial'
+                    - $ref: '#/components/schemas/Query-InputSpline'
+                    - $ref: '#/components/schemas/Query-InputFrom_derivatives'
+                    - $ref: '#/components/schemas/Query-InputPchip'
+                    - $ref: '#/components/schemas/Query-InputAkima'
+                  type: string
+                  title: Interpolation method
+                value:
+                  anyOf:
+                    - type: number
+                    - type: integer
+                  title: Interpolation parameter
+                  description: >-
+                    Optional parameter value for the interpolation method (see
+                    method description).
+                order:
+                  type: integer
+                  title: Interpolation order
+                  description: >-
+                    Optional order parameter for the interpolation method (see
+                    method description).
+              additionalProperties: true
+              type: object
+              required:
+                - method
+              title: InterpolationSpec
+              description: >-
+                Defines whether, and how to treat missing values.
+
+
+                This can occur in two circumstances when aggregating (setting a
+                sample frequency):
+
+                * missing values: if there are missing (or invalid) values
+                stored for
+
+                a given freq-interval,
+
+                "interpolation" specifies how to compute these.
+
+                * down-sampling: when the specified freq is smaller than the
+                series’
+
+                actual frequency.
+
+                "interpolation" specifies how to compute intermediate values.
+            - oneOf:
                 - $ref: '#/components/schemas/Query-InputPad'
                 - $ref: '#/components/schemas/Query-InputFixed'
                 - $ref: '#/components/schemas/Query-InputBackfill'
@@ -4299,9 +4514,6 @@ components:
                 - $ref: '#/components/schemas/Query-InputFrom_derivatives'
                 - $ref: '#/components/schemas/Query-InputPchip'
                 - $ref: '#/components/schemas/Query-InputAkima'
-              title: Interpolation Method
-            - $ref: '#/components/schemas/InterpolationSpec'
-              title: Interpolation specification.
           title: Default Interpolation
           description: Default Interpolation method for the series (if aggregated).
         freq:
@@ -4428,6 +4640,20 @@ components:
             `metric`,`resource`, ... ).
         render:
           $ref: '#/components/schemas/Render'
+        lookback:
+          type: boolean
+          title: Lookback option.
+          description: >-
+            If enabled, the **last-known value** for each of the series will be
+            taken into account in the result. 
+
+            For **unaggregated** series, that value will be included as is (with
+            a timestamp before the result window).
+
+            For **aggregated** series, that value will be used at the first
+            timestamp, but only if
+             * no aggregated value on the first timestamp could be computed
+             * and the aggregation is compatible with the value, i.e. in mean, min, max, first, last, median
       additionalProperties: true
       type: object
       description: >-
@@ -4455,6 +4681,8 @@ components:
                 - $ref: '#/components/schemas/Query-OutputMedian'
                 - $ref: '#/components/schemas/Query-OutputSum'
                 - $ref: '#/components/schemas/Query-OutputCount'
+                - $ref: '#/components/schemas/Query-OutputCount-numeric'
+                - $ref: '#/components/schemas/Query-OutputCount-non-numeric'
                 - $ref: '#/components/schemas/Query-OutputStd'
                 - $ref: '#/components/schemas/Query-OutputMax'
                 - $ref: '#/components/schemas/Query-OutputMin'
@@ -4477,6 +4705,8 @@ components:
                       - $ref: '#/components/schemas/Query-OutputMedian'
                       - $ref: '#/components/schemas/Query-OutputSum'
                       - $ref: '#/components/schemas/Query-OutputCount'
+                      - $ref: '#/components/schemas/Query-OutputCount-numeric'
+                      - $ref: '#/components/schemas/Query-OutputCount-non-numeric'
                       - $ref: '#/components/schemas/Query-OutputStd'
                       - $ref: '#/components/schemas/Query-OutputMax'
                       - $ref: '#/components/schemas/Query-OutputMin'
@@ -4503,6 +4733,8 @@ components:
                       - $ref: '#/components/schemas/Query-OutputMedian'
                       - $ref: '#/components/schemas/Query-OutputSum'
                       - $ref: '#/components/schemas/Query-OutputCount'
+                      - $ref: '#/components/schemas/Query-OutputCount-numeric'
+                      - $ref: '#/components/schemas/Query-OutputCount-non-numeric'
                       - $ref: '#/components/schemas/Query-OutputStd'
                       - $ref: '#/components/schemas/Query-OutputMax'
                       - $ref: '#/components/schemas/Query-OutputMin'
@@ -4525,6 +4757,9 @@ components:
                             - $ref: '#/components/schemas/Query-OutputMedian'
                             - $ref: '#/components/schemas/Query-OutputSum'
                             - $ref: '#/components/schemas/Query-OutputCount'
+                            - $ref: '#/components/schemas/Query-OutputCount-numeric'
+                            - $ref: >-
+                                #/components/schemas/Query-OutputCount-non-numeric
                             - $ref: '#/components/schemas/Query-OutputStd'
                             - $ref: '#/components/schemas/Query-OutputMax'
                             - $ref: '#/components/schemas/Query-OutputMin'
@@ -4557,6 +4792,9 @@ components:
                             - $ref: '#/components/schemas/Query-OutputMedian'
                             - $ref: '#/components/schemas/Query-OutputSum'
                             - $ref: '#/components/schemas/Query-OutputCount'
+                            - $ref: '#/components/schemas/Query-OutputCount-numeric'
+                            - $ref: >-
+                                #/components/schemas/Query-OutputCount-non-numeric
                             - $ref: '#/components/schemas/Query-OutputStd'
                             - $ref: '#/components/schemas/Query-OutputMax'
                             - $ref: '#/components/schemas/Query-OutputMin'
@@ -4579,6 +4817,10 @@ components:
                                   - $ref: '#/components/schemas/Query-OutputMedian'
                                   - $ref: '#/components/schemas/Query-OutputSum'
                                   - $ref: '#/components/schemas/Query-OutputCount'
+                                  - $ref: >-
+                                      #/components/schemas/Query-OutputCount-numeric
+                                  - $ref: >-
+                                      #/components/schemas/Query-OutputCount-non-numeric
                                   - $ref: '#/components/schemas/Query-OutputStd'
                                   - $ref: '#/components/schemas/Query-OutputMax'
                                   - $ref: '#/components/schemas/Query-OutputMin'
@@ -4608,8 +4850,65 @@ components:
           description: Default aggregation method(s) for the series in the query.
         interpolation:
           anyOf:
-            - $ref: '#/components/schemas/InterpolationMethod'
-              oneOf:
+            - properties:
+                method:
+                  oneOf:
+                    - $ref: '#/components/schemas/Query-OutputPad'
+                    - $ref: '#/components/schemas/Query-OutputFixed'
+                    - $ref: '#/components/schemas/Query-OutputBackfill'
+                    - $ref: '#/components/schemas/Query-OutputLinear'
+                    - $ref: '#/components/schemas/Query-OutputNearest'
+                    - $ref: '#/components/schemas/Query-OutputZero'
+                    - $ref: '#/components/schemas/Query-OutputSlinear'
+                    - $ref: '#/components/schemas/Query-OutputQuadratic'
+                    - $ref: '#/components/schemas/Query-OutputCubic'
+                    - $ref: '#/components/schemas/Query-OutputPolynomial'
+                    - $ref: '#/components/schemas/Query-OutputSpline'
+                    - $ref: '#/components/schemas/Query-OutputFrom_derivatives'
+                    - $ref: '#/components/schemas/Query-OutputPchip'
+                    - $ref: '#/components/schemas/Query-OutputAkima'
+                  type: string
+                  title: Interpolation method
+                value:
+                  anyOf:
+                    - type: number
+                    - type: integer
+                  title: Interpolation parameter
+                  description: >-
+                    Optional parameter value for the interpolation method (see
+                    method description).
+                order:
+                  type: integer
+                  title: Interpolation order
+                  description: >-
+                    Optional order parameter for the interpolation method (see
+                    method description).
+              additionalProperties: true
+              type: object
+              required:
+                - method
+              title: InterpolationSpec
+              description: >-
+                Defines whether, and how to treat missing values.
+
+
+                This can occur in two circumstances when aggregating (setting a
+                sample frequency):
+
+                * missing values: if there are missing (or invalid) values
+                stored for
+
+                a given freq-interval,
+
+                "interpolation" specifies how to compute these.
+
+                * down-sampling: when the specified freq is smaller than the
+                series’
+
+                actual frequency.
+
+                "interpolation" specifies how to compute intermediate values.
+            - oneOf:
                 - $ref: '#/components/schemas/Query-OutputPad'
                 - $ref: '#/components/schemas/Query-OutputFixed'
                 - $ref: '#/components/schemas/Query-OutputBackfill'
@@ -4624,9 +4923,6 @@ components:
                 - $ref: '#/components/schemas/Query-OutputFrom_derivatives'
                 - $ref: '#/components/schemas/Query-OutputPchip'
                 - $ref: '#/components/schemas/Query-OutputAkima'
-              title: Interpolation Method
-            - $ref: '#/components/schemas/InterpolationSpec'
-              title: Interpolation specification.
           title: Default Interpolation
           description: Default Interpolation method for the series (if aggregated).
         freq:
@@ -4753,6 +5049,20 @@ components:
             `metric`,`resource`, ... ).
         render:
           $ref: '#/components/schemas/Render'
+        lookback:
+          type: boolean
+          title: Lookback option.
+          description: >-
+            If enabled, the **last-known value** for each of the series will be
+            taken into account in the result. 
+
+            For **unaggregated** series, that value will be included as is (with
+            a timestamp before the result window).
+
+            For **aggregated** series, that value will be used at the first
+            timestamp, but only if
+             * no aggregated value on the first timestamp could be computed
+             * and the aggregation is compatible with the value, i.e. in mean, min, max, first, last, median
       additionalProperties: true
       type: object
       description: >-
@@ -5106,6 +5416,18 @@ components:
           x-prefixItems:
             - const: timestamp
               title: Unix epoch milliseconds timestamp.
+        column_names:
+          items:
+            type: string
+          type: array
+          title: Column names
+          description: >-
+            Short names for the columns in the data set.
+
+            These names are the `name` alias if given in the series
+            specification, otherwise is composed of the `resource`, `metric` and
+            `aggregation` attributes, concatenated with the
+            `render.key_separator` (default `.`) as separator.
         data:
           items:
             items:
@@ -5121,6 +5443,7 @@ components:
       type: object
       required:
         - columns
+        - column_names
         - data
       description: >-
         Row-oriented dataset.
@@ -5183,6 +5506,18 @@ components:
           x-prefixItems:
             - const: timestamp
               title: Unix epoch milliseconds timestamp.
+        column_names:
+          items:
+            type: string
+          type: array
+          title: Column names
+          description: >-
+            Short names for the columns in the data set.
+
+            These names are the `name` alias if given in the series
+            specification, otherwise is composed of the `resource`, `metric` and
+            `aggregation` attributes, concatenated with the
+            `render.key_separator` (default `.`) as separator.
         data:
           items:
             items:
@@ -5202,6 +5537,7 @@ components:
       type: object
       required:
         - columns
+        - column_names
         - data
       description: |-
         Column-oriented dataset.
@@ -5240,6 +5576,8 @@ components:
             - $ref: '#/components/schemas/SeriesSpecMedian'
             - $ref: '#/components/schemas/SeriesSpecSum'
             - $ref: '#/components/schemas/SeriesSpecCount'
+            - $ref: '#/components/schemas/SeriesSpecCount-numeric'
+            - $ref: '#/components/schemas/SeriesSpecCount-non-numeric'
             - $ref: '#/components/schemas/SeriesSpecStd'
             - $ref: '#/components/schemas/SeriesSpecMax'
             - $ref: '#/components/schemas/SeriesSpecMin'
@@ -5256,8 +5594,65 @@ components:
             query default is used.
         interpolation:
           anyOf:
-            - $ref: '#/components/schemas/InterpolationMethod'
-              oneOf:
+            - properties:
+                method:
+                  oneOf:
+                    - $ref: '#/components/schemas/SeriesSpecPad'
+                    - $ref: '#/components/schemas/SeriesSpecFixed'
+                    - $ref: '#/components/schemas/SeriesSpecBackfill'
+                    - $ref: '#/components/schemas/SeriesSpecLinear'
+                    - $ref: '#/components/schemas/SeriesSpecNearest'
+                    - $ref: '#/components/schemas/SeriesSpecZero'
+                    - $ref: '#/components/schemas/SeriesSpecSlinear'
+                    - $ref: '#/components/schemas/SeriesSpecQuadratic'
+                    - $ref: '#/components/schemas/SeriesSpecCubic'
+                    - $ref: '#/components/schemas/SeriesSpecPolynomial'
+                    - $ref: '#/components/schemas/SeriesSpecSpline'
+                    - $ref: '#/components/schemas/SeriesSpecFrom_derivatives'
+                    - $ref: '#/components/schemas/SeriesSpecPchip'
+                    - $ref: '#/components/schemas/SeriesSpecAkima'
+                  type: string
+                  title: Interpolation method
+                value:
+                  anyOf:
+                    - type: number
+                    - type: integer
+                  title: Interpolation parameter
+                  description: >-
+                    Optional parameter value for the interpolation method (see
+                    method description).
+                order:
+                  type: integer
+                  title: Interpolation order
+                  description: >-
+                    Optional order parameter for the interpolation method (see
+                    method description).
+              additionalProperties: true
+              type: object
+              required:
+                - method
+              title: InterpolationSpec
+              description: >-
+                Defines whether, and how to treat missing values.
+
+
+                This can occur in two circumstances when aggregating (setting a
+                sample frequency):
+
+                * missing values: if there are missing (or invalid) values
+                stored for
+
+                a given freq-interval,
+
+                "interpolation" specifies how to compute these.
+
+                * down-sampling: when the specified freq is smaller than the
+                series’
+
+                actual frequency.
+
+                "interpolation" specifies how to compute intermediate values.
+            - oneOf:
                 - $ref: '#/components/schemas/SeriesSpecPad'
                 - $ref: '#/components/schemas/SeriesSpecFixed'
                 - $ref: '#/components/schemas/SeriesSpecBackfill'
@@ -5272,10 +5667,7 @@ components:
                 - $ref: '#/components/schemas/SeriesSpecFrom_derivatives'
                 - $ref: '#/components/schemas/SeriesSpecPchip'
                 - $ref: '#/components/schemas/SeriesSpecAkima'
-              title: Interpolation Method
-            - $ref: '#/components/schemas/InterpolationSpec'
-              title: Interpolation specification.
-          title: Interpolation
+          title: Interpolation Specification.
       additionalProperties: true
       type: object
       description: Query specification for a single series.
@@ -5354,6 +5746,14 @@ components:
       description: Use the count of observations in the sample interval.
       enum:
         - count
+    ExecuteQueryQueriesV1DataPostAggregationCount-numeric:
+      description: Use the count of numeric observations in the sample interval.
+      enum:
+        - count-numeric
+    ExecuteQueryQueriesV1DataPostAggregationCount-non-numeric:
+      description: Use the count of non-numeric observations in the sample interval.
+      enum:
+        - count-non-numeric
     ExecuteQueryQueriesV1DataPostAggregationStd:
       description: Use the standard deviation of all observations in the sample interval.
       enum:
@@ -5375,6 +5775,10 @@ components:
         - $ref: '#/components/schemas/ExecuteQueryQueriesV1DataPostAggregationMedian'
         - $ref: '#/components/schemas/ExecuteQueryQueriesV1DataPostAggregationSum'
         - $ref: '#/components/schemas/ExecuteQueryQueriesV1DataPostAggregationCount'
+        - $ref: >-
+            #/components/schemas/ExecuteQueryQueriesV1DataPostAggregationCount-numeric
+        - $ref: >-
+            #/components/schemas/ExecuteQueryQueriesV1DataPostAggregationCount-non-numeric
         - $ref: '#/components/schemas/ExecuteQueryQueriesV1DataPostAggregationStd'
         - $ref: '#/components/schemas/ExecuteQueryQueriesV1DataPostAggregationMax'
         - $ref: '#/components/schemas/ExecuteQueryQueriesV1DataPostAggregationMin'
@@ -5460,41 +5864,6 @@ components:
         interpolation.
       enum:
         - akima
-    ExecuteQueryQueriesV1DataPostInterpolation:
-      anyOf:
-        - $ref: '#/components/schemas/InterpolationMethod'
-          title: Interpolation Override.
-          oneOf:
-            - $ref: >-
-                #/components/schemas/ExecuteQueryQueriesV1DataPostInterpolationPad
-            - $ref: >-
-                #/components/schemas/ExecuteQueryQueriesV1DataPostInterpolationFixed
-            - $ref: >-
-                #/components/schemas/ExecuteQueryQueriesV1DataPostInterpolationBackfill
-            - $ref: >-
-                #/components/schemas/ExecuteQueryQueriesV1DataPostInterpolationLinear
-            - $ref: >-
-                #/components/schemas/ExecuteQueryQueriesV1DataPostInterpolationNearest
-            - $ref: >-
-                #/components/schemas/ExecuteQueryQueriesV1DataPostInterpolationZero
-            - $ref: >-
-                #/components/schemas/ExecuteQueryQueriesV1DataPostInterpolationSlinear
-            - $ref: >-
-                #/components/schemas/ExecuteQueryQueriesV1DataPostInterpolationQuadratic
-            - $ref: >-
-                #/components/schemas/ExecuteQueryQueriesV1DataPostInterpolationCubic
-            - $ref: >-
-                #/components/schemas/ExecuteQueryQueriesV1DataPostInterpolationPolynomial
-            - $ref: >-
-                #/components/schemas/ExecuteQueryQueriesV1DataPostInterpolationSpline
-            - $ref: >-
-                #/components/schemas/ExecuteQueryQueriesV1DataPostInterpolationFrom_derivatives
-            - $ref: >-
-                #/components/schemas/ExecuteQueryQueriesV1DataPostInterpolationPchip
-            - $ref: >-
-                #/components/schemas/ExecuteQueryQueriesV1DataPostInterpolationAkima
-        - $ref: '#/components/schemas/InterpolationSpec'
-          title: Interpolation Override.
     ExecuteQueryQueriesV1DataPostFreqInferred:
       type: string
       description: >-
@@ -5745,217 +6114,160 @@ components:
       type: string
       enum:
         - CSV
-    ExecuteQueryQueriesV1DataPostRender:
-      anyOf:
-        - $ref: '#/components/schemas/_RenderMode'
-          title: Render Mode
-          oneOf:
-            - $ref: >-
-                #/components/schemas/ExecuteQueryQueriesV1DataPostRenderHEADER_ROW
-            - $ref: '#/components/schemas/ExecuteQueryQueriesV1DataPostRenderCOMPACT'
-            - $ref: >-
-                #/components/schemas/ExecuteQueryQueriesV1DataPostRenderCOMPACT_WS
-            - $ref: '#/components/schemas/ExecuteQueryQueriesV1DataPostRenderSERIES'
-            - $ref: >-
-                #/components/schemas/ExecuteQueryQueriesV1DataPostRenderHEADER_COLUMN
-            - $ref: >-
-                #/components/schemas/ExecuteQueryQueriesV1DataPostRenderFLAT_DICT
-            - $ref: >-
-                #/components/schemas/ExecuteQueryQueriesV1DataPostRenderHIER_DICT
-            - $ref: >-
-                #/components/schemas/ExecuteQueryQueriesV1DataPostRenderMETRIC_FLAT_DICT
-            - $ref: '#/components/schemas/ExecuteQueryQueriesV1DataPostRenderUPLOAD'
-            - $ref: '#/components/schemas/ExecuteQueryQueriesV1DataPostRenderCSV'
-        - $ref: '#/components/schemas/Render'
-          title: Render Override.
     ExecuteQueryQueriesV1DataPostAccept:
       anyOf:
         - type: string
           nullable: true
       description: Use a 'text/csv' accept header to get CSV formatted results.
-    ExecuteByNameQueriesV1DataQueryNameGetAggregationFirst:
+    ExecuteByNameAggregationFirst:
       description: >-
         Use the first value (in time) to represent all data for the sample
         interval.
       enum:
         - first
-    ExecuteByNameQueriesV1DataQueryNameGetAggregationLast:
+    ExecuteByNameAggregationLast:
       description: >-
         Use the last value (in time) to represent all data for the sample
         interval.
       enum:
         - last
-    ExecuteByNameQueriesV1DataQueryNameGetAggregationMean:
+    ExecuteByNameAggregationMean:
       description: >-
         Aggregate data by the mean value: The sum of values divided by number of
         observations.
       enum:
         - mean
-    ExecuteByNameQueriesV1DataQueryNameGetAggregationMedian:
+    ExecuteByNameAggregationMedian:
       description: >-
         Aggregate data by the median value: The n/2-th value when ordered, the
         average of the (n-1)/2-th and (n+1)/2-th value when n is uneven.
       enum:
         - median
-    ExecuteByNameQueriesV1DataQueryNameGetAggregationSum:
+    ExecuteByNameAggregationSum:
       description: The sum of all values summarizes the data for the sample interval.
       enum:
         - sum
-    ExecuteByNameQueriesV1DataQueryNameGetAggregationCount:
+    ExecuteByNameAggregationCount:
       description: Use the count of observations in the sample interval.
       enum:
         - count
-    ExecuteByNameQueriesV1DataQueryNameGetAggregationStd:
+    ExecuteByNameAggregationCount-numeric:
+      description: Use the count of numeric observations in the sample interval.
+      enum:
+        - count-numeric
+    ExecuteByNameAggregationCount-non-numeric:
+      description: Use the count of non-numeric observations in the sample interval.
+      enum:
+        - count-non-numeric
+    ExecuteByNameAggregationStd:
       description: Use the standard deviation of all observations in the sample interval.
       enum:
         - std
-    ExecuteByNameQueriesV1DataQueryNameGetAggregationMax:
+    ExecuteByNameAggregationMax:
       description: Use the maximum of all values in the sample interval.
       enum:
         - max
-    ExecuteByNameQueriesV1DataQueryNameGetAggregationMin:
+    ExecuteByNameAggregationMin:
       description: Use the minimum of all values in the sample interval.
       enum:
         - min
-    ExecuteByNameQueriesV1DataQueryNameGetAggregation:
+    ExecuteByNameAggregation:
       type: string
       oneOf:
-        - $ref: >-
-            #/components/schemas/ExecuteByNameQueriesV1DataQueryNameGetAggregationFirst
-        - $ref: >-
-            #/components/schemas/ExecuteByNameQueriesV1DataQueryNameGetAggregationLast
-        - $ref: >-
-            #/components/schemas/ExecuteByNameQueriesV1DataQueryNameGetAggregationMean
-        - $ref: >-
-            #/components/schemas/ExecuteByNameQueriesV1DataQueryNameGetAggregationMedian
-        - $ref: >-
-            #/components/schemas/ExecuteByNameQueriesV1DataQueryNameGetAggregationSum
-        - $ref: >-
-            #/components/schemas/ExecuteByNameQueriesV1DataQueryNameGetAggregationCount
-        - $ref: >-
-            #/components/schemas/ExecuteByNameQueriesV1DataQueryNameGetAggregationStd
-        - $ref: >-
-            #/components/schemas/ExecuteByNameQueriesV1DataQueryNameGetAggregationMax
-        - $ref: >-
-            #/components/schemas/ExecuteByNameQueriesV1DataQueryNameGetAggregationMin
+        - $ref: '#/components/schemas/ExecuteByNameAggregationFirst'
+        - $ref: '#/components/schemas/ExecuteByNameAggregationLast'
+        - $ref: '#/components/schemas/ExecuteByNameAggregationMean'
+        - $ref: '#/components/schemas/ExecuteByNameAggregationMedian'
+        - $ref: '#/components/schemas/ExecuteByNameAggregationSum'
+        - $ref: '#/components/schemas/ExecuteByNameAggregationCount'
+        - $ref: '#/components/schemas/ExecuteByNameAggregationCount-numeric'
+        - $ref: '#/components/schemas/ExecuteByNameAggregationCount-non-numeric'
+        - $ref: '#/components/schemas/ExecuteByNameAggregationStd'
+        - $ref: '#/components/schemas/ExecuteByNameAggregationMax'
+        - $ref: '#/components/schemas/ExecuteByNameAggregationMin'
         - title: Precentile
           description: >-
             Aggregate data by the p-th percentile, where p is a number between 0
             and 1.
           pattern: ^percentile\((1(\.0*)?)|(0\.[0-9]*)\)$
           example: percentile(0.02)
-    ExecuteByNameQueriesV1DataQueryNameGetInterpolationPad:
+    ExecuteByNameInterpolationPad:
       description: >-
         Interpolate with the value of the first observed point. This method also
         extrapolates.
       enum:
         - pad
-    ExecuteByNameQueriesV1DataQueryNameGetInterpolationFixed:
+    ExecuteByNameInterpolationFixed:
       description: >-
         Interpolate with a fixed, user-specified value. This method also
         extrapolates.
       enum:
         - fixed
-    ExecuteByNameQueriesV1DataQueryNameGetInterpolationBackfill:
+    ExecuteByNameInterpolationBackfill:
       description: >-
         Same as pad, but using the last observed value. This method also
         extrapolates
       enum:
         - backfill
-    ExecuteByNameQueriesV1DataQueryNameGetInterpolationLinear:
+    ExecuteByNameInterpolationLinear:
       description: >-
         Linearly go from the first observed value of the gap to the last
         observed oneThis method also extrapolates
       enum:
         - linear
-    ExecuteByNameQueriesV1DataQueryNameGetInterpolationNearest:
+    ExecuteByNameInterpolationNearest:
       description: Use the value that is closest in time.
       enum:
         - nearest
-    ExecuteByNameQueriesV1DataQueryNameGetInterpolationZero:
+    ExecuteByNameInterpolationZero:
       description: >-
         Interpolate with a spline function of order 0, which is a piecewise
         polynomial.
       enum:
         - zero
-    ExecuteByNameQueriesV1DataQueryNameGetInterpolationSlinear:
+    ExecuteByNameInterpolationSlinear:
       description: >-
         Interpolate with a spline function of order 1, which is a piecewise
         polynomial.
       enum:
         - slinear
-    ExecuteByNameQueriesV1DataQueryNameGetInterpolationQuadratic:
+    ExecuteByNameInterpolationQuadratic:
       description: >-
         Interpolate with a spline function of order 2, which is a piecewise
         polynomial.
       enum:
         - quadratic
-    ExecuteByNameQueriesV1DataQueryNameGetInterpolationCubic:
+    ExecuteByNameInterpolationCubic:
       description: >-
         Interpolate with a spline function of order 3, which is a piecewise
         polynomial.
       enum:
         - cubic
-    ExecuteByNameQueriesV1DataQueryNameGetInterpolationPolynomial:
+    ExecuteByNameInterpolationPolynomial:
       description: >-
         Interpolate with a polynomial of the lowest possible degree passing
         trough the data points.
       enum:
         - polynomial
-    ExecuteByNameQueriesV1DataQueryNameGetInterpolationSpline:
+    ExecuteByNameInterpolationSpline:
       description: Interpolate with a spline function of a user-specified order.
       enum:
         - spline
-    ExecuteByNameQueriesV1DataQueryNameGetInterpolationFrom_derivatives:
+    ExecuteByNameInterpolationFrom_derivatives:
       description: Interpolate with the derivative of order 1.
       enum:
         - from_derivatives
-    ExecuteByNameQueriesV1DataQueryNameGetInterpolationPchip:
+    ExecuteByNameInterpolationPchip:
       description: Interpolate with a piecewise cubic spline function.
       enum:
         - pchip
-    ExecuteByNameQueriesV1DataQueryNameGetInterpolationAkima:
+    ExecuteByNameInterpolationAkima:
       description: >-
         Interpolate with a non-smoothing spline of order 2, called Akima
         interpolation.
       enum:
         - akima
-    ExecuteByNameQueriesV1DataQueryNameGetInterpolation:
-      anyOf:
-        - $ref: '#/components/schemas/InterpolationMethod'
-          title: Interpolation Override.
-          oneOf:
-            - $ref: >-
-                #/components/schemas/ExecuteByNameQueriesV1DataQueryNameGetInterpolationPad
-            - $ref: >-
-                #/components/schemas/ExecuteByNameQueriesV1DataQueryNameGetInterpolationFixed
-            - $ref: >-
-                #/components/schemas/ExecuteByNameQueriesV1DataQueryNameGetInterpolationBackfill
-            - $ref: >-
-                #/components/schemas/ExecuteByNameQueriesV1DataQueryNameGetInterpolationLinear
-            - $ref: >-
-                #/components/schemas/ExecuteByNameQueriesV1DataQueryNameGetInterpolationNearest
-            - $ref: >-
-                #/components/schemas/ExecuteByNameQueriesV1DataQueryNameGetInterpolationZero
-            - $ref: >-
-                #/components/schemas/ExecuteByNameQueriesV1DataQueryNameGetInterpolationSlinear
-            - $ref: >-
-                #/components/schemas/ExecuteByNameQueriesV1DataQueryNameGetInterpolationQuadratic
-            - $ref: >-
-                #/components/schemas/ExecuteByNameQueriesV1DataQueryNameGetInterpolationCubic
-            - $ref: >-
-                #/components/schemas/ExecuteByNameQueriesV1DataQueryNameGetInterpolationPolynomial
-            - $ref: >-
-                #/components/schemas/ExecuteByNameQueriesV1DataQueryNameGetInterpolationSpline
-            - $ref: >-
-                #/components/schemas/ExecuteByNameQueriesV1DataQueryNameGetInterpolationFrom_derivatives
-            - $ref: >-
-                #/components/schemas/ExecuteByNameQueriesV1DataQueryNameGetInterpolationPchip
-            - $ref: >-
-                #/components/schemas/ExecuteByNameQueriesV1DataQueryNameGetInterpolationAkima
-        - $ref: '#/components/schemas/InterpolationSpec'
-          title: Interpolation Override.
-    ExecuteByNameQueriesV1DataQueryNameGetFreqInferred:
+    ExecuteByNameFreqInferred:
       type: string
       description: >-
         When `inferred` is specified, the frequency of aggregation will be
@@ -5963,7 +6275,7 @@ components:
         the time series
       enum:
         - inferred
-    ExecuteByNameQueriesV1DataQueryNameGetFreq:
+    ExecuteByNameFreq:
       type: string
       description: Override for the `freq` query attribute.
       oneOf:
@@ -5976,9 +6288,8 @@ components:
           description: >-
             A period in [ISO8601
             duration](https://en.wikipedia.org/wiki/ISO_8601#Durations) format.
-        - $ref: >-
-            #/components/schemas/ExecuteByNameQueriesV1DataQueryNameGetFreqInferred
-    ExecuteByNameQueriesV1DataQueryNameGetFrom:
+        - $ref: '#/components/schemas/ExecuteByNameFreqInferred'
+    ExecuteByNameFrom:
       type: string
       oneOf:
         - title: ISO8601 absolute timestamp
@@ -6005,7 +6316,7 @@ components:
           description: >-
             Specifies a timestamp before _now_ as a period in [ISO8601
             duration](https://en.wikipedia.org/wiki/ISO_8601#Durations) format.
-    ExecuteByNameQueriesV1DataQueryNameGetUntil:
+    ExecuteByNameUntil:
       type: string
       oneOf:
         - title: ISO8601 absolute timestamp
@@ -6032,7 +6343,7 @@ components:
           description: >-
             Specifies a timestamp before _now_ as a period in [ISO8601
             duration](https://en.wikipedia.org/wiki/ISO_8601#Durations) format.
-    ExecuteByNameQueriesV1DataQueryNameGetWindow:
+    ExecuteByNameWindow:
       type: string
       oneOf:
         - type: string
@@ -6044,7 +6355,7 @@ components:
           description: >-
             A period in [ISO8601
             duration](https://en.wikipedia.org/wiki/ISO_8601#Durations) format.
-    ExecuteByNameQueriesV1DataQueryNameGetRenderHEADER_ROW:
+    ExecuteByNameRenderHEADER_ROW:
       description: >-
         Render rows of timestamp and values. Show column headers. Includes an
         iso timestamp.
@@ -6062,7 +6373,7 @@ components:
       type: string
       enum:
         - HEADER_ROW
-    ExecuteByNameQueriesV1DataQueryNameGetRenderCOMPACT:
+    ExecuteByNameRenderCOMPACT:
       description: |-
         Render rows of timestamp and values. Show column headers.
 
@@ -6074,7 +6385,7 @@ components:
       type: string
       enum:
         - COMPACT
-    ExecuteByNameQueriesV1DataQueryNameGetRenderCOMPACT_WS:
+    ExecuteByNameRenderCOMPACT_WS:
       description: >-
         Render rows of timestamp and values. Show column headers. Show the time
         window attributes.
@@ -6094,7 +6405,7 @@ components:
       type: string
       enum:
         - COMPACT_WS
-    ExecuteByNameQueriesV1DataQueryNameGetRenderSERIES:
+    ExecuteByNameRenderSERIES:
       description: >-
         Render timestamps and each series (column) as a values array. Show
         column headers.
@@ -6114,7 +6425,7 @@ components:
       type: string
       enum:
         - SERIES
-    ExecuteByNameQueriesV1DataQueryNameGetRenderHEADER_COLUMN:
+    ExecuteByNameRenderHEADER_COLUMN:
       description: >-
         Renders row index in `rows`, and each series as a values array.
 
@@ -6135,7 +6446,7 @@ components:
       type: string
       enum:
         - HEADER_COLUMN
-    ExecuteByNameQueriesV1DataQueryNameGetRenderFLAT_DICT:
+    ExecuteByNameRenderFLAT_DICT:
       description: |-
         Render an object for each observation. Uses flattened keys.
 
@@ -6147,7 +6458,7 @@ components:
       type: string
       enum:
         - FLAT_DICT
-    ExecuteByNameQueriesV1DataQueryNameGetRenderHIER_DICT:
+    ExecuteByNameRenderHIER_DICT:
       description: >-
         Render an hierarchical object for each observation. Shows an iso
         timestamp.
@@ -6165,7 +6476,7 @@ components:
       type: string
       enum:
         - HIER_DICT
-    ExecuteByNameQueriesV1DataQueryNameGetRenderMETRIC_FLAT_DICT:
+    ExecuteByNameRenderMETRIC_FLAT_DICT:
       description: >-
         Render an object with metric keys for each observation. Shows an iso
         timestamp.
@@ -6185,7 +6496,7 @@ components:
       type: string
       enum:
         - METRIC_FLAT_DICT
-    ExecuteByNameQueriesV1DataQueryNameGetRenderUPLOAD:
+    ExecuteByNameRenderUPLOAD:
       description: |-
         Render in an object format compatible with the `/data/v1/events` upload.
 
@@ -6197,7 +6508,7 @@ components:
       type: string
       enum:
         - UPLOAD
-    ExecuteByNameQueriesV1DataQueryNameGetRenderCSV:
+    ExecuteByNameRenderCSV:
       description: |-
         Render in csv format with row headers.
 
@@ -6206,34 +6517,7 @@ components:
       type: string
       enum:
         - CSV
-    ExecuteByNameQueriesV1DataQueryNameGetRender:
-      anyOf:
-        - $ref: '#/components/schemas/_RenderMode'
-          title: Render Mode
-          oneOf:
-            - $ref: >-
-                #/components/schemas/ExecuteByNameQueriesV1DataQueryNameGetRenderHEADER_ROW
-            - $ref: >-
-                #/components/schemas/ExecuteByNameQueriesV1DataQueryNameGetRenderCOMPACT
-            - $ref: >-
-                #/components/schemas/ExecuteByNameQueriesV1DataQueryNameGetRenderCOMPACT_WS
-            - $ref: >-
-                #/components/schemas/ExecuteByNameQueriesV1DataQueryNameGetRenderSERIES
-            - $ref: >-
-                #/components/schemas/ExecuteByNameQueriesV1DataQueryNameGetRenderHEADER_COLUMN
-            - $ref: >-
-                #/components/schemas/ExecuteByNameQueriesV1DataQueryNameGetRenderFLAT_DICT
-            - $ref: >-
-                #/components/schemas/ExecuteByNameQueriesV1DataQueryNameGetRenderHIER_DICT
-            - $ref: >-
-                #/components/schemas/ExecuteByNameQueriesV1DataQueryNameGetRenderMETRIC_FLAT_DICT
-            - $ref: >-
-                #/components/schemas/ExecuteByNameQueriesV1DataQueryNameGetRenderUPLOAD
-            - $ref: >-
-                #/components/schemas/ExecuteByNameQueriesV1DataQueryNameGetRenderCSV
-        - $ref: '#/components/schemas/Render'
-          title: Render Override.
-    ExecuteByNameQueriesV1DataQueryNameGetAccept:
+    ExecuteByNameAccept:
       anyOf:
         - type: string
           nullable: true
@@ -6399,6 +6683,14 @@ components:
       description: Use the count of observations in the sample interval.
       enum:
         - count
+    Query-InputCount-numeric:
+      description: Use the count of numeric observations in the sample interval.
+      enum:
+        - count-numeric
+    Query-InputCount-non-numeric:
+      description: Use the count of non-numeric observations in the sample interval.
+      enum:
+        - count-non-numeric
     Query-InputStd:
       description: Use the standard deviation of all observations in the sample interval.
       enum:
@@ -6527,6 +6819,14 @@ components:
       description: Use the count of observations in the sample interval.
       enum:
         - count
+    Query-OutputCount-numeric:
+      description: Use the count of numeric observations in the sample interval.
+      enum:
+        - count-numeric
+    Query-OutputCount-non-numeric:
+      description: Use the count of non-numeric observations in the sample interval.
+      enum:
+        - count-non-numeric
     Query-OutputStd:
       description: Use the standard deviation of all observations in the sample interval.
       enum:
@@ -6817,6 +7117,14 @@ components:
       description: Use the count of observations in the sample interval.
       enum:
         - count
+    SeriesSpecCount-numeric:
+      description: Use the count of numeric observations in the sample interval.
+      enum:
+        - count-numeric
+    SeriesSpecCount-non-numeric:
+      description: Use the count of non-numeric observations in the sample interval.
+      enum:
+        - count-non-numeric
     SeriesSpecStd:
       description: Use the standard deviation of all observations in the sample interval.
       enum:

@@ -7,7 +7,7 @@ Do not edit the class manually.
 
 from __future__ import annotations
 
-from typing import Annotated, Any
+from typing import Annotated
 
 from pydantic import (
     ConfigDict,
@@ -16,6 +16,13 @@ from pydantic import (
     StrictStr,
 )
 from waylay.sdk.api._models import BaseModel as WaylayBaseModel
+
+from ..models.execute_query_queries_v1_data_post_interpolation_parameter import (
+    ExecuteQueryQueriesV1DataPostInterpolationParameter,
+)
+from ..models.execute_query_queries_v1_data_post_render_parameter import (
+    ExecuteQueryQueriesV1DataPostRenderParameter,
+)
 
 
 def _execute_by_name_query_alias_for(field_name: str) -> str:
@@ -52,7 +59,7 @@ class ExecuteByNameQuery(WaylayBaseModel):
         StrictStr | None, Field(description="Default Metric Override.")
     ] = None
     aggregation: StrictStr | None = None
-    interpolation: Any | None = None
+    interpolation: ExecuteQueryQueriesV1DataPostInterpolationParameter | None = None
     freq: Annotated[
         StrictStr | None,
         Field(description="Override for the `freq` query attribute."),
@@ -61,7 +68,7 @@ class ExecuteByNameQuery(WaylayBaseModel):
     until: StrictStr | None = None
     window: StrictStr | None = None
     periods: StrictInt | None = None
-    render: Any | None = None
+    render: ExecuteQueryQueriesV1DataPostRenderParameter | None = None
 
     model_config = ConfigDict(
         protected_namespaces=(),
@@ -105,7 +112,7 @@ class ExecuteQuery(WaylayBaseModel):
         StrictStr | None, Field(description="Default Metric Override.")
     ] = None
     aggregation: StrictStr | None = None
-    interpolation: Any | None = None
+    interpolation: ExecuteQueryQueriesV1DataPostInterpolationParameter | None = None
     freq: Annotated[
         StrictStr | None,
         Field(description="Override for the `freq` query attribute."),
@@ -114,7 +121,7 @@ class ExecuteQuery(WaylayBaseModel):
     until: StrictStr | None = None
     window: StrictStr | None = None
     periods: StrictInt | None = None
-    render: Any | None = None
+    render: ExecuteQueryQueriesV1DataPostRenderParameter | None = None
 
     model_config = ConfigDict(
         protected_namespaces=(),

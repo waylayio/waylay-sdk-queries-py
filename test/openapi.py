@@ -48,6 +48,10 @@ _aggregation_model_schema = json.loads(
   }, {
     "$ref" : "#/components/schemas/Query-InputCount"
   }, {
+    "$ref" : "#/components/schemas/Query-InputCount-numeric"
+  }, {
+    "$ref" : "#/components/schemas/Query-InputCount-non-numeric"
+  }, {
     "$ref" : "#/components/schemas/Query-InputStd"
   }, {
     "$ref" : "#/components/schemas/Query-InputMax"
@@ -78,6 +82,10 @@ _aggregation_1_model_schema = json.loads(
     "$ref" : "#/components/schemas/Query-OutputSum"
   }, {
     "$ref" : "#/components/schemas/Query-OutputCount"
+  }, {
+    "$ref" : "#/components/schemas/Query-OutputCount-numeric"
+  }, {
+    "$ref" : "#/components/schemas/Query-OutputCount-non-numeric"
   }, {
     "$ref" : "#/components/schemas/Query-OutputStd"
   }, {
@@ -211,6 +219,10 @@ _aggregration_model_schema = json.loads(
     "$ref" : "#/components/schemas/SeriesSpecSum"
   }, {
     "$ref" : "#/components/schemas/SeriesSpecCount"
+  }, {
+    "$ref" : "#/components/schemas/SeriesSpecCount-numeric"
+  }, {
+    "$ref" : "#/components/schemas/SeriesSpecCount-non-numeric"
   }, {
     "$ref" : "#/components/schemas/SeriesSpecStd"
   }, {
@@ -452,7 +464,7 @@ MODEL_DEFINITIONS.update({"CauseException": _cause_exception_model_schema})
 
 _column_data_set_model_schema = json.loads(
     r"""{
-  "required" : [ "data", "rows" ],
+  "required" : [ "column_names", "data", "rows" ],
   "type" : "object",
   "properties" : {
     "attributes" : {
@@ -470,6 +482,14 @@ _column_data_set_model_schema = json.loads(
       "description" : "Header Attributes for the index data.\n\nThe initial string-valued headers (normally `resource`, `metric`,`aggregation`) indicate that row to contain series attributes.\n\nThe remaining object-valued row headers contain the index data.",
       "items" : {
         "$ref" : "#/components/schemas/Row_Headers_inner"
+      }
+    },
+    "column_names" : {
+      "title" : "Column names",
+      "type" : "array",
+      "description" : "Short names for the columns in the data set.\nThese names are the `name` alias if given in the series specification, otherwise is composed of the `resource`, `metric` and `aggregation` attributes, concatenated with the `render.key_separator` (default `.`) as separator.",
+      "items" : {
+        "type" : "string"
       }
     },
     "data" : {
@@ -721,9 +741,9 @@ _default_interpolation_model_schema = json.loads(
   "title" : "Default Interpolation",
   "description" : "Default Interpolation method for the series (if aggregated).",
   "anyOf" : [ {
-    "$ref" : "#/components/schemas/Default_Interpolation_anyOf"
+    "$ref" : "#/components/schemas/InterpolationSpec_1"
   }, {
-    "$ref" : "#/components/schemas/InterpolationSpec"
+    "$ref" : "#/components/schemas/Default_Interpolation_anyOf"
   } ]
 }
 """,
@@ -731,9 +751,93 @@ _default_interpolation_model_schema = json.loads(
 )
 MODEL_DEFINITIONS.update({"Default_Interpolation": _default_interpolation_model_schema})
 
+_default_interpolation_1_model_schema = json.loads(
+    r"""{
+  "title" : "Default Interpolation",
+  "description" : "Default Interpolation method for the series (if aggregated).",
+  "anyOf" : [ {
+    "$ref" : "#/components/schemas/InterpolationSpec_2"
+  }, {
+    "$ref" : "#/components/schemas/Default_Interpolation_1_anyOf"
+  } ]
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({
+    "Default_Interpolation_1": _default_interpolation_1_model_schema
+})
+
+_default_interpolation_1_any_of_model_schema = json.loads(
+    r"""{
+  "oneOf" : [ {
+    "$ref" : "#/components/schemas/Query-OutputPad"
+  }, {
+    "$ref" : "#/components/schemas/Query-OutputFixed"
+  }, {
+    "$ref" : "#/components/schemas/Query-OutputBackfill"
+  }, {
+    "$ref" : "#/components/schemas/Query-OutputLinear"
+  }, {
+    "$ref" : "#/components/schemas/Query-OutputNearest"
+  }, {
+    "$ref" : "#/components/schemas/Query-OutputZero"
+  }, {
+    "$ref" : "#/components/schemas/Query-OutputSlinear"
+  }, {
+    "$ref" : "#/components/schemas/Query-OutputQuadratic"
+  }, {
+    "$ref" : "#/components/schemas/Query-OutputCubic"
+  }, {
+    "$ref" : "#/components/schemas/Query-OutputPolynomial"
+  }, {
+    "$ref" : "#/components/schemas/Query-OutputSpline"
+  }, {
+    "$ref" : "#/components/schemas/Query-OutputFrom_derivatives"
+  }, {
+    "$ref" : "#/components/schemas/Query-OutputPchip"
+  }, {
+    "$ref" : "#/components/schemas/Query-OutputAkima"
+  } ]
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({
+    "Default_Interpolation_1_anyOf": _default_interpolation_1_any_of_model_schema
+})
+
 _default_interpolation_any_of_model_schema = json.loads(
     r"""{
-  "$ref" : "#/components/schemas/InterpolationMethod"
+  "oneOf" : [ {
+    "$ref" : "#/components/schemas/Query-InputPad"
+  }, {
+    "$ref" : "#/components/schemas/Query-InputFixed"
+  }, {
+    "$ref" : "#/components/schemas/Query-InputBackfill"
+  }, {
+    "$ref" : "#/components/schemas/Query-InputLinear"
+  }, {
+    "$ref" : "#/components/schemas/Query-InputNearest"
+  }, {
+    "$ref" : "#/components/schemas/Query-InputZero"
+  }, {
+    "$ref" : "#/components/schemas/Query-InputSlinear"
+  }, {
+    "$ref" : "#/components/schemas/Query-InputQuadratic"
+  }, {
+    "$ref" : "#/components/schemas/Query-InputCubic"
+  }, {
+    "$ref" : "#/components/schemas/Query-InputPolynomial"
+  }, {
+    "$ref" : "#/components/schemas/Query-InputSpline"
+  }, {
+    "$ref" : "#/components/schemas/Query-InputFrom_derivatives"
+  }, {
+    "$ref" : "#/components/schemas/Query-InputPchip"
+  }, {
+    "$ref" : "#/components/schemas/Query-InputAkima"
+  } ]
 }
 """,
     object_hook=with_example_provider,
@@ -801,173 +905,185 @@ _embeddings_value_model_schema = json.loads(
 )
 MODEL_DEFINITIONS.update({"Embeddings_value": _embeddings_value_model_schema})
 
-_execute_by_name_queries_v1_data_query_name_get_aggregation_model_schema = json.loads(
+_execute_by_name_aggregation_model_schema = json.loads(
     r"""{
   "type" : "string",
   "nullable" : true,
   "oneOf" : [ {
-    "$ref" : "#/components/schemas/ExecuteByNameQueriesV1DataQueryNameGetAggregationFirst"
+    "$ref" : "#/components/schemas/ExecuteByNameAggregationFirst"
   }, {
-    "$ref" : "#/components/schemas/ExecuteByNameQueriesV1DataQueryNameGetAggregationLast"
+    "$ref" : "#/components/schemas/ExecuteByNameAggregationLast"
   }, {
-    "$ref" : "#/components/schemas/ExecuteByNameQueriesV1DataQueryNameGetAggregationMean"
+    "$ref" : "#/components/schemas/ExecuteByNameAggregationMean"
   }, {
-    "$ref" : "#/components/schemas/ExecuteByNameQueriesV1DataQueryNameGetAggregationMedian"
+    "$ref" : "#/components/schemas/ExecuteByNameAggregationMedian"
   }, {
-    "$ref" : "#/components/schemas/ExecuteByNameQueriesV1DataQueryNameGetAggregationSum"
+    "$ref" : "#/components/schemas/ExecuteByNameAggregationSum"
   }, {
-    "$ref" : "#/components/schemas/ExecuteByNameQueriesV1DataQueryNameGetAggregationCount"
+    "$ref" : "#/components/schemas/ExecuteByNameAggregationCount"
   }, {
-    "$ref" : "#/components/schemas/ExecuteByNameQueriesV1DataQueryNameGetAggregationStd"
+    "$ref" : "#/components/schemas/ExecuteByNameAggregationCount-numeric"
   }, {
-    "$ref" : "#/components/schemas/ExecuteByNameQueriesV1DataQueryNameGetAggregationMax"
+    "$ref" : "#/components/schemas/ExecuteByNameAggregationCount-non-numeric"
   }, {
-    "$ref" : "#/components/schemas/ExecuteByNameQueriesV1DataQueryNameGetAggregationMin"
+    "$ref" : "#/components/schemas/ExecuteByNameAggregationStd"
+  }, {
+    "$ref" : "#/components/schemas/ExecuteByNameAggregationMax"
+  }, {
+    "$ref" : "#/components/schemas/ExecuteByNameAggregationMin"
   } ]
 }
 """,
     object_hook=with_example_provider,
 )
 MODEL_DEFINITIONS.update({
-    "ExecuteByNameQueriesV1DataQueryNameGetAggregation": _execute_by_name_queries_v1_data_query_name_get_aggregation_model_schema
+    "ExecuteByNameAggregation": _execute_by_name_aggregation_model_schema
 })
 
-_execute_by_name_queries_v1_data_query_name_get_aggregation_count_model_schema = (
-    json.loads(
-        r"""{
+_execute_by_name_aggregation_count_model_schema = json.loads(
+    r"""{
   "type" : "string",
   "description" : "Use the count of observations in the sample interval.",
   "enum" : [ "count" ]
 }
 """,
-        object_hook=with_example_provider,
-    )
+    object_hook=with_example_provider,
 )
 MODEL_DEFINITIONS.update({
-    "ExecuteByNameQueriesV1DataQueryNameGetAggregationCount": _execute_by_name_queries_v1_data_query_name_get_aggregation_count_model_schema
+    "ExecuteByNameAggregationCount": _execute_by_name_aggregation_count_model_schema
 })
 
-_execute_by_name_queries_v1_data_query_name_get_aggregation_first_model_schema = (
-    json.loads(
-        r"""{
+_execute_by_name_aggregation_count_non_numeric_model_schema = json.loads(
+    r"""{
+  "type" : "string",
+  "description" : "Use the count of non-numeric observations in the sample interval.",
+  "enum" : [ "count-non-numeric" ]
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({
+    "ExecuteByNameAggregationCount-non-numeric": _execute_by_name_aggregation_count_non_numeric_model_schema
+})
+
+_execute_by_name_aggregation_count_numeric_model_schema = json.loads(
+    r"""{
+  "type" : "string",
+  "description" : "Use the count of numeric observations in the sample interval.",
+  "enum" : [ "count-numeric" ]
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({
+    "ExecuteByNameAggregationCount-numeric": _execute_by_name_aggregation_count_numeric_model_schema
+})
+
+_execute_by_name_aggregation_first_model_schema = json.loads(
+    r"""{
   "type" : "string",
   "description" : "Use the first value (in time) to represent all data for the sample interval.",
   "enum" : [ "first" ]
 }
 """,
-        object_hook=with_example_provider,
-    )
+    object_hook=with_example_provider,
 )
 MODEL_DEFINITIONS.update({
-    "ExecuteByNameQueriesV1DataQueryNameGetAggregationFirst": _execute_by_name_queries_v1_data_query_name_get_aggregation_first_model_schema
+    "ExecuteByNameAggregationFirst": _execute_by_name_aggregation_first_model_schema
 })
 
-_execute_by_name_queries_v1_data_query_name_get_aggregation_last_model_schema = (
-    json.loads(
-        r"""{
+_execute_by_name_aggregation_last_model_schema = json.loads(
+    r"""{
   "type" : "string",
   "description" : "Use the last value (in time) to represent all data for the sample interval.",
   "enum" : [ "last" ]
 }
 """,
-        object_hook=with_example_provider,
-    )
+    object_hook=with_example_provider,
 )
 MODEL_DEFINITIONS.update({
-    "ExecuteByNameQueriesV1DataQueryNameGetAggregationLast": _execute_by_name_queries_v1_data_query_name_get_aggregation_last_model_schema
+    "ExecuteByNameAggregationLast": _execute_by_name_aggregation_last_model_schema
 })
 
-_execute_by_name_queries_v1_data_query_name_get_aggregation_max_model_schema = (
-    json.loads(
-        r"""{
+_execute_by_name_aggregation_max_model_schema = json.loads(
+    r"""{
   "type" : "string",
   "description" : "Use the maximum of all values in the sample interval.",
   "enum" : [ "max" ]
 }
 """,
-        object_hook=with_example_provider,
-    )
+    object_hook=with_example_provider,
 )
 MODEL_DEFINITIONS.update({
-    "ExecuteByNameQueriesV1DataQueryNameGetAggregationMax": _execute_by_name_queries_v1_data_query_name_get_aggregation_max_model_schema
+    "ExecuteByNameAggregationMax": _execute_by_name_aggregation_max_model_schema
 })
 
-_execute_by_name_queries_v1_data_query_name_get_aggregation_mean_model_schema = (
-    json.loads(
-        r"""{
+_execute_by_name_aggregation_mean_model_schema = json.loads(
+    r"""{
   "type" : "string",
   "description" : "Aggregate data by the mean value: The sum of values divided by number of observations.",
   "enum" : [ "mean" ]
 }
 """,
-        object_hook=with_example_provider,
-    )
+    object_hook=with_example_provider,
 )
 MODEL_DEFINITIONS.update({
-    "ExecuteByNameQueriesV1DataQueryNameGetAggregationMean": _execute_by_name_queries_v1_data_query_name_get_aggregation_mean_model_schema
+    "ExecuteByNameAggregationMean": _execute_by_name_aggregation_mean_model_schema
 })
 
-_execute_by_name_queries_v1_data_query_name_get_aggregation_median_model_schema = (
-    json.loads(
-        r"""{
+_execute_by_name_aggregation_median_model_schema = json.loads(
+    r"""{
   "type" : "string",
   "description" : "Aggregate data by the median value: The n/2-th value when ordered, the average of the (n-1)/2-th and (n+1)/2-th value when n is uneven.",
   "enum" : [ "median" ]
 }
 """,
-        object_hook=with_example_provider,
-    )
+    object_hook=with_example_provider,
 )
 MODEL_DEFINITIONS.update({
-    "ExecuteByNameQueriesV1DataQueryNameGetAggregationMedian": _execute_by_name_queries_v1_data_query_name_get_aggregation_median_model_schema
+    "ExecuteByNameAggregationMedian": _execute_by_name_aggregation_median_model_schema
 })
 
-_execute_by_name_queries_v1_data_query_name_get_aggregation_min_model_schema = (
-    json.loads(
-        r"""{
+_execute_by_name_aggregation_min_model_schema = json.loads(
+    r"""{
   "type" : "string",
   "description" : "Use the minimum of all values in the sample interval.",
   "enum" : [ "min" ]
 }
 """,
-        object_hook=with_example_provider,
-    )
+    object_hook=with_example_provider,
 )
 MODEL_DEFINITIONS.update({
-    "ExecuteByNameQueriesV1DataQueryNameGetAggregationMin": _execute_by_name_queries_v1_data_query_name_get_aggregation_min_model_schema
+    "ExecuteByNameAggregationMin": _execute_by_name_aggregation_min_model_schema
 })
 
-_execute_by_name_queries_v1_data_query_name_get_aggregation_std_model_schema = (
-    json.loads(
-        r"""{
+_execute_by_name_aggregation_std_model_schema = json.loads(
+    r"""{
   "type" : "string",
   "description" : "Use the standard deviation of all observations in the sample interval.",
   "enum" : [ "std" ]
 }
 """,
-        object_hook=with_example_provider,
-    )
+    object_hook=with_example_provider,
 )
 MODEL_DEFINITIONS.update({
-    "ExecuteByNameQueriesV1DataQueryNameGetAggregationStd": _execute_by_name_queries_v1_data_query_name_get_aggregation_std_model_schema
+    "ExecuteByNameAggregationStd": _execute_by_name_aggregation_std_model_schema
 })
 
-_execute_by_name_queries_v1_data_query_name_get_aggregation_sum_model_schema = (
-    json.loads(
-        r"""{
+_execute_by_name_aggregation_sum_model_schema = json.loads(
+    r"""{
   "type" : "string",
   "description" : "The sum of all values summarizes the data for the sample interval.",
   "enum" : [ "sum" ]
 }
 """,
-        object_hook=with_example_provider,
-    )
+    object_hook=with_example_provider,
 )
 MODEL_DEFINITIONS.update({
-    "ExecuteByNameQueriesV1DataQueryNameGetAggregationSum": _execute_by_name_queries_v1_data_query_name_get_aggregation_sum_model_schema
+    "ExecuteByNameAggregationSum": _execute_by_name_aggregation_sum_model_schema
 })
 
-_execute_by_name_queries_v1_data_query_name_get_freq_model_schema = json.loads(
+_execute_by_name_freq_model_schema = json.loads(
     r"""{
   "type" : "string",
   "description" : "Override for the `freq` query attribute.",
@@ -979,17 +1095,15 @@ _execute_by_name_queries_v1_data_query_name_get_freq_model_schema = json.loads(
     "format" : "period",
     "example" : "PT3H15M"
   }, {
-    "$ref" : "#/components/schemas/ExecuteByNameQueriesV1DataQueryNameGetFreqInferred"
+    "$ref" : "#/components/schemas/ExecuteByNameFreqInferred"
   } ]
 }
 """,
     object_hook=with_example_provider,
 )
-MODEL_DEFINITIONS.update({
-    "ExecuteByNameQueriesV1DataQueryNameGetFreq": _execute_by_name_queries_v1_data_query_name_get_freq_model_schema
-})
+MODEL_DEFINITIONS.update({"ExecuteByNameFreq": _execute_by_name_freq_model_schema})
 
-_execute_by_name_queries_v1_data_query_name_get_freq_inferred_model_schema = json.loads(
+_execute_by_name_freq_inferred_model_schema = json.loads(
     r"""{
   "type" : "string",
   "description" : "When `inferred` is specified, the frequency of aggregation will be inferred from the main/first time series. This can be used to regularize the time series",
@@ -999,10 +1113,10 @@ _execute_by_name_queries_v1_data_query_name_get_freq_inferred_model_schema = jso
     object_hook=with_example_provider,
 )
 MODEL_DEFINITIONS.update({
-    "ExecuteByNameQueriesV1DataQueryNameGetFreqInferred": _execute_by_name_queries_v1_data_query_name_get_freq_inferred_model_schema
+    "ExecuteByNameFreqInferred": _execute_by_name_freq_inferred_model_schema
 })
 
-_execute_by_name_queries_v1_data_query_name_get_from_model_schema = json.loads(
+_execute_by_name_from_model_schema = json.loads(
     r"""{
   "type" : "string",
   "oneOf" : [ {
@@ -1030,86 +1144,61 @@ _execute_by_name_queries_v1_data_query_name_get_from_model_schema = json.loads(
 """,
     object_hook=with_example_provider,
 )
-MODEL_DEFINITIONS.update({
-    "ExecuteByNameQueriesV1DataQueryNameGetFrom": _execute_by_name_queries_v1_data_query_name_get_from_model_schema
-})
+MODEL_DEFINITIONS.update({"ExecuteByNameFrom": _execute_by_name_from_model_schema})
 
-_execute_by_name_queries_v1_data_query_name_get_interpolation_model_schema = json.loads(
+_execute_by_name_interpolation_akima_model_schema = json.loads(
     r"""{
-  "anyOf" : [ {
-    "$ref" : "#/components/schemas/Default_Interpolation_anyOf"
-  }, {
-    "$ref" : "#/components/schemas/InterpolationSpec"
-  } ]
-}
-""",
-    object_hook=with_example_provider,
-)
-MODEL_DEFINITIONS.update({
-    "ExecuteByNameQueriesV1DataQueryNameGetInterpolation": _execute_by_name_queries_v1_data_query_name_get_interpolation_model_schema
-})
-
-_execute_by_name_queries_v1_data_query_name_get_interpolation_akima_model_schema = (
-    json.loads(
-        r"""{
   "type" : "string",
   "description" : "Interpolate with a non-smoothing spline of order 2, called Akima interpolation.",
   "enum" : [ "akima" ]
 }
 """,
-        object_hook=with_example_provider,
-    )
+    object_hook=with_example_provider,
 )
 MODEL_DEFINITIONS.update({
-    "ExecuteByNameQueriesV1DataQueryNameGetInterpolationAkima": _execute_by_name_queries_v1_data_query_name_get_interpolation_akima_model_schema
+    "ExecuteByNameInterpolationAkima": _execute_by_name_interpolation_akima_model_schema
 })
 
-_execute_by_name_queries_v1_data_query_name_get_interpolation_backfill_model_schema = (
-    json.loads(
-        r"""{
+_execute_by_name_interpolation_backfill_model_schema = json.loads(
+    r"""{
   "type" : "string",
   "description" : "Same as pad, but using the last observed value. This method also extrapolates",
   "enum" : [ "backfill" ]
 }
 """,
-        object_hook=with_example_provider,
-    )
+    object_hook=with_example_provider,
 )
 MODEL_DEFINITIONS.update({
-    "ExecuteByNameQueriesV1DataQueryNameGetInterpolationBackfill": _execute_by_name_queries_v1_data_query_name_get_interpolation_backfill_model_schema
+    "ExecuteByNameInterpolationBackfill": _execute_by_name_interpolation_backfill_model_schema
 })
 
-_execute_by_name_queries_v1_data_query_name_get_interpolation_cubic_model_schema = (
-    json.loads(
-        r"""{
+_execute_by_name_interpolation_cubic_model_schema = json.loads(
+    r"""{
   "type" : "string",
   "description" : "Interpolate with a spline function of order 3, which is a piecewise polynomial.",
   "enum" : [ "cubic" ]
 }
 """,
-        object_hook=with_example_provider,
-    )
+    object_hook=with_example_provider,
 )
 MODEL_DEFINITIONS.update({
-    "ExecuteByNameQueriesV1DataQueryNameGetInterpolationCubic": _execute_by_name_queries_v1_data_query_name_get_interpolation_cubic_model_schema
+    "ExecuteByNameInterpolationCubic": _execute_by_name_interpolation_cubic_model_schema
 })
 
-_execute_by_name_queries_v1_data_query_name_get_interpolation_fixed_model_schema = (
-    json.loads(
-        r"""{
+_execute_by_name_interpolation_fixed_model_schema = json.loads(
+    r"""{
   "type" : "string",
   "description" : "Interpolate with a fixed, user-specified value. This method also extrapolates.",
   "enum" : [ "fixed" ]
 }
 """,
-        object_hook=with_example_provider,
-    )
+    object_hook=with_example_provider,
 )
 MODEL_DEFINITIONS.update({
-    "ExecuteByNameQueriesV1DataQueryNameGetInterpolationFixed": _execute_by_name_queries_v1_data_query_name_get_interpolation_fixed_model_schema
+    "ExecuteByNameInterpolationFixed": _execute_by_name_interpolation_fixed_model_schema
 })
 
-_execute_by_name_queries_v1_data_query_name_get_interpolation_from_derivatives_model_schema = json.loads(
+_execute_by_name_interpolation_from_derivatives_model_schema = json.loads(
     r"""{
   "type" : "string",
   "description" : "Interpolate with the derivative of order 1.",
@@ -1119,70 +1208,62 @@ _execute_by_name_queries_v1_data_query_name_get_interpolation_from_derivatives_m
     object_hook=with_example_provider,
 )
 MODEL_DEFINITIONS.update({
-    "ExecuteByNameQueriesV1DataQueryNameGetInterpolationFrom_derivatives": _execute_by_name_queries_v1_data_query_name_get_interpolation_from_derivatives_model_schema
+    "ExecuteByNameInterpolationFrom_derivatives": _execute_by_name_interpolation_from_derivatives_model_schema
 })
 
-_execute_by_name_queries_v1_data_query_name_get_interpolation_linear_model_schema = (
-    json.loads(
-        r"""{
+_execute_by_name_interpolation_linear_model_schema = json.loads(
+    r"""{
   "type" : "string",
   "description" : "Linearly go from the first observed value of the gap to the last observed oneThis method also extrapolates",
   "enum" : [ "linear" ]
 }
 """,
-        object_hook=with_example_provider,
-    )
+    object_hook=with_example_provider,
 )
 MODEL_DEFINITIONS.update({
-    "ExecuteByNameQueriesV1DataQueryNameGetInterpolationLinear": _execute_by_name_queries_v1_data_query_name_get_interpolation_linear_model_schema
+    "ExecuteByNameInterpolationLinear": _execute_by_name_interpolation_linear_model_schema
 })
 
-_execute_by_name_queries_v1_data_query_name_get_interpolation_nearest_model_schema = (
-    json.loads(
-        r"""{
+_execute_by_name_interpolation_nearest_model_schema = json.loads(
+    r"""{
   "type" : "string",
   "description" : "Use the value that is closest in time.",
   "enum" : [ "nearest" ]
 }
 """,
-        object_hook=with_example_provider,
-    )
+    object_hook=with_example_provider,
 )
 MODEL_DEFINITIONS.update({
-    "ExecuteByNameQueriesV1DataQueryNameGetInterpolationNearest": _execute_by_name_queries_v1_data_query_name_get_interpolation_nearest_model_schema
+    "ExecuteByNameInterpolationNearest": _execute_by_name_interpolation_nearest_model_schema
 })
 
-_execute_by_name_queries_v1_data_query_name_get_interpolation_pad_model_schema = (
-    json.loads(
-        r"""{
+_execute_by_name_interpolation_pad_model_schema = json.loads(
+    r"""{
   "type" : "string",
   "description" : "Interpolate with the value of the first observed point. This method also extrapolates.",
   "enum" : [ "pad" ]
 }
 """,
-        object_hook=with_example_provider,
-    )
+    object_hook=with_example_provider,
 )
 MODEL_DEFINITIONS.update({
-    "ExecuteByNameQueriesV1DataQueryNameGetInterpolationPad": _execute_by_name_queries_v1_data_query_name_get_interpolation_pad_model_schema
+    "ExecuteByNameInterpolationPad": _execute_by_name_interpolation_pad_model_schema
 })
 
-_execute_by_name_queries_v1_data_query_name_get_interpolation_pchip_model_schema = (
-    json.loads(
-        r"""{
+_execute_by_name_interpolation_pchip_model_schema = json.loads(
+    r"""{
   "type" : "string",
   "description" : "Interpolate with a piecewise cubic spline function.",
   "enum" : [ "pchip" ]
 }
 """,
-        object_hook=with_example_provider,
-    )
+    object_hook=with_example_provider,
 )
 MODEL_DEFINITIONS.update({
-    "ExecuteByNameQueriesV1DataQueryNameGetInterpolationPchip": _execute_by_name_queries_v1_data_query_name_get_interpolation_pchip_model_schema
+    "ExecuteByNameInterpolationPchip": _execute_by_name_interpolation_pchip_model_schema
 })
 
-_execute_by_name_queries_v1_data_query_name_get_interpolation_polynomial_model_schema = json.loads(
+_execute_by_name_interpolation_polynomial_model_schema = json.loads(
     r"""{
   "type" : "string",
   "description" : "Interpolate with a polynomial of the lowest possible degree passing trough the data points.",
@@ -1192,115 +1273,88 @@ _execute_by_name_queries_v1_data_query_name_get_interpolation_polynomial_model_s
     object_hook=with_example_provider,
 )
 MODEL_DEFINITIONS.update({
-    "ExecuteByNameQueriesV1DataQueryNameGetInterpolationPolynomial": _execute_by_name_queries_v1_data_query_name_get_interpolation_polynomial_model_schema
+    "ExecuteByNameInterpolationPolynomial": _execute_by_name_interpolation_polynomial_model_schema
 })
 
-_execute_by_name_queries_v1_data_query_name_get_interpolation_quadratic_model_schema = (
-    json.loads(
-        r"""{
+_execute_by_name_interpolation_quadratic_model_schema = json.loads(
+    r"""{
   "type" : "string",
   "description" : "Interpolate with a spline function of order 2, which is a piecewise polynomial.",
   "enum" : [ "quadratic" ]
 }
 """,
-        object_hook=with_example_provider,
-    )
+    object_hook=with_example_provider,
 )
 MODEL_DEFINITIONS.update({
-    "ExecuteByNameQueriesV1DataQueryNameGetInterpolationQuadratic": _execute_by_name_queries_v1_data_query_name_get_interpolation_quadratic_model_schema
+    "ExecuteByNameInterpolationQuadratic": _execute_by_name_interpolation_quadratic_model_schema
 })
 
-_execute_by_name_queries_v1_data_query_name_get_interpolation_slinear_model_schema = (
-    json.loads(
-        r"""{
+_execute_by_name_interpolation_slinear_model_schema = json.loads(
+    r"""{
   "type" : "string",
   "description" : "Interpolate with a spline function of order 1, which is a piecewise polynomial.",
   "enum" : [ "slinear" ]
 }
 """,
-        object_hook=with_example_provider,
-    )
+    object_hook=with_example_provider,
 )
 MODEL_DEFINITIONS.update({
-    "ExecuteByNameQueriesV1DataQueryNameGetInterpolationSlinear": _execute_by_name_queries_v1_data_query_name_get_interpolation_slinear_model_schema
+    "ExecuteByNameInterpolationSlinear": _execute_by_name_interpolation_slinear_model_schema
 })
 
-_execute_by_name_queries_v1_data_query_name_get_interpolation_spline_model_schema = (
-    json.loads(
-        r"""{
+_execute_by_name_interpolation_spline_model_schema = json.loads(
+    r"""{
   "type" : "string",
   "description" : "Interpolate with a spline function of a user-specified order.",
   "enum" : [ "spline" ]
 }
 """,
-        object_hook=with_example_provider,
-    )
+    object_hook=with_example_provider,
 )
 MODEL_DEFINITIONS.update({
-    "ExecuteByNameQueriesV1DataQueryNameGetInterpolationSpline": _execute_by_name_queries_v1_data_query_name_get_interpolation_spline_model_schema
+    "ExecuteByNameInterpolationSpline": _execute_by_name_interpolation_spline_model_schema
 })
 
-_execute_by_name_queries_v1_data_query_name_get_interpolation_zero_model_schema = (
-    json.loads(
-        r"""{
+_execute_by_name_interpolation_zero_model_schema = json.loads(
+    r"""{
   "type" : "string",
   "description" : "Interpolate with a spline function of order 0, which is a piecewise polynomial.",
   "enum" : [ "zero" ]
 }
 """,
-        object_hook=with_example_provider,
-    )
-)
-MODEL_DEFINITIONS.update({
-    "ExecuteByNameQueriesV1DataQueryNameGetInterpolationZero": _execute_by_name_queries_v1_data_query_name_get_interpolation_zero_model_schema
-})
-
-_execute_by_name_queries_v1_data_query_name_get_render_model_schema = json.loads(
-    r"""{
-  "anyOf" : [ {
-    "$ref" : "#/components/schemas/Render_mode"
-  }, {
-    "$ref" : "#/components/schemas/Render"
-  } ]
-}
-""",
     object_hook=with_example_provider,
 )
 MODEL_DEFINITIONS.update({
-    "ExecuteByNameQueriesV1DataQueryNameGetRender": _execute_by_name_queries_v1_data_query_name_get_render_model_schema
+    "ExecuteByNameInterpolationZero": _execute_by_name_interpolation_zero_model_schema
 })
 
-_execute_by_name_queries_v1_data_query_name_get_render_compact_model_schema = (
-    json.loads(
-        r"""{
+_execute_by_name_render_compact_model_schema = json.loads(
+    r"""{
   "type" : "string",
   "description" : "Render rows of timestamp and values. Show column headers.\n\n###### options\n- `iso_timestamp`: `False`\n- `header_array`: `row`\n- `roll_up`: `False`\n- `data_axis`: `column`",
   "enum" : [ "COMPACT" ]
 }
 """,
-        object_hook=with_example_provider,
-    )
+    object_hook=with_example_provider,
 )
 MODEL_DEFINITIONS.update({
-    "ExecuteByNameQueriesV1DataQueryNameGetRenderCOMPACT": _execute_by_name_queries_v1_data_query_name_get_render_compact_model_schema
+    "ExecuteByNameRenderCOMPACT": _execute_by_name_render_compact_model_schema
 })
 
-_execute_by_name_queries_v1_data_query_name_get_render_compact_ws_model_schema = (
-    json.loads(
-        r"""{
+_execute_by_name_render_compact_ws_model_schema = json.loads(
+    r"""{
   "type" : "string",
   "description" : "Render rows of timestamp and values. Show column headers. Show the time window attributes.\n\n###### options\n- `iso_timestamp`: `False`\n- `header_array`: `row`\n- `roll_up`: `False`\n- `data_axis`: `column`\n- `include_window_spec`: `True`",
   "enum" : [ "COMPACT_WS" ]
 }
 """,
-        object_hook=with_example_provider,
-    )
+    object_hook=with_example_provider,
 )
 MODEL_DEFINITIONS.update({
-    "ExecuteByNameQueriesV1DataQueryNameGetRenderCOMPACT_WS": _execute_by_name_queries_v1_data_query_name_get_render_compact_ws_model_schema
+    "ExecuteByNameRenderCOMPACT_WS": _execute_by_name_render_compact_ws_model_schema
 })
 
-_execute_by_name_queries_v1_data_query_name_get_render_csv_model_schema = json.loads(
+_execute_by_name_render_csv_model_schema = json.loads(
     r"""{
   "type" : "string",
   "description" : "Render in csv format with row headers.\n\n###### options\n- `iso_timestamp`: `False`",
@@ -1310,85 +1364,75 @@ _execute_by_name_queries_v1_data_query_name_get_render_csv_model_schema = json.l
     object_hook=with_example_provider,
 )
 MODEL_DEFINITIONS.update({
-    "ExecuteByNameQueriesV1DataQueryNameGetRenderCSV": _execute_by_name_queries_v1_data_query_name_get_render_csv_model_schema
+    "ExecuteByNameRenderCSV": _execute_by_name_render_csv_model_schema
 })
 
-_execute_by_name_queries_v1_data_query_name_get_render_flat_dict_model_schema = (
-    json.loads(
-        r"""{
+_execute_by_name_render_flat_dict_model_schema = json.loads(
+    r"""{
   "type" : "string",
   "description" : "Render an object for each observation. Uses flattened keys.\n\n###### options\n- `iso_timestamp`: `True`\n- `hierarchical`: `False`\n- `show_levels`: `True`\n- `roll_up`: `False`",
   "enum" : [ "FLAT_DICT" ]
 }
 """,
-        object_hook=with_example_provider,
-    )
+    object_hook=with_example_provider,
 )
 MODEL_DEFINITIONS.update({
-    "ExecuteByNameQueriesV1DataQueryNameGetRenderFLAT_DICT": _execute_by_name_queries_v1_data_query_name_get_render_flat_dict_model_schema
+    "ExecuteByNameRenderFLAT_DICT": _execute_by_name_render_flat_dict_model_schema
 })
 
-_execute_by_name_queries_v1_data_query_name_get_render_header_column_model_schema = (
-    json.loads(
-        r"""{
+_execute_by_name_render_header_column_model_schema = json.loads(
+    r"""{
   "type" : "string",
   "description" : "Renders row index in `rows`, and each series as a values array.\n\nThe series are prefixed by their series attributes.The `rows` index is prefixed by the labels for these attributes.\n\n###### options\n- `iso_timestamp`: `True`\n- `header_array`: `column`\n- `roll_up`: `False`\n- `data_axis`: `row`",
   "enum" : [ "HEADER_COLUMN" ]
 }
 """,
-        object_hook=with_example_provider,
-    )
+    object_hook=with_example_provider,
 )
 MODEL_DEFINITIONS.update({
-    "ExecuteByNameQueriesV1DataQueryNameGetRenderHEADER_COLUMN": _execute_by_name_queries_v1_data_query_name_get_render_header_column_model_schema
+    "ExecuteByNameRenderHEADER_COLUMN": _execute_by_name_render_header_column_model_schema
 })
 
-_execute_by_name_queries_v1_data_query_name_get_render_header_row_model_schema = (
-    json.loads(
-        r"""{
+_execute_by_name_render_header_row_model_schema = json.loads(
+    r"""{
   "type" : "string",
   "description" : "Render rows of timestamp and values. Show column headers. Includes an iso timestamp.\n\n###### options\n- `iso_timestamp`: `True`\n- `header_array`: `row`\n- `roll_up`: `False`\n- `data_axis`: `column`",
   "enum" : [ "HEADER_ROW" ]
 }
 """,
-        object_hook=with_example_provider,
-    )
+    object_hook=with_example_provider,
 )
 MODEL_DEFINITIONS.update({
-    "ExecuteByNameQueriesV1DataQueryNameGetRenderHEADER_ROW": _execute_by_name_queries_v1_data_query_name_get_render_header_row_model_schema
+    "ExecuteByNameRenderHEADER_ROW": _execute_by_name_render_header_row_model_schema
 })
 
-_execute_by_name_queries_v1_data_query_name_get_render_hier_dict_model_schema = (
-    json.loads(
-        r"""{
+_execute_by_name_render_hier_dict_model_schema = json.loads(
+    r"""{
   "type" : "string",
   "description" : "Render an hierarchical object for each observation. Shows an iso timestamp.\n\n###### options\n- `iso_timestamp`: `True`\n- `hierarchical`: `True`\n- `show_levels`: `True`\n- `roll_up`: `True`",
   "enum" : [ "HIER_DICT" ]
 }
 """,
-        object_hook=with_example_provider,
-    )
+    object_hook=with_example_provider,
 )
 MODEL_DEFINITIONS.update({
-    "ExecuteByNameQueriesV1DataQueryNameGetRenderHIER_DICT": _execute_by_name_queries_v1_data_query_name_get_render_hier_dict_model_schema
+    "ExecuteByNameRenderHIER_DICT": _execute_by_name_render_hier_dict_model_schema
 })
 
-_execute_by_name_queries_v1_data_query_name_get_render_metric_flat_dict_model_schema = (
-    json.loads(
-        r"""{
+_execute_by_name_render_metric_flat_dict_model_schema = json.loads(
+    r"""{
   "type" : "string",
   "description" : "Render an object with metric keys for each observation. Shows an iso timestamp.\n\n###### options\n- `iso_timestamp`: `True`\n- `hierarchical`: `['metric']`\n- `show_levels`: `False`\n- `roll_up`: `True`\n- `key_skip_empty`: `True`",
   "enum" : [ "METRIC_FLAT_DICT" ]
 }
 """,
-        object_hook=with_example_provider,
-    )
+    object_hook=with_example_provider,
 )
 MODEL_DEFINITIONS.update({
-    "ExecuteByNameQueriesV1DataQueryNameGetRenderMETRIC_FLAT_DICT": _execute_by_name_queries_v1_data_query_name_get_render_metric_flat_dict_model_schema
+    "ExecuteByNameRenderMETRIC_FLAT_DICT": _execute_by_name_render_metric_flat_dict_model_schema
 })
 
-_execute_by_name_queries_v1_data_query_name_get_render_series_model_schema = json.loads(
+_execute_by_name_render_series_model_schema = json.loads(
     r"""{
   "type" : "string",
   "description" : "Render timestamps and each series (column) as a values array. Show column headers.\n\n###### options\n- `iso_timestamp`: `False`\n- `header_array`: `row`\n- `data_axis`: `row`\n- `roll_up`: `True`\n- `include_window_spec`: `True`",
@@ -1398,10 +1442,10 @@ _execute_by_name_queries_v1_data_query_name_get_render_series_model_schema = jso
     object_hook=with_example_provider,
 )
 MODEL_DEFINITIONS.update({
-    "ExecuteByNameQueriesV1DataQueryNameGetRenderSERIES": _execute_by_name_queries_v1_data_query_name_get_render_series_model_schema
+    "ExecuteByNameRenderSERIES": _execute_by_name_render_series_model_schema
 })
 
-_execute_by_name_queries_v1_data_query_name_get_render_upload_model_schema = json.loads(
+_execute_by_name_render_upload_model_schema = json.loads(
     r"""{
   "type" : "string",
   "description" : "Render in an object format compatible with the `/data/v1/events` upload.\n\n###### options\n- `iso_timestamp`: `False`\n- `hierarchical`: `False`\n- `show_levels`: `False`\n- `roll_up`: `True`",
@@ -1411,10 +1455,10 @@ _execute_by_name_queries_v1_data_query_name_get_render_upload_model_schema = jso
     object_hook=with_example_provider,
 )
 MODEL_DEFINITIONS.update({
-    "ExecuteByNameQueriesV1DataQueryNameGetRenderUPLOAD": _execute_by_name_queries_v1_data_query_name_get_render_upload_model_schema
+    "ExecuteByNameRenderUPLOAD": _execute_by_name_render_upload_model_schema
 })
 
-_execute_by_name_queries_v1_data_query_name_get_until_model_schema = json.loads(
+_execute_by_name_until_model_schema = json.loads(
     r"""{
   "type" : "string",
   "oneOf" : [ {
@@ -1442,11 +1486,9 @@ _execute_by_name_queries_v1_data_query_name_get_until_model_schema = json.loads(
 """,
     object_hook=with_example_provider,
 )
-MODEL_DEFINITIONS.update({
-    "ExecuteByNameQueriesV1DataQueryNameGetUntil": _execute_by_name_queries_v1_data_query_name_get_until_model_schema
-})
+MODEL_DEFINITIONS.update({"ExecuteByNameUntil": _execute_by_name_until_model_schema})
 
-_execute_by_name_queries_v1_data_query_name_get_window_model_schema = json.loads(
+_execute_by_name_window_model_schema = json.loads(
     r"""{
   "type" : "string",
   "oneOf" : [ {
@@ -1461,9 +1503,7 @@ _execute_by_name_queries_v1_data_query_name_get_window_model_schema = json.loads
 """,
     object_hook=with_example_provider,
 )
-MODEL_DEFINITIONS.update({
-    "ExecuteByNameQueriesV1DataQueryNameGetWindow": _execute_by_name_queries_v1_data_query_name_get_window_model_schema
-})
+MODEL_DEFINITIONS.update({"ExecuteByNameWindow": _execute_by_name_window_model_schema})
 
 _execute_query_queries_v1_data_post_aggregation_model_schema = json.loads(
     r"""{
@@ -1481,6 +1521,10 @@ _execute_query_queries_v1_data_post_aggregation_model_schema = json.loads(
     "$ref" : "#/components/schemas/ExecuteQueryQueriesV1DataPostAggregationSum"
   }, {
     "$ref" : "#/components/schemas/ExecuteQueryQueriesV1DataPostAggregationCount"
+  }, {
+    "$ref" : "#/components/schemas/ExecuteQueryQueriesV1DataPostAggregationCount-numeric"
+  }, {
+    "$ref" : "#/components/schemas/ExecuteQueryQueriesV1DataPostAggregationCount-non-numeric"
   }, {
     "$ref" : "#/components/schemas/ExecuteQueryQueriesV1DataPostAggregationStd"
   }, {
@@ -1507,6 +1551,34 @@ _execute_query_queries_v1_data_post_aggregation_count_model_schema = json.loads(
 )
 MODEL_DEFINITIONS.update({
     "ExecuteQueryQueriesV1DataPostAggregationCount": _execute_query_queries_v1_data_post_aggregation_count_model_schema
+})
+
+_execute_query_queries_v1_data_post_aggregation_count_non_numeric_model_schema = (
+    json.loads(
+        r"""{
+  "type" : "string",
+  "description" : "Use the count of non-numeric observations in the sample interval.",
+  "enum" : [ "count-non-numeric" ]
+}
+""",
+        object_hook=with_example_provider,
+    )
+)
+MODEL_DEFINITIONS.update({
+    "ExecuteQueryQueriesV1DataPostAggregationCount-non-numeric": _execute_query_queries_v1_data_post_aggregation_count_non_numeric_model_schema
+})
+
+_execute_query_queries_v1_data_post_aggregation_count_numeric_model_schema = json.loads(
+    r"""{
+  "type" : "string",
+  "description" : "Use the count of numeric observations in the sample interval.",
+  "enum" : [ "count-numeric" ]
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({
+    "ExecuteQueryQueriesV1DataPostAggregationCount-numeric": _execute_query_queries_v1_data_post_aggregation_count_numeric_model_schema
 })
 
 _execute_query_queries_v1_data_post_aggregation_first_model_schema = json.loads(
@@ -1680,21 +1752,6 @@ MODEL_DEFINITIONS.update({
     "ExecuteQueryQueriesV1DataPostFrom": _execute_query_queries_v1_data_post_from_model_schema
 })
 
-_execute_query_queries_v1_data_post_interpolation_model_schema = json.loads(
-    r"""{
-  "anyOf" : [ {
-    "$ref" : "#/components/schemas/Default_Interpolation_anyOf"
-  }, {
-    "$ref" : "#/components/schemas/InterpolationSpec"
-  } ]
-}
-""",
-    object_hook=with_example_provider,
-)
-MODEL_DEFINITIONS.update({
-    "ExecuteQueryQueriesV1DataPostInterpolation": _execute_query_queries_v1_data_post_interpolation_model_schema
-})
-
 _execute_query_queries_v1_data_post_interpolation_akima_model_schema = json.loads(
     r"""{
   "type" : "string",
@@ -1801,6 +1858,17 @@ MODEL_DEFINITIONS.update({
     "ExecuteQueryQueriesV1DataPostInterpolationPad": _execute_query_queries_v1_data_post_interpolation_pad_model_schema
 })
 
+_execute_query_queries_v1_data_post_interpolation_parameter_model_schema = json.loads(
+    r"""{
+  "$ref" : "#/components/schemas/InterpolationMethod"
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({
+    "execute_query_queries_v1_data_post_interpolation_parameter": _execute_query_queries_v1_data_post_interpolation_parameter_model_schema
+})
+
 _execute_query_queries_v1_data_post_interpolation_pchip_model_schema = json.loads(
     r"""{
   "type" : "string",
@@ -1877,21 +1945,6 @@ _execute_query_queries_v1_data_post_interpolation_zero_model_schema = json.loads
 )
 MODEL_DEFINITIONS.update({
     "ExecuteQueryQueriesV1DataPostInterpolationZero": _execute_query_queries_v1_data_post_interpolation_zero_model_schema
-})
-
-_execute_query_queries_v1_data_post_render_model_schema = json.loads(
-    r"""{
-  "anyOf" : [ {
-    "$ref" : "#/components/schemas/Render_mode"
-  }, {
-    "$ref" : "#/components/schemas/Render"
-  } ]
-}
-""",
-    object_hook=with_example_provider,
-)
-MODEL_DEFINITIONS.update({
-    "ExecuteQueryQueriesV1DataPostRender": _execute_query_queries_v1_data_post_render_model_schema
 })
 
 _execute_query_queries_v1_data_post_render_compact_model_schema = json.loads(
@@ -1996,6 +2049,17 @@ _execute_query_queries_v1_data_post_render_metric_flat_dict_model_schema = json.
 )
 MODEL_DEFINITIONS.update({
     "ExecuteQueryQueriesV1DataPostRenderMETRIC_FLAT_DICT": _execute_query_queries_v1_data_post_render_metric_flat_dict_model_schema
+})
+
+_execute_query_queries_v1_data_post_render_parameter_model_schema = json.loads(
+    r"""{
+  "$ref" : "#/components/schemas/_RenderMode"
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({
+    "execute_query_queries_v1_data_post_render_parameter": _execute_query_queries_v1_data_post_render_parameter_model_schema
 })
 
 _execute_query_queries_v1_data_post_render_series_model_schema = json.loads(
@@ -2214,20 +2278,6 @@ _hierarchical_model_schema = json.loads(
 )
 MODEL_DEFINITIONS.update({"Hierarchical": _hierarchical_model_schema})
 
-_interpolation_model_schema = json.loads(
-    r"""{
-  "title" : "Interpolation",
-  "anyOf" : [ {
-    "$ref" : "#/components/schemas/Default_Interpolation_anyOf"
-  }, {
-    "$ref" : "#/components/schemas/InterpolationSpec"
-  } ]
-}
-""",
-    object_hook=with_example_provider,
-)
-MODEL_DEFINITIONS.update({"Interpolation": _interpolation_model_schema})
-
 _interpolation_method_model_schema = json.loads(
     r"""{
   "title" : "Interpolation method",
@@ -2266,6 +2316,129 @@ _interpolation_method_model_schema = json.loads(
     object_hook=with_example_provider,
 )
 MODEL_DEFINITIONS.update({"Interpolation_method": _interpolation_method_model_schema})
+
+_interpolation_method_1_model_schema = json.loads(
+    r"""{
+  "title" : "Interpolation method",
+  "type" : "string",
+  "oneOf" : [ {
+    "$ref" : "#/components/schemas/Query-InputPad"
+  }, {
+    "$ref" : "#/components/schemas/Query-InputFixed"
+  }, {
+    "$ref" : "#/components/schemas/Query-InputBackfill"
+  }, {
+    "$ref" : "#/components/schemas/Query-InputLinear"
+  }, {
+    "$ref" : "#/components/schemas/Query-InputNearest"
+  }, {
+    "$ref" : "#/components/schemas/Query-InputZero"
+  }, {
+    "$ref" : "#/components/schemas/Query-InputSlinear"
+  }, {
+    "$ref" : "#/components/schemas/Query-InputQuadratic"
+  }, {
+    "$ref" : "#/components/schemas/Query-InputCubic"
+  }, {
+    "$ref" : "#/components/schemas/Query-InputPolynomial"
+  }, {
+    "$ref" : "#/components/schemas/Query-InputSpline"
+  }, {
+    "$ref" : "#/components/schemas/Query-InputFrom_derivatives"
+  }, {
+    "$ref" : "#/components/schemas/Query-InputPchip"
+  }, {
+    "$ref" : "#/components/schemas/Query-InputAkima"
+  } ]
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({
+    "Interpolation_method_1": _interpolation_method_1_model_schema
+})
+
+_interpolation_method_2_model_schema = json.loads(
+    r"""{
+  "title" : "Interpolation method",
+  "type" : "string",
+  "oneOf" : [ {
+    "$ref" : "#/components/schemas/Query-OutputPad"
+  }, {
+    "$ref" : "#/components/schemas/Query-OutputFixed"
+  }, {
+    "$ref" : "#/components/schemas/Query-OutputBackfill"
+  }, {
+    "$ref" : "#/components/schemas/Query-OutputLinear"
+  }, {
+    "$ref" : "#/components/schemas/Query-OutputNearest"
+  }, {
+    "$ref" : "#/components/schemas/Query-OutputZero"
+  }, {
+    "$ref" : "#/components/schemas/Query-OutputSlinear"
+  }, {
+    "$ref" : "#/components/schemas/Query-OutputQuadratic"
+  }, {
+    "$ref" : "#/components/schemas/Query-OutputCubic"
+  }, {
+    "$ref" : "#/components/schemas/Query-OutputPolynomial"
+  }, {
+    "$ref" : "#/components/schemas/Query-OutputSpline"
+  }, {
+    "$ref" : "#/components/schemas/Query-OutputFrom_derivatives"
+  }, {
+    "$ref" : "#/components/schemas/Query-OutputPchip"
+  }, {
+    "$ref" : "#/components/schemas/Query-OutputAkima"
+  } ]
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({
+    "Interpolation_method_2": _interpolation_method_2_model_schema
+})
+
+_interpolation_method_3_model_schema = json.loads(
+    r"""{
+  "title" : "Interpolation method",
+  "type" : "string",
+  "oneOf" : [ {
+    "$ref" : "#/components/schemas/SeriesSpecPad"
+  }, {
+    "$ref" : "#/components/schemas/SeriesSpecFixed"
+  }, {
+    "$ref" : "#/components/schemas/SeriesSpecBackfill"
+  }, {
+    "$ref" : "#/components/schemas/SeriesSpecLinear"
+  }, {
+    "$ref" : "#/components/schemas/SeriesSpecNearest"
+  }, {
+    "$ref" : "#/components/schemas/SeriesSpecZero"
+  }, {
+    "$ref" : "#/components/schemas/SeriesSpecSlinear"
+  }, {
+    "$ref" : "#/components/schemas/SeriesSpecQuadratic"
+  }, {
+    "$ref" : "#/components/schemas/SeriesSpecCubic"
+  }, {
+    "$ref" : "#/components/schemas/SeriesSpecPolynomial"
+  }, {
+    "$ref" : "#/components/schemas/SeriesSpecSpline"
+  }, {
+    "$ref" : "#/components/schemas/SeriesSpecFrom_derivatives"
+  }, {
+    "$ref" : "#/components/schemas/SeriesSpecPchip"
+  }, {
+    "$ref" : "#/components/schemas/SeriesSpecAkima"
+  } ]
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({
+    "Interpolation_method_3": _interpolation_method_3_model_schema
+})
 
 _interpolation_parameter_model_schema = json.loads(
     r"""{
@@ -2308,6 +2481,84 @@ _interpolation_spec_model_schema = json.loads(
     object_hook=with_example_provider,
 )
 MODEL_DEFINITIONS.update({"InterpolationSpec": _interpolation_spec_model_schema})
+
+_interpolation_spec_1_model_schema = json.loads(
+    r"""{
+  "title" : "InterpolationSpec",
+  "required" : [ "method" ],
+  "type" : "object",
+  "properties" : {
+    "method" : {
+      "$ref" : "#/components/schemas/Interpolation_method_1"
+    },
+    "value" : {
+      "$ref" : "#/components/schemas/Interpolation_parameter"
+    },
+    "order" : {
+      "title" : "Interpolation order",
+      "type" : "integer",
+      "description" : "Optional order parameter for the interpolation method (see method description)."
+    }
+  },
+  "additionalProperties" : true,
+  "description" : "Defines whether, and how to treat missing values.\n\nThis can occur in two circumstances when aggregating (setting a sample frequency):\n* missing values: if there are missing (or invalid) values stored for\na given freq-interval,\n\"interpolation\" specifies how to compute these.\n* down-sampling: when the specified freq is smaller than the series’\nactual frequency.\n\"interpolation\" specifies how to compute intermediate values."
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({"InterpolationSpec_1": _interpolation_spec_1_model_schema})
+
+_interpolation_spec_2_model_schema = json.loads(
+    r"""{
+  "title" : "InterpolationSpec",
+  "required" : [ "method" ],
+  "type" : "object",
+  "properties" : {
+    "method" : {
+      "$ref" : "#/components/schemas/Interpolation_method_2"
+    },
+    "value" : {
+      "$ref" : "#/components/schemas/Interpolation_parameter"
+    },
+    "order" : {
+      "title" : "Interpolation order",
+      "type" : "integer",
+      "description" : "Optional order parameter for the interpolation method (see method description)."
+    }
+  },
+  "additionalProperties" : true,
+  "description" : "Defines whether, and how to treat missing values.\n\nThis can occur in two circumstances when aggregating (setting a sample frequency):\n* missing values: if there are missing (or invalid) values stored for\na given freq-interval,\n\"interpolation\" specifies how to compute these.\n* down-sampling: when the specified freq is smaller than the series’\nactual frequency.\n\"interpolation\" specifies how to compute intermediate values."
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({"InterpolationSpec_2": _interpolation_spec_2_model_schema})
+
+_interpolation_spec_3_model_schema = json.loads(
+    r"""{
+  "title" : "InterpolationSpec",
+  "required" : [ "method" ],
+  "type" : "object",
+  "properties" : {
+    "method" : {
+      "$ref" : "#/components/schemas/Interpolation_method_3"
+    },
+    "value" : {
+      "$ref" : "#/components/schemas/Interpolation_parameter"
+    },
+    "order" : {
+      "title" : "Interpolation order",
+      "type" : "integer",
+      "description" : "Optional order parameter for the interpolation method (see method description)."
+    }
+  },
+  "additionalProperties" : true,
+  "description" : "Defines whether, and how to treat missing values.\n\nThis can occur in two circumstances when aggregating (setting a sample frequency):\n* missing values: if there are missing (or invalid) values stored for\na given freq-interval,\n\"interpolation\" specifies how to compute these.\n* down-sampling: when the specified freq is smaller than the series’\nactual frequency.\n\"interpolation\" specifies how to compute intermediate values."
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({"InterpolationSpec_3": _interpolation_spec_3_model_schema})
 
 _interpolation_spec_akima_model_schema = json.loads(
     r"""{
@@ -2487,6 +2738,61 @@ _interpolation_spec_zero_model_schema = json.loads(
 )
 MODEL_DEFINITIONS.update({
     "InterpolationSpecZero": _interpolation_spec_zero_model_schema
+})
+
+_interpolation_specification__model_schema = json.loads(
+    r"""{
+  "title" : "Interpolation Specification.",
+  "anyOf" : [ {
+    "$ref" : "#/components/schemas/InterpolationSpec_3"
+  }, {
+    "$ref" : "#/components/schemas/Interpolation_Specification__anyOf"
+  } ]
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({
+    "Interpolation_Specification_": _interpolation_specification__model_schema
+})
+
+_interpolation_specification__any_of_model_schema = json.loads(
+    r"""{
+  "oneOf" : [ {
+    "$ref" : "#/components/schemas/SeriesSpecPad"
+  }, {
+    "$ref" : "#/components/schemas/SeriesSpecFixed"
+  }, {
+    "$ref" : "#/components/schemas/SeriesSpecBackfill"
+  }, {
+    "$ref" : "#/components/schemas/SeriesSpecLinear"
+  }, {
+    "$ref" : "#/components/schemas/SeriesSpecNearest"
+  }, {
+    "$ref" : "#/components/schemas/SeriesSpecZero"
+  }, {
+    "$ref" : "#/components/schemas/SeriesSpecSlinear"
+  }, {
+    "$ref" : "#/components/schemas/SeriesSpecQuadratic"
+  }, {
+    "$ref" : "#/components/schemas/SeriesSpecCubic"
+  }, {
+    "$ref" : "#/components/schemas/SeriesSpecPolynomial"
+  }, {
+    "$ref" : "#/components/schemas/SeriesSpecSpline"
+  }, {
+    "$ref" : "#/components/schemas/SeriesSpecFrom_derivatives"
+  }, {
+    "$ref" : "#/components/schemas/SeriesSpecPchip"
+  }, {
+    "$ref" : "#/components/schemas/SeriesSpecAkima"
+  } ]
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({
+    "Interpolation_Specification__anyOf": _interpolation_specification__any_of_model_schema
 })
 
 _links_value_model_schema = json.loads(
@@ -2898,6 +3204,11 @@ _query_input_model_schema = json.loads(
     },
     "render" : {
       "$ref" : "#/components/schemas/Render"
+    },
+    "lookback" : {
+      "title" : "Lookback option.",
+      "type" : "boolean",
+      "description" : "If enabled, the **last-known value** for each of the series will be taken into account in the result. \nFor **unaggregated** series, that value will be included as is (with a timestamp before the result window).\nFor **aggregated** series, that value will be used at the first timestamp, but only if\n * no aggregated value on the first timestamp could be computed\n * and the aggregation is compatible with the value, i.e. in mean, min, max, first, last, median"
     }
   },
   "additionalProperties" : true,
@@ -2940,6 +3251,32 @@ _query_input_count_model_schema = json.loads(
     object_hook=with_example_provider,
 )
 MODEL_DEFINITIONS.update({"Query-InputCount": _query_input_count_model_schema})
+
+_query_input_count_non_numeric_model_schema = json.loads(
+    r"""{
+  "type" : "string",
+  "description" : "Use the count of non-numeric observations in the sample interval.",
+  "enum" : [ "count-non-numeric" ]
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({
+    "Query-InputCount-non-numeric": _query_input_count_non_numeric_model_schema
+})
+
+_query_input_count_numeric_model_schema = json.loads(
+    r"""{
+  "type" : "string",
+  "description" : "Use the count of numeric observations in the sample interval.",
+  "enum" : [ "count-numeric" ]
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({
+    "Query-InputCount-numeric": _query_input_count_numeric_model_schema
+})
 
 _query_input_cubic_model_schema = json.loads(
     r"""{
@@ -3259,7 +3596,7 @@ _query_output_model_schema = json.loads(
       "$ref" : "#/components/schemas/Default_Aggregation_1"
     },
     "interpolation" : {
-      "$ref" : "#/components/schemas/Default_Interpolation"
+      "$ref" : "#/components/schemas/Default_Interpolation_1"
     },
     "freq" : {
       "$ref" : "#/components/schemas/Grouping_interval_1"
@@ -3291,6 +3628,11 @@ _query_output_model_schema = json.loads(
     },
     "render" : {
       "$ref" : "#/components/schemas/Render"
+    },
+    "lookback" : {
+      "title" : "Lookback option.",
+      "type" : "boolean",
+      "description" : "If enabled, the **last-known value** for each of the series will be taken into account in the result. \nFor **unaggregated** series, that value will be included as is (with a timestamp before the result window).\nFor **aggregated** series, that value will be used at the first timestamp, but only if\n * no aggregated value on the first timestamp could be computed\n * and the aggregation is compatible with the value, i.e. in mean, min, max, first, last, median"
     }
   },
   "additionalProperties" : true,
@@ -3333,6 +3675,32 @@ _query_output_count_model_schema = json.loads(
     object_hook=with_example_provider,
 )
 MODEL_DEFINITIONS.update({"Query-OutputCount": _query_output_count_model_schema})
+
+_query_output_count_non_numeric_model_schema = json.loads(
+    r"""{
+  "type" : "string",
+  "description" : "Use the count of non-numeric observations in the sample interval.",
+  "enum" : [ "count-non-numeric" ]
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({
+    "Query-OutputCount-non-numeric": _query_output_count_non_numeric_model_schema
+})
+
+_query_output_count_numeric_model_schema = json.loads(
+    r"""{
+  "type" : "string",
+  "description" : "Use the count of numeric observations in the sample interval.",
+  "enum" : [ "count-numeric" ]
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({
+    "Query-OutputCount-numeric": _query_output_count_numeric_model_schema
+})
 
 _query_output_cubic_model_schema = json.loads(
     r"""{
@@ -3675,7 +4043,7 @@ _render_model_schema = json.loads(
   "type" : "object",
   "properties" : {
     "mode" : {
-      "$ref" : "#/components/schemas/Render_mode"
+      "$ref" : "#/components/schemas/execute_query_queries_v1_data_post_render_parameter"
     },
     "roll_up" : {
       "title" : "Roll Up",
@@ -3832,12 +4200,15 @@ MODEL_DEFINITIONS.update({
 
 _render_mode_model_schema = json.loads(
     r"""{
-  "$ref" : "#/components/schemas/_RenderMode"
+  "title" : "_RenderMode",
+  "type" : "string",
+  "description" : "Render mode configuration keys.",
+  "enum" : [ "HEADER_ROW", "COMPACT", "SERIES", "HEADER_COLUMN", "FLAT_DICT", "HIER_DICT", "METRIC_FLAT_DICT", "UPLOAD", "COMPACT_WS", "CSV" ]
 }
 """,
     object_hook=with_example_provider,
 )
-MODEL_DEFINITIONS.update({"Render_mode": _render_mode_model_schema})
+MODEL_DEFINITIONS.update({"_RenderMode": _render_mode_model_schema})
 
 _render_series_model_schema = json.loads(
     r"""{
@@ -3882,7 +4253,7 @@ MODEL_DEFINITIONS.update({"Response_Data_Set": _response_data_set_model_schema})
 
 _row_data_set_model_schema = json.loads(
     r"""{
-  "required" : [ "columns", "data" ],
+  "required" : [ "column_names", "columns", "data" ],
   "type" : "object",
   "properties" : {
     "attributes" : {
@@ -3905,6 +4276,14 @@ _row_data_set_model_schema = json.loads(
         "const" : "timestamp",
         "title" : "Unix epoch milliseconds timestamp."
       } ]
+    },
+    "column_names" : {
+      "title" : "Column names",
+      "type" : "array",
+      "description" : "Short names for the columns in the data set.\nThese names are the `name` alias if given in the series specification, otherwise is composed of the `resource`, `metric` and `aggregation` attributes, concatenated with the `render.key_separator` (default `.`) as separator.",
+      "items" : {
+        "type" : "string"
+      }
     },
     "data" : {
       "title" : "Data",
@@ -3978,7 +4357,7 @@ MODEL_DEFINITIONS.update({"Row_Headers_inner": _row_headers_inner_model_schema})
 
 _series_data_set_model_schema = json.loads(
     r"""{
-  "required" : [ "columns", "data" ],
+  "required" : [ "column_names", "columns", "data" ],
   "type" : "object",
   "properties" : {
     "attributes" : {
@@ -4001,6 +4380,14 @@ _series_data_set_model_schema = json.loads(
         "const" : "timestamp",
         "title" : "Unix epoch milliseconds timestamp."
       } ]
+    },
+    "column_names" : {
+      "title" : "Column names",
+      "type" : "array",
+      "description" : "Short names for the columns in the data set.\nThese names are the `name` alias if given in the series specification, otherwise is composed of the `resource`, `metric` and `aggregation` attributes, concatenated with the `render.key_separator` (default `.`) as separator.",
+      "items" : {
+        "type" : "string"
+      }
     },
     "data" : {
       "title" : "Data",
@@ -4058,7 +4445,7 @@ _series_spec_model_schema = json.loads(
       "$ref" : "#/components/schemas/Aggregration"
     },
     "interpolation" : {
-      "$ref" : "#/components/schemas/Interpolation"
+      "$ref" : "#/components/schemas/Interpolation_Specification_"
     }
   },
   "additionalProperties" : true,
@@ -4101,6 +4488,32 @@ _series_spec_count_model_schema = json.loads(
     object_hook=with_example_provider,
 )
 MODEL_DEFINITIONS.update({"SeriesSpecCount": _series_spec_count_model_schema})
+
+_series_spec_count_non_numeric_model_schema = json.loads(
+    r"""{
+  "type" : "string",
+  "description" : "Use the count of non-numeric observations in the sample interval.",
+  "enum" : [ "count-non-numeric" ]
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({
+    "SeriesSpecCount-non-numeric": _series_spec_count_non_numeric_model_schema
+})
+
+_series_spec_count_numeric_model_schema = json.loads(
+    r"""{
+  "type" : "string",
+  "description" : "Use the count of numeric observations in the sample interval.",
+  "enum" : [ "count-numeric" ]
+}
+""",
+    object_hook=with_example_provider,
+)
+MODEL_DEFINITIONS.update({
+    "SeriesSpecCount-numeric": _series_spec_count_numeric_model_schema
+})
 
 _series_spec_cubic_model_schema = json.loads(
     r"""{

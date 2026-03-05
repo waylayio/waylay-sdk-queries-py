@@ -39,6 +39,10 @@ aggregation_1_model_schema = json.loads(
   }, {
     "$ref" : "#/components/schemas/Query-OutputCount"
   }, {
+    "$ref" : "#/components/schemas/Query-OutputCount-numeric"
+  }, {
+    "$ref" : "#/components/schemas/Query-OutputCount-non-numeric"
+  }, {
     "$ref" : "#/components/schemas/Query-OutputStd"
   }, {
     "$ref" : "#/components/schemas/Query-OutputMax"

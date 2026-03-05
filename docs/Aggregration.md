@@ -18,6 +18,8 @@ Type | Description
 [**SeriesSpecMedian**](SeriesSpecMedian.md) | -
 [**SeriesSpecSum**](SeriesSpecSum.md) | -
 [**SeriesSpecCount**](SeriesSpecCount.md) | -
+[**SeriesSpecCountNumeric**](SeriesSpecCountNumeric.md) | -
+[**SeriesSpecCountNonNumeric**](SeriesSpecCountNonNumeric.md) | -
 [**SeriesSpecStd**](SeriesSpecStd.md) | -
 [**SeriesSpecMax**](SeriesSpecMax.md) | -
 [**SeriesSpecMin**](SeriesSpecMin.md) | -

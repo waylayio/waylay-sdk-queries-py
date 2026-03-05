@@ -4,79 +4,11 @@ All URIs are relative to *https://api.waylay.io*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**create**](NamedQueriesApi.md#create) | **POST** /queries/v1/query | Create Query
 [**get**](NamedQueriesApi.md#get) | **GET** /queries/v1/query/{query_name} | Get Query
 [**list**](NamedQueriesApi.md#list) | **GET** /queries/v1/query | List Queries
+[**post**](NamedQueriesApi.md#post) | **POST** /queries/v1/query | Post Query
 [**remove**](NamedQueriesApi.md#remove) | **DELETE** /queries/v1/query/{query_name} | Remove Query
 [**update**](NamedQueriesApi.md#update) | **PUT** /queries/v1/query/{query_name} | Update Query
-
-# **create**
-> create(
-> headers
-> ) -> QueryResponse
-
-Create Query
-
-Create a new named query.
-
-### Example
-
-```python
-# Import the waylay-client from the waylay-sdk-core package
-from waylay.sdk.client import WaylayClient
-from waylay.sdk.api.api_exceptions import ApiError
-
-# Intialize a waylay client instance
-waylay_client = WaylayClient.from_profile()
-
-# Note that the typed model classes for responses/parameters/... are only available when `waylay-sdk-queries-types` is installed
-from waylay.services.queries.models.query_entity_input import QueryEntityInput
-from waylay.services.queries.models.query_response import QueryResponse
-
-try:
-    # Create Query
-    # calls `POST /queries/v1/query`
-    api_response = await waylay_client.queries.named_queries.create(
-        # json data: use a generated model or a json-serializable python data structure (dict, list)
-        json=waylay.services.queries.QueryEntityInput(),  # QueryEntityInput |
-    )
-    print(f"Response: {api_response}")
-except ApiError as e:
-    print("Exception when calling queries.named_queries.create: %s\n" % e)
-```
-
-### Endpoint
-```
-POST /queries/v1/query
-```
-### Parameters
-
-Name     | Type  | API binding   | Description   | Notes
--------- | ----- | ------------- | ------------- | -------------
-**json** | [**QueryEntityInput**](QueryEntityInput.md) | json request body |  | 
-**headers** | [HeaderTypes](Operation.md#req_headers) | request headers |  | 
-
-### Return type
-
-Selected path param | Raw response param | Return Type  | Description | Links
-------------------- | ------------------ | ------------ | ----------- | -----
-Literal[""] _(default)_  | False _(default)_ | **`QueryResponse`** |  | [QueryResponse](QueryResponse.md)
-str | False _(default)_ | **`Any`** | If any other string value for the selected path is provided, the exact type of the response will only be known at runtime. | 
-/ | True | `Response` | The raw http response object.
-
-### HTTP request headers
-
- - **Content-Type**: application/json
- - **Accept**: application/json
-
-### HTTP response details
-
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-**200** | Successful Response |  -  |
-**422** | Validation Error |  -  |
-
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **get**
 > get(
@@ -209,6 +141,74 @@ str | False _(default)_ | **`Any`** | If any other string value for the selected
 ### HTTP request headers
 
  - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+### HTTP response details
+
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**200** | Successful Response |  -  |
+**422** | Validation Error |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+
+# **post**
+> post(
+> headers
+> ) -> QueryResponse
+
+Post Query
+
+Create a new named query.
+
+### Example
+
+```python
+# Import the waylay-client from the waylay-sdk-core package
+from waylay.sdk.client import WaylayClient
+from waylay.sdk.api.api_exceptions import ApiError
+
+# Intialize a waylay client instance
+waylay_client = WaylayClient.from_profile()
+
+# Note that the typed model classes for responses/parameters/... are only available when `waylay-sdk-queries-types` is installed
+from waylay.services.queries.models.query_entity_input import QueryEntityInput
+from waylay.services.queries.models.query_response import QueryResponse
+
+try:
+    # Post Query
+    # calls `POST /queries/v1/query`
+    api_response = await waylay_client.queries.named_queries.post(
+        # json data: use a generated model or a json-serializable python data structure (dict, list)
+        json=waylay.services.queries.QueryEntityInput(),  # QueryEntityInput |
+    )
+    print(f"Response: {api_response}")
+except ApiError as e:
+    print("Exception when calling queries.named_queries.post: %s\n" % e)
+```
+
+### Endpoint
+```
+POST /queries/v1/query
+```
+### Parameters
+
+Name     | Type  | API binding   | Description   | Notes
+-------- | ----- | ------------- | ------------- | -------------
+**json** | [**QueryEntityInput**](QueryEntityInput.md) | json request body |  | 
+**headers** | [HeaderTypes](Operation.md#req_headers) | request headers |  | 
+
+### Return type
+
+Selected path param | Raw response param | Return Type  | Description | Links
+------------------- | ------------------ | ------------ | ----------- | -----
+Literal[""] _(default)_  | False _(default)_ | **`QueryResponse`** |  | [QueryResponse](QueryResponse.md)
+str | False _(default)_ | **`Any`** | If any other string value for the selected path is provided, the exact type of the response will only be known at runtime. | 
+/ | True | `Response` | The raw http response object.
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
  - **Accept**: application/json
 
 ### HTTP response details

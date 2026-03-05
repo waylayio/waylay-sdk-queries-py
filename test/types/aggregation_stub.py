@@ -39,6 +39,10 @@ aggregation_model_schema = json.loads(
   }, {
     "$ref" : "#/components/schemas/Query-InputCount"
   }, {
+    "$ref" : "#/components/schemas/Query-InputCount-numeric"
+  }, {
+    "$ref" : "#/components/schemas/Query-InputCount-non-numeric"
+  }, {
     "$ref" : "#/components/schemas/Query-InputStd"
   }, {
     "$ref" : "#/components/schemas/Query-InputMax"

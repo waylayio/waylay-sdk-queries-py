@@ -13,6 +13,12 @@ from typing import TypeAlias
 from ..models.execute_query_queries_v1_data_post_aggregation_count import (
     ExecuteQueryQueriesV1DataPostAggregationCount,
 )
+from ..models.execute_query_queries_v1_data_post_aggregation_count_non_numeric import (
+    ExecuteQueryQueriesV1DataPostAggregationCountNonNumeric,
+)
+from ..models.execute_query_queries_v1_data_post_aggregation_count_numeric import (
+    ExecuteQueryQueriesV1DataPostAggregationCountNumeric,
+)
 from ..models.execute_query_queries_v1_data_post_aggregation_first import (
     ExecuteQueryQueriesV1DataPostAggregationFirst,
 )
@@ -38,5 +44,5 @@ from ..models.execute_query_queries_v1_data_post_aggregation_sum import (
     ExecuteQueryQueriesV1DataPostAggregationSum,
 )
 
-ExecuteQueryQueriesV1DataPostAggregation: TypeAlias = ExecuteQueryQueriesV1DataPostAggregationFirst | ExecuteQueryQueriesV1DataPostAggregationLast | ExecuteQueryQueriesV1DataPostAggregationMean | ExecuteQueryQueriesV1DataPostAggregationMedian | ExecuteQueryQueriesV1DataPostAggregationSum | ExecuteQueryQueriesV1DataPostAggregationCount | ExecuteQueryQueriesV1DataPostAggregationStd | ExecuteQueryQueriesV1DataPostAggregationMax | ExecuteQueryQueriesV1DataPostAggregationMin
+ExecuteQueryQueriesV1DataPostAggregation: TypeAlias = ExecuteQueryQueriesV1DataPostAggregationFirst | ExecuteQueryQueriesV1DataPostAggregationLast | ExecuteQueryQueriesV1DataPostAggregationMean | ExecuteQueryQueriesV1DataPostAggregationMedian | ExecuteQueryQueriesV1DataPostAggregationSum | ExecuteQueryQueriesV1DataPostAggregationCount | ExecuteQueryQueriesV1DataPostAggregationCountNumeric | ExecuteQueryQueriesV1DataPostAggregationCountNonNumeric | ExecuteQueryQueriesV1DataPostAggregationStd | ExecuteQueryQueriesV1DataPostAggregationMax | ExecuteQueryQueriesV1DataPostAggregationMin
 """ExecuteQueryQueriesV1DataPostAggregation."""

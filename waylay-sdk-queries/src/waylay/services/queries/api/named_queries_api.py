@@ -40,9 +40,9 @@ if TYPE_CHECKING:
         QueryResponse,
     )
     from waylay.services.queries.queries.named_queries_api import (
-        CreateQuery,
         GetQuery,
         ListQuery,
+        PostQuery,
         RemoveQuery,
         UpdateQuery,
     )
@@ -58,9 +58,9 @@ try:
         QueryResponse,
     )
     from waylay.services.queries.queries.named_queries_api import (
-        CreateQuery,
         GetQuery,
         ListQuery,
+        PostQuery,
         RemoveQuery,
         UpdateQuery,
     )
@@ -70,13 +70,6 @@ except ImportError:
     MODELS_AVAILABLE = False
 
     if not TYPE_CHECKING:
-        QueryEntityInput = Model
-
-        CreateQuery = dict
-        QueryResponse = Model
-
-        HTTPValidationError = Model
-
         GetQuery = dict
         QueryResponse = Model
 
@@ -84,6 +77,13 @@ except ImportError:
 
         ListQuery = dict
         QueriesListResponse = Model
+
+        HTTPValidationError = Model
+
+        QueryEntityInput = Model
+
+        PostQuery = dict
+        QueryResponse = Model
 
         HTTPValidationError = Model
 
@@ -111,159 +111,6 @@ class NamedQueriesApi(WithApiClient):
 
     Do not edit the class manually.
     """
-
-    @overload
-    async def create(
-        self,
-        *,
-        json: QueryEntityInput,
-        query: CreateQuery | QueryParamTypes | None = None,
-        raw_response: Literal[False] = False,
-        select_path: Literal[""] = "",
-        response_type: Literal[None] = None,
-        validate_request: StrictBool = True,
-        headers: HeaderTypes | None = None,
-        **kwargs,
-    ) -> QueryResponse: ...
-
-    @overload
-    async def create(
-        self,
-        *,
-        json: QueryEntityInput,
-        query: CreateQuery | QueryParamTypes | None = None,
-        raw_response: Literal[False] = False,
-        select_path: Literal[""] = "",
-        response_type: type[T],
-        validate_request: StrictBool = True,
-        headers: HeaderTypes | None = None,
-        **kwargs,
-    ) -> T: ...
-
-    @overload
-    async def create(
-        self,
-        *,
-        json: QueryEntityInput,
-        query: CreateQuery | QueryParamTypes | None = None,
-        raw_response: Literal[True],
-        select_path: Literal["_not_used_"] = "_not_used_",
-        response_type: Literal[None] = None,  # not used
-        validate_request: StrictBool = True,
-        headers: HeaderTypes | None = None,
-        **kwargs,
-    ) -> Response: ...
-
-    @overload
-    async def create(
-        self,
-        *,
-        json: QueryEntityInput,
-        query: CreateQuery | QueryParamTypes | None = None,
-        raw_response: Literal[False] = False,
-        select_path: str,
-        response_type: Literal[None] = None,
-        validate_request: StrictBool = True,
-        headers: HeaderTypes | None = None,
-        **kwargs,
-    ) -> Model: ...
-
-    @overload
-    async def create(
-        self,
-        *,
-        json: QueryEntityInput,
-        query: CreateQuery | QueryParamTypes | None = None,
-        raw_response: Literal[False] = False,
-        select_path: str,
-        response_type: type[T],
-        validate_request: StrictBool = True,
-        headers: HeaderTypes | None = None,
-        **kwargs,
-    ) -> T: ...
-
-    async def create(
-        self,
-        *,
-        json: QueryEntityInput,
-        query: CreateQuery | QueryParamTypes | None = None,
-        raw_response: StrictBool = False,
-        select_path: str = "",
-        response_type: type[T] | None = None,
-        validate_request: StrictBool = True,
-        headers: HeaderTypes | None = None,
-        **kwargs,
-    ) -> QueryResponse | T | Response | Model:
-        """Create Query.
-
-        Create a new named query.
-        :param json: The json request body.
-        :type json: QueryEntityInput, optional
-        :param query: URL Query parameters.
-        :type query: CreateQuery | QueryParamTypes, optional
-        :param raw_response: If true, return the http Response object instead of returning an api model object, or throwing an ApiError.
-        :param select_path: Denotes the json path applied to the response object before returning it.
-                Set it to the empty string `""` to receive the full response object.
-        :param response_type: If specified, the response is parsed into an instance of the specified type.
-        :param validate_request: If set to false, the request body and query parameters are NOT validated against the models in the service types package, even when available.
-        :param headers: Header parameters for this request
-        :type headers: dict, optional
-        :param `**kwargs`: Additional parameters passed on to the http client.
-            See below.
-        :Keyword Arguments:
-            * timeout: a single numeric timeout in seconds,
-                or a tuple of _connect_, _read_, _write_ and _pool_ timeouts.
-            * stream: if true, the response will be in streaming mode
-            * cookies
-            * extensions
-            * auth
-            * follow_redirects: bool
-
-        :return: Returns the result object if the http request succeeded with status code '2XX'.
-        :raises APIError: If the http request has a status code different from `2XX`. This
-            object wraps both the http Response and any parsed data.
-        """
-
-        # path parameters
-        path_params: dict[str, str] = {}
-
-        # named body parameters
-        body_args: dict[str, Any] = {}
-        if json is not None and validate_request:
-            _BodyType = QueryEntityInput  # fmt: skip  # noqa: UP045
-            body_adapter: TypeAdapter = TypeAdapter(_BodyType)
-            json = body_adapter.validate_python(json)  # type: ignore # https://github.com/pydantic/pydantic/discussions/7094
-        body_args["json"] = json
-
-        # query parameters
-        if query is not None and MODELS_AVAILABLE and validate_request:
-            query = TypeAdapter(CreateQuery).validate_python(query)
-
-        response_types_map: dict[str, Any] = (
-            {"2XX": response_type}
-            if response_type is not None
-            else {
-                "200": QueryResponse if not select_path else Model,
-            }
-        )
-        non_200_response_types_map: dict[str, Any] = {
-            "422": HTTPValidationError,
-        }
-        response_types_map.update(non_200_response_types_map)
-
-        # perform request
-        return await self.api_client.request(
-            method="POST",
-            resource_path="/queries/v1/query",
-            path_params=path_params,
-            params=query,
-            **body_args,
-            headers=headers,
-            **kwargs,
-            response_type=response_types_map,
-            select_path=select_path,
-            raw_response=raw_response,
-        )
 
     @overload
     async def get(
@@ -562,6 +409,159 @@ class NamedQueriesApi(WithApiClient):
         # perform request
         return await self.api_client.request(
             method="GET",
+            resource_path="/queries/v1/query",
+            path_params=path_params,
+            params=query,
+            **body_args,
+            headers=headers,
+            **kwargs,
+            response_type=response_types_map,
+            select_path=select_path,
+            raw_response=raw_response,
+        )
+
+    @overload
+    async def post(
+        self,
+        *,
+        json: QueryEntityInput,
+        query: PostQuery | QueryParamTypes | None = None,
+        raw_response: Literal[False] = False,
+        select_path: Literal[""] = "",
+        response_type: Literal[None] = None,
+        validate_request: StrictBool = True,
+        headers: HeaderTypes | None = None,
+        **kwargs,
+    ) -> QueryResponse: ...
+
+    @overload
+    async def post(
+        self,
+        *,
+        json: QueryEntityInput,
+        query: PostQuery | QueryParamTypes | None = None,
+        raw_response: Literal[False] = False,
+        select_path: Literal[""] = "",
+        response_type: type[T],
+        validate_request: StrictBool = True,
+        headers: HeaderTypes | None = None,
+        **kwargs,
+    ) -> T: ...
+
+    @overload
+    async def post(
+        self,
+        *,
+        json: QueryEntityInput,
+        query: PostQuery | QueryParamTypes | None = None,
+        raw_response: Literal[True],
+        select_path: Literal["_not_used_"] = "_not_used_",
+        response_type: Literal[None] = None,  # not used
+        validate_request: StrictBool = True,
+        headers: HeaderTypes | None = None,
+        **kwargs,
+    ) -> Response: ...
+
+    @overload
+    async def post(
+        self,
+        *,
+        json: QueryEntityInput,
+        query: PostQuery | QueryParamTypes | None = None,
+        raw_response: Literal[False] = False,
+        select_path: str,
+        response_type: Literal[None] = None,
+        validate_request: StrictBool = True,
+        headers: HeaderTypes | None = None,
+        **kwargs,
+    ) -> Model: ...
+
+    @overload
+    async def post(
+        self,
+        *,
+        json: QueryEntityInput,
+        query: PostQuery | QueryParamTypes | None = None,
+        raw_response: Literal[False] = False,
+        select_path: str,
+        response_type: type[T],
+        validate_request: StrictBool = True,
+        headers: HeaderTypes | None = None,
+        **kwargs,
+    ) -> T: ...
+
+    async def post(
+        self,
+        *,
+        json: QueryEntityInput,
+        query: PostQuery | QueryParamTypes | None = None,
+        raw_response: StrictBool = False,
+        select_path: str = "",
+        response_type: type[T] | None = None,
+        validate_request: StrictBool = True,
+        headers: HeaderTypes | None = None,
+        **kwargs,
+    ) -> QueryResponse | T | Response | Model:
+        """Post Query.
+
+        Create a new named query.
+        :param json: The json request body.
+        :type json: QueryEntityInput, optional
+        :param query: URL Query parameters.
+        :type query: PostQuery | QueryParamTypes, optional
+        :param raw_response: If true, return the http Response object instead of returning an api model object, or throwing an ApiError.
+        :param select_path: Denotes the json path applied to the response object before returning it.
+                Set it to the empty string `""` to receive the full response object.
+        :param response_type: If specified, the response is parsed into an instance of the specified type.
+        :param validate_request: If set to false, the request body and query parameters are NOT validated against the models in the service types package, even when available.
+        :param headers: Header parameters for this request
+        :type headers: dict, optional
+        :param `**kwargs`: Additional parameters passed on to the http client.
+            See below.
+        :Keyword Arguments:
+            * timeout: a single numeric timeout in seconds,
+                or a tuple of _connect_, _read_, _write_ and _pool_ timeouts.
+            * stream: if true, the response will be in streaming mode
+            * cookies
+            * extensions
+            * auth
+            * follow_redirects: bool
+
+        :return: Returns the result object if the http request succeeded with status code '2XX'.
+        :raises APIError: If the http request has a status code different from `2XX`. This
+            object wraps both the http Response and any parsed data.
+        """
+
+        # path parameters
+        path_params: dict[str, str] = {}
+
+        # named body parameters
+        body_args: dict[str, Any] = {}
+        if json is not None and validate_request:
+            _BodyType = QueryEntityInput  # fmt: skip  # noqa: UP045
+            body_adapter: TypeAdapter = TypeAdapter(_BodyType)
+            json = body_adapter.validate_python(json)  # type: ignore # https://github.com/pydantic/pydantic/discussions/7094
+        body_args["json"] = json
+
+        # query parameters
+        if query is not None and MODELS_AVAILABLE and validate_request:
+            query = TypeAdapter(PostQuery).validate_python(query)
+
+        response_types_map: dict[str, Any] = (
+            {"2XX": response_type}
+            if response_type is not None
+            else {
+                "200": QueryResponse if not select_path else Model,
+            }
+        )
+        non_200_response_types_map: dict[str, Any] = {
+            "422": HTTPValidationError,
+        }
+        response_types_map.update(non_200_response_types_map)
+
+        # perform request
+        return await self.api_client.request(
+            method="POST",
             resource_path="/queries/v1/query",
             path_params=path_params,
             params=query,
