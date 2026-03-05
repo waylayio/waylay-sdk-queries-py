@@ -44,7 +44,7 @@ from waylay.services.queries.models.query_result import QueryResult
 try:
     # Execute Query
     # calls `POST /queries/v1/data`
-    api_response = await waylay_client.queries.execute_queries.execute(
+    api_response = await waylay_client.queries.execute.execute(
         # query parameters:
         query = {
             'resource': '13efb488-75ac-4dac-828a-d49c5c2ebbfc',
@@ -60,7 +60,7 @@ try:
     )
     print(f"Response: {api_response}")
 except ApiError as e:
-    print("Exception when calling queries.execute_queries.execute: %s\n" % e)
+    print("Exception when calling queries.execute.execute: %s\n" % e)
 ```
 
 

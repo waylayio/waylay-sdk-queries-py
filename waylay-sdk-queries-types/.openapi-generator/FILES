@@ -284,7 +284,7 @@ src/waylay/services/queries/models/time_window_until.py
 src/waylay/services/queries/models/validation_error.py
 src/waylay/services/queries/models/window.py
 src/waylay/services/queries/queries/__init__.py
-src/waylay/services/queries/queries/execute_queries_api.py
-src/waylay/services/queries/queries/named_queries_api.py
+src/waylay/services/queries/queries/execute_api.py
+src/waylay/services/queries/queries/manage_api.py
 src/waylay/services/queries/queries/py.typed
 src/waylay/services/queries/queries/status_api.py

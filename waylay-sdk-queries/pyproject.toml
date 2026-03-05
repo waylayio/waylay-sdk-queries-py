@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "waylay-sdk-queries"
-version = "0.6.8.20260306"
+version = "0.6.8.20260307"
 description = "Waylay Query: timeseries queries (v1 protocol)"
 authors = [
     { name = "Waylay", email = "info@waylay.io"}

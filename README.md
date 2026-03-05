@@ -50,7 +50,7 @@ from waylay.services.queries.models.query_result import QueryResult
 try:
     # Execute Query
     # calls `POST /queries/v1/data`
-    api_response = await waylay_client.queries.execute_queries.execute(
+    api_response = await waylay_client.queries.execute.execute(
         # query parameters:
         query={
             "resource": "13efb488-75ac-4dac-828a-d49c5c2ebbfc",
@@ -66,7 +66,7 @@ try:
     )
     print(f"Response: {api_response}")
 except ApiError as e:
-    print("Exception when calling queries.execute_queries.execute: %s\n" % e)
+    print("Exception when calling queries.execute.execute: %s\n" % e)
 ```
 
 
@@ -78,14 +78,14 @@ All URIs are relative to *https://api.waylay.io*
 
 SDK Path | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
-**waylay_client.queries.execute_queries** | [**execute_by_name**](docs/ExecuteQueriesApi.md#execute_by_name) | **GET** /queries/v1/data/{query_name} | Execute Named Query
-**waylay_client.queries.execute_queries** | [**execute**](docs/ExecuteQueriesApi.md#execute) | **POST** /queries/v1/data | Execute Query
+**waylay_client.queries.execute** | [**execute_by_name**](docs/ExecuteApi.md#execute_by_name) | **GET** /queries/v1/data/{query_name} | Execute Named Query
+**waylay_client.queries.execute** | [**execute**](docs/ExecuteApi.md#execute) | **POST** /queries/v1/data | Execute Query
  | | |
-**waylay_client.queries.named_queries** | [**get**](docs/NamedQueriesApi.md#get) | **GET** /queries/v1/query/{query_name} | Get Query
-**waylay_client.queries.named_queries** | [**list**](docs/NamedQueriesApi.md#list) | **GET** /queries/v1/query | List Queries
-**waylay_client.queries.named_queries** | [**post**](docs/NamedQueriesApi.md#post) | **POST** /queries/v1/query | Post Query
-**waylay_client.queries.named_queries** | [**remove**](docs/NamedQueriesApi.md#remove) | **DELETE** /queries/v1/query/{query_name} | Remove Query
-**waylay_client.queries.named_queries** | [**update**](docs/NamedQueriesApi.md#update) | **PUT** /queries/v1/query/{query_name} | Update Query
+**waylay_client.queries.manage** | [**get**](docs/ManageApi.md#get) | **GET** /queries/v1/query/{query_name} | Get Query
+**waylay_client.queries.manage** | [**list**](docs/ManageApi.md#list) | **GET** /queries/v1/query | List Queries
+**waylay_client.queries.manage** | [**post**](docs/ManageApi.md#post) | **POST** /queries/v1/query | Post Query
+**waylay_client.queries.manage** | [**remove**](docs/ManageApi.md#remove) | **DELETE** /queries/v1/query/{query_name} | Remove Query
+**waylay_client.queries.manage** | [**update**](docs/ManageApi.md#update) | **PUT** /queries/v1/query/{query_name} | Update Query
  | | |
 **waylay_client.queries.status** | [**get**](docs/StatusApi.md#get) | **GET** /queries/v1 | Get Version And Health
 

@@ -1,14 +1,14 @@
-# waylay.services.queries.NamedQueriesApi
+# waylay.services.queries.ManageApi
 
 All URIs are relative to *https://api.waylay.io*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**get**](NamedQueriesApi.md#get) | **GET** /queries/v1/query/{query_name} | Get Query
-[**list**](NamedQueriesApi.md#list) | **GET** /queries/v1/query | List Queries
-[**post**](NamedQueriesApi.md#post) | **POST** /queries/v1/query | Post Query
-[**remove**](NamedQueriesApi.md#remove) | **DELETE** /queries/v1/query/{query_name} | Remove Query
-[**update**](NamedQueriesApi.md#update) | **PUT** /queries/v1/query/{query_name} | Update Query
+[**get**](ManageApi.md#get) | **GET** /queries/v1/query/{query_name} | Get Query
+[**list**](ManageApi.md#list) | **GET** /queries/v1/query | List Queries
+[**post**](ManageApi.md#post) | **POST** /queries/v1/query | Post Query
+[**remove**](ManageApi.md#remove) | **DELETE** /queries/v1/query/{query_name} | Remove Query
+[**update**](ManageApi.md#update) | **PUT** /queries/v1/query/{query_name} | Update Query
 
 # **get**
 > get(
@@ -36,12 +36,12 @@ from waylay.services.queries.models.query_response import QueryResponse
 try:
     # Get Query
     # calls `GET /queries/v1/query/{query_name}`
-    api_response = await waylay_client.queries.named_queries.get(
+    api_response = await waylay_client.queries.manage.get(
         "query_name_example",  # query_name | path param "query_name"
     )
     print(f"Response: {api_response}")
 except ApiError as e:
-    print("Exception when calling queries.named_queries.get: %s\n" % e)
+    print("Exception when calling queries.manage.get: %s\n" % e)
 ```
 
 ### Endpoint
@@ -103,7 +103,7 @@ from waylay.services.queries.models.queries_list_response import QueriesListResp
 try:
     # List Queries
     # calls `GET /queries/v1/query`
-    api_response = await waylay_client.queries.named_queries.list(
+    api_response = await waylay_client.queries.manage.list(
         # query parameters:
         query={
             "q": "",
@@ -113,7 +113,7 @@ try:
     )
     print(f"Response: {api_response}")
 except ApiError as e:
-    print("Exception when calling queries.named_queries.list: %s\n" % e)
+    print("Exception when calling queries.manage.list: %s\n" % e)
 ```
 
 ### Endpoint
@@ -178,13 +178,13 @@ from waylay.services.queries.models.query_response import QueryResponse
 try:
     # Post Query
     # calls `POST /queries/v1/query`
-    api_response = await waylay_client.queries.named_queries.post(
+    api_response = await waylay_client.queries.manage.post(
         # json data: use a generated model or a json-serializable python data structure (dict, list)
         json=waylay.services.queries.QueryEntityInput(),  # QueryEntityInput |
     )
     print(f"Response: {api_response}")
 except ApiError as e:
-    print("Exception when calling queries.named_queries.post: %s\n" % e)
+    print("Exception when calling queries.manage.post: %s\n" % e)
 ```
 
 ### Endpoint
@@ -246,12 +246,12 @@ from waylay.services.queries.models.delete_response import DeleteResponse
 try:
     # Remove Query
     # calls `DELETE /queries/v1/query/{query_name}`
-    api_response = await waylay_client.queries.named_queries.remove(
+    api_response = await waylay_client.queries.manage.remove(
         "query_name_example",  # query_name | path param "query_name"
     )
     print(f"Response: {api_response}")
 except ApiError as e:
-    print("Exception when calling queries.named_queries.remove: %s\n" % e)
+    print("Exception when calling queries.manage.remove: %s\n" % e)
 ```
 
 ### Endpoint
@@ -314,14 +314,14 @@ from waylay.services.queries.models.query_response import QueryResponse
 try:
     # Update Query
     # calls `PUT /queries/v1/query/{query_name}`
-    api_response = await waylay_client.queries.named_queries.update(
+    api_response = await waylay_client.queries.manage.update(
         "query_name_example",  # query_name | path param "query_name"
         # json data: use a generated model or a json-serializable python data structure (dict, list)
         json=waylay.services.queries.QueryDefinition(),  # QueryDefinition |
     )
     print(f"Response: {api_response}")
 except ApiError as e:
-    print("Exception when calling queries.named_queries.update: %s\n" % e)
+    print("Exception when calling queries.manage.update: %s\n" % e)
 ```
 
 ### Endpoint
