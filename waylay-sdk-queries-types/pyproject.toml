@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "waylay-sdk-queries-types"
-version = "0.6.5rc20260304"
+version = "0.6.5.20260305"
 description = "Waylay Query: timeseries queries (v1 protocol) Types "
 authors = [
     { name = "Waylay", email = "info@waylay.io"}
@@ -13,7 +13,7 @@ keywords = ["Waylay Query: timeseries queries (v1 protocol)" , "Types"]
 requires-python = ">= 3.10"
 dependencies = [
     "waylay-sdk-core ~= 1.0",
-    "waylay-sdk-queries == 0.6.5rc20260304",
+    "waylay-sdk-queries == 0.6.5.20260305",
 ]
 readme = "README.md"
 license={file = "LICENSE.txt"}
