@@ -45,6 +45,7 @@ docs/DefaultInterpolation1AnyOf.md
 docs/DefaultInterpolationAnyOf.md
 docs/DeleteResponse.md
 docs/EmbeddingsValue.md
+docs/ExecuteApi.md
 docs/ExecuteByNameAggregation.md
 docs/ExecuteByNameAggregationCount.md
 docs/ExecuteByNameAggregationCountNonNumeric.md
@@ -86,7 +87,6 @@ docs/ExecuteByNameRenderSERIES.md
 docs/ExecuteByNameRenderUPLOAD.md
 docs/ExecuteByNameUntil.md
 docs/ExecuteByNameWindow.md
-docs/ExecuteQueriesApi.md
 docs/ExecuteQueryQueriesV1DataPostAggregation.md
 docs/ExecuteQueryQueriesV1DataPostAggregationCount.md
 docs/ExecuteQueryQueriesV1DataPostAggregationCountNonNumeric.md
@@ -165,11 +165,11 @@ docs/InterpolationSpecification.md
 docs/InterpolationSpecificationAnyOf.md
 docs/LinksValue.md
 docs/LocationInner.md
+docs/ManageApi.md
 docs/Message.md
 docs/MessageArguments.md
 docs/MessageLevel.md
 docs/MessageProperties.md
-docs/NamedQueriesApi.md
 docs/ObjectData.md
 docs/ObjectDataSet.md
 docs/Operation.md
@@ -290,8 +290,8 @@ docs/Window.md
 pyproject.toml
 test/__init__.py
 test/api/__init__.py
-test/api/execute_queries_api_test.py
-test/api/named_queries_api_test.py
+test/api/execute_api_test.py
+test/api/manage_api_test.py
 test/api/status_api_test.py
 test/conftest.py
 test/openapi.py

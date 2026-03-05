@@ -35,7 +35,7 @@ paths:
   /queries/v1/data:
     post:
       tags:
-        - Execute Queries
+        - Execute
       summary: Execute Query
       description: >-
         Execute a timeseries query.
@@ -1725,7 +1725,7 @@ paths:
   /queries/v1/data/{query_name}:
     get:
       tags:
-        - Execute Queries
+        - Execute
       summary: Execute Named Query
       description: |-
         Execute a named timeseries query.
@@ -3373,7 +3373,7 @@ paths:
   /queries/v1/query:
     get:
       tags:
-        - Named Queries
+        - Manage
       summary: List Queries
       description: List named queries.
       operationId: list_queries_queries_v1_query_get
@@ -3468,7 +3468,7 @@ paths:
       x-consumes-other: false
     post:
       tags:
-        - Named Queries
+        - Manage
       summary: Post Query
       description: Create a new named query.
       operationId: post_query_queries_v1_query_post
@@ -3501,7 +3501,7 @@ paths:
   /queries/v1/query/{query_name}:
     get:
       tags:
-        - Named Queries
+        - Manage
       summary: Get Query
       description: Get the definition of a named query.
       operationId: get_query_queries_v1_query__query_name__get
@@ -3537,7 +3537,7 @@ paths:
       x-consumes-other: false
     put:
       tags:
-        - Named Queries
+        - Manage
       summary: Update Query
       description: Create or update a named query definition.
       operationId: update_query_queries_v1_query__query_name__put
@@ -3582,7 +3582,7 @@ paths:
       x-consumes-other: false
     delete:
       tags:
-        - Named Queries
+        - Manage
       summary: Remove Query
       description: Remove definition of a named query.
       operationId: remove_query_queries_v1_query__query_name__delete
@@ -7221,9 +7221,9 @@ components:
         Waylay JWT Bearer authentication.
       scheme: basic
 tags:
-  - name: Execute Queries
+  - name: Execute
     description: Execute a named or ad-hoc query.
-  - name: Named Queries
+  - name: Manage
     description: List, read, create, update and remove queries that are stored by name.
   - name: Status
     description: Inspect the technical status of the waylay-query service.

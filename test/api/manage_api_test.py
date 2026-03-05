@@ -15,7 +15,7 @@ from pytest_httpx import HTTPXMock
 from typeguard import check_type
 from waylay.sdk import ApiClient, WaylayClient
 from waylay.sdk.api._models import Model
-from waylay.services.queries.api import NamedQueriesApi
+from waylay.services.queries.api import ManageApi
 from waylay.services.queries.service import QueriesService
 
 from ..types.delete_response_stub import DeleteResponseStub
@@ -34,7 +34,7 @@ if MODELS_AVAILABLE:
         QueriesListResponse,
         QueryResponse,
     )
-    from waylay.services.queries.queries.named_queries_api import ListQuery
+    from waylay.services.queries.queries.manage_api import ListQuery
 
 
 # some mappings that are needed for some <example> interpolations
@@ -42,13 +42,13 @@ null, true, false = None, True, False
 
 
 @pytest.fixture
-def named_queries_api(waylay_api_client: ApiClient) -> NamedQueriesApi:
-    return NamedQueriesApi(waylay_api_client)
+def manage_api(waylay_api_client: ApiClient) -> ManageApi:
+    return ManageApi(waylay_api_client)
 
 
 def test_registered(waylay_client: WaylayClient):
-    """Test that NamedQueriesApi api is registered in the sdk client."""
-    assert isinstance(waylay_client.queries.named_queries, NamedQueriesApi)
+    """Test that ManageApi api is registered in the sdk client."""
+    assert isinstance(waylay_client.queries.manage, ManageApi)
 
 
 def _get_set_mock_response(httpx_mock: HTTPXMock, gateway_url: str, query_name: str):
@@ -73,7 +73,7 @@ async def test_get(service: QueriesService, gateway_url: str, httpx_mock: HTTPXM
 
     kwargs = {}
     _get_set_mock_response(httpx_mock, gateway_url, quote(str(query_name)))
-    resp = await service.named_queries.get(query_name, **kwargs)
+    resp = await service.manage.get(query_name, **kwargs)
     check_type(resp, QueryResponse)
 
 
@@ -90,7 +90,7 @@ async def test_get_without_types(
 
     kwargs = {}
     _get_set_mock_response(httpx_mock, gateway_url, quote(str(query_name)))
-    resp = await service.named_queries.get(query_name, **kwargs)
+    resp = await service.manage.get(query_name, **kwargs)
     check_type(resp, Model)
 
 
@@ -121,7 +121,7 @@ async def test_list(service: QueriesService, gateway_url: str, httpx_mock: HTTPX
         ),
     }
     _list_set_mock_response(httpx_mock, gateway_url)
-    resp = await service.named_queries.list(**kwargs)
+    resp = await service.manage.list(**kwargs)
     check_type(resp, QueriesListResponse)
 
 
@@ -142,7 +142,7 @@ async def test_list_without_types(
         },
     }
     _list_set_mock_response(httpx_mock, gateway_url)
-    resp = await service.named_queries.list(**kwargs)
+    resp = await service.manage.list(**kwargs)
     check_type(resp, Model)
 
 
@@ -168,7 +168,7 @@ async def test_post(service: QueriesService, gateway_url: str, httpx_mock: HTTPX
         "json": QueryEntityInputStub.create_instance(),
     }
     _post_set_mock_response(httpx_mock, gateway_url)
-    resp = await service.named_queries.post(**kwargs)
+    resp = await service.manage.post(**kwargs)
     check_type(resp, QueryResponse)
 
 
@@ -185,7 +185,7 @@ async def test_post_without_types(
         "json": QueryEntityInputStub.create_json(),
     }
     _post_set_mock_response(httpx_mock, gateway_url)
-    resp = await service.named_queries.post(**kwargs)
+    resp = await service.manage.post(**kwargs)
     check_type(resp, Model)
 
 
@@ -211,7 +211,7 @@ async def test_remove(service: QueriesService, gateway_url: str, httpx_mock: HTT
 
     kwargs = {}
     _remove_set_mock_response(httpx_mock, gateway_url, quote(str(query_name)))
-    resp = await service.named_queries.remove(query_name, **kwargs)
+    resp = await service.manage.remove(query_name, **kwargs)
     check_type(resp, DeleteResponse)
 
 
@@ -228,7 +228,7 @@ async def test_remove_without_types(
 
     kwargs = {}
     _remove_set_mock_response(httpx_mock, gateway_url, quote(str(query_name)))
-    resp = await service.named_queries.remove(query_name, **kwargs)
+    resp = await service.manage.remove(query_name, **kwargs)
     check_type(resp, Model)
 
 
@@ -256,7 +256,7 @@ async def test_update(service: QueriesService, gateway_url: str, httpx_mock: HTT
         "json": QueryDefinitionStub.create_instance(),
     }
     _update_set_mock_response(httpx_mock, gateway_url, quote(str(query_name)))
-    resp = await service.named_queries.update(query_name, **kwargs)
+    resp = await service.manage.update(query_name, **kwargs)
     check_type(resp, QueryResponse)
 
 
@@ -275,5 +275,5 @@ async def test_update_without_types(
         "json": QueryDefinitionStub.create_json(),
     }
     _update_set_mock_response(httpx_mock, gateway_url, quote(str(query_name)))
-    resp = await service.named_queries.update(query_name, **kwargs)
+    resp = await service.manage.update(query_name, **kwargs)
     check_type(resp, Model)

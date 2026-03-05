@@ -15,7 +15,7 @@ from pytest_httpx import HTTPXMock
 from typeguard import check_type
 from waylay.sdk import ApiClient, WaylayClient
 from waylay.sdk.api._models import Model
-from waylay.services.queries.api import ExecuteQueriesApi
+from waylay.services.queries.api import ExecuteApi
 from waylay.services.queries.service import QueriesService
 
 from ..types.execute_by_name_aggregation_stub import ExecuteByNameAggregationStub
@@ -47,7 +47,7 @@ MODELS_AVAILABLE = (
 
 if MODELS_AVAILABLE:
     from waylay.services.queries.models import QueryResult
-    from waylay.services.queries.queries.execute_queries_api import (
+    from waylay.services.queries.queries.execute_api import (
         ExecuteByNameQuery,
         ExecuteQuery,
     )
@@ -58,13 +58,13 @@ null, true, false = None, True, False
 
 
 @pytest.fixture
-def execute_queries_api(waylay_api_client: ApiClient) -> ExecuteQueriesApi:
-    return ExecuteQueriesApi(waylay_api_client)
+def execute_api(waylay_api_client: ApiClient) -> ExecuteApi:
+    return ExecuteApi(waylay_api_client)
 
 
 def test_registered(waylay_client: WaylayClient):
-    """Test that ExecuteQueriesApi api is registered in the sdk client."""
-    assert isinstance(waylay_client.queries.execute_queries, ExecuteQueriesApi)
+    """Test that ExecuteApi api is registered in the sdk client."""
+    assert isinstance(waylay_client.queries.execute, ExecuteApi)
 
 
 def _execute_by_name_set_mock_response(
@@ -107,7 +107,7 @@ async def test_execute_by_name(
         ),
     }
     _execute_by_name_set_mock_response(httpx_mock, gateway_url, quote(str(query_name)))
-    resp = await service.execute_queries.execute_by_name(query_name, **kwargs)
+    resp = await service.execute.execute_by_name(query_name, **kwargs)
     check_type(resp, QueryResult)
 
 
@@ -137,7 +137,7 @@ async def test_execute_by_name_without_types(
         },
     }
     _execute_by_name_set_mock_response(httpx_mock, gateway_url, quote(str(query_name)))
-    resp = await service.execute_queries.execute_by_name(query_name, **kwargs)
+    resp = await service.execute.execute_by_name(query_name, **kwargs)
     check_type(resp, Model)
 
 
@@ -178,7 +178,7 @@ async def test_execute(
         "json": QueryInputStub.create_instance(),
     }
     _execute_set_mock_response(httpx_mock, gateway_url)
-    resp = await service.execute_queries.execute(**kwargs)
+    resp = await service.execute.execute(**kwargs)
     check_type(resp, QueryResult)
 
 
@@ -207,5 +207,5 @@ async def test_execute_without_types(
         "json": QueryInputStub.create_json(),
     }
     _execute_set_mock_response(httpx_mock, gateway_url)
-    resp = await service.execute_queries.execute(**kwargs)
+    resp = await service.execute.execute(**kwargs)
     check_type(resp, Model)

@@ -1,11 +1,11 @@
-# waylay.services.queries.ExecuteQueriesApi
+# waylay.services.queries.ExecuteApi
 
 All URIs are relative to *https://api.waylay.io*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**execute_by_name**](ExecuteQueriesApi.md#execute_by_name) | **GET** /queries/v1/data/{query_name} | Execute Named Query
-[**execute**](ExecuteQueriesApi.md#execute) | **POST** /queries/v1/data | Execute Query
+[**execute_by_name**](ExecuteApi.md#execute_by_name) | **GET** /queries/v1/data/{query_name} | Execute Named Query
+[**execute**](ExecuteApi.md#execute) | **POST** /queries/v1/data | Execute Query
 
 # **execute_by_name**
 > execute_by_name(
@@ -40,7 +40,7 @@ from waylay.services.queries.models.query_result import QueryResult
 try:
     # Execute Named Query
     # calls `GET /queries/v1/data/{query_name}`
-    api_response = await waylay_client.queries.execute_queries.execute_by_name(
+    api_response = await waylay_client.queries.execute.execute_by_name(
         "query_name_example",  # query_name | path param "query_name"
         # query parameters:
         query={
@@ -55,7 +55,7 @@ try:
     )
     print(f"Response: {api_response}")
 except ApiError as e:
-    print("Exception when calling queries.execute_queries.execute_by_name: %s\n" % e)
+    print("Exception when calling queries.execute.execute_by_name: %s\n" % e)
 ```
 
 ### Endpoint
@@ -136,7 +136,7 @@ from waylay.services.queries.models.query_result import QueryResult
 try:
     # Execute Query
     # calls `POST /queries/v1/data`
-    api_response = await waylay_client.queries.execute_queries.execute(
+    api_response = await waylay_client.queries.execute.execute(
         # query parameters:
         query={
             "resource": "13efb488-75ac-4dac-828a-d49c5c2ebbfc",
@@ -152,7 +152,7 @@ try:
     )
     print(f"Response: {api_response}")
 except ApiError as e:
-    print("Exception when calling queries.execute_queries.execute: %s\n" % e)
+    print("Exception when calling queries.execute.execute: %s\n" % e)
 ```
 
 ### Endpoint
