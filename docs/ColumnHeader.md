@@ -2,6 +2,11 @@
 
 Column attributes.  Attributes that identify and describe the data in this column.
 
+**Source:** `waylay.services.queries.models.column_header`
+
+
+
+
 ## Properties
 
 Name | Type | Description | Notes
@@ -10,23 +15,25 @@ Name | Type | Description | Notes
 **metric** | **str** |  | 
 **aggregation** | **str** |  | [optional] 
 
+
 ## Example
 
 ```python
 from waylay.services.queries.models.column_header import ColumnHeader
 
-# TODO update the JSON string below
-json = "{}"
-# create an instance of ColumnHeader from a JSON string
-column_header_instance = ColumnHeader.from_json(json)
-# print the JSON string representation of the object
-print ColumnHeader.to_json()
+column_header = ColumnHeader(resource=..., metric=..., aggregation=...)
 
-# convert the object into a dict
-column_header_dict = column_header_instance.to_dict()
-# create an instance of ColumnHeader from a dict
-column_header_form_dict = column_header.from_dict(column_header_dict)
+# Create from JSON
+column_header = ColumnHeader.from_json(
+    '{ "resource": ..., "metric": ..., "aggregation": ... }'
+)
+
+# Export to dictionary
+column_header_dict = column_header.to_dict()
 ```
+
+
+
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 
 

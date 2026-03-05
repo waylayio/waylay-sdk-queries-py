@@ -2,6 +2,11 @@
 
 Additional message arguments.
 
+**Source:** `waylay.services.queries.models.message_properties`
+
+
+
+
 ## Properties
 
 Name | Type | Description | Notes
@@ -9,23 +14,23 @@ Name | Type | Description | Notes
 **resource** | **str** |  | [optional] 
 **metric** | **str** |  | [optional] 
 
+
 ## Example
 
 ```python
 from waylay.services.queries.models.message_properties import MessageProperties
 
-# TODO update the JSON string below
-json = "{}"
-# create an instance of MessageProperties from a JSON string
-message_properties_instance = MessageProperties.from_json(json)
-# print the JSON string representation of the object
-print MessageProperties.to_json()
+message_properties = MessageProperties(resource=..., metric=...)
 
-# convert the object into a dict
-message_properties_dict = message_properties_instance.to_dict()
-# create an instance of MessageProperties from a dict
-message_properties_form_dict = message_properties.from_dict(message_properties_dict)
+# Create from JSON
+message_properties = MessageProperties.from_json('{ "resource": ..., "metric": ... }')
+
+# Export to dictionary
+message_properties_dict = message_properties.to_dict()
 ```
+
+
+
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 
 

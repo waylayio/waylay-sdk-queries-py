@@ -2,6 +2,11 @@
 
 Query specification for a single series.
 
+**Source:** `waylay.services.queries.models.series_spec`
+
+
+
+
 ## Properties
 
 Name | Type | Description | Notes
@@ -12,23 +17,27 @@ Name | Type | Description | Notes
 **aggregration** | [**Aggregration**](Aggregration.md) |  | [optional] 
 **interpolation** | [**Interpolation**](Interpolation.md) |  | [optional] 
 
+
 ## Example
 
 ```python
 from waylay.services.queries.models.series_spec import SeriesSpec
 
-# TODO update the JSON string below
-json = "{}"
-# create an instance of SeriesSpec from a JSON string
-series_spec_instance = SeriesSpec.from_json(json)
-# print the JSON string representation of the object
-print SeriesSpec.to_json()
+series_spec = SeriesSpec(
+    name=..., resource=..., metric=..., aggregration=..., interpolation=...
+)
 
-# convert the object into a dict
-series_spec_dict = series_spec_instance.to_dict()
-# create an instance of SeriesSpec from a dict
-series_spec_form_dict = series_spec.from_dict(series_spec_dict)
+# Create from JSON
+series_spec = SeriesSpec.from_json(
+    '{ "name": ..., "resource": ..., "metric": ..., "aggregration": ..., "interpolation": ... }'
+)
+
+# Export to dictionary
+series_spec_dict = series_spec.to_dict()
 ```
+
+
+
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 
 

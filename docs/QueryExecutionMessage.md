@@ -2,6 +2,11 @@
 
 A message object that informs or warns about a query execution issue.
 
+**Source:** `waylay.services.queries.models.query_execution_message`
+
+
+
+
 ## Properties
 
 Name | Type | Description | Notes
@@ -14,23 +19,33 @@ Name | Type | Description | Notes
 **properties** | [**MessageArguments**](MessageArguments.md) |  | [optional] 
 **exception** | [**CauseException**](CauseException.md) |  | [optional] 
 
+
 ## Example
 
 ```python
 from waylay.services.queries.models.query_execution_message import QueryExecutionMessage
 
-# TODO update the JSON string below
-json = "{}"
-# create an instance of QueryExecutionMessage from a JSON string
-query_execution_message_instance = QueryExecutionMessage.from_json(json)
-# print the JSON string representation of the object
-print QueryExecutionMessage.to_json()
+query_execution_message = QueryExecutionMessage(
+    message=...,
+    level=...,
+    timestamp=...,
+    action=...,
+    category=...,
+    properties=...,
+    exception=...,
+)
 
-# convert the object into a dict
-query_execution_message_dict = query_execution_message_instance.to_dict()
-# create an instance of QueryExecutionMessage from a dict
-query_execution_message_form_dict = query_execution_message.from_dict(query_execution_message_dict)
+# Create from JSON
+query_execution_message = QueryExecutionMessage.from_json(
+    '{ "message": ..., "level": ..., "timestamp": ..., "action": ..., "category": ..., "properties": ..., "exception": ... }'
+)
+
+# Export to dictionary
+query_execution_message_dict = query_execution_message.to_dict()
 ```
+
+
+
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 
 

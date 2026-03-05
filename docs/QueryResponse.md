@@ -2,6 +2,11 @@
 
 Represents a single named query.
 
+**Source:** `waylay.services.queries.models.query_response`
+
+
+
+
 ## Properties
 
 Name | Type | Description | Notes
@@ -13,23 +18,27 @@ Name | Type | Description | Notes
 **query** | [**QueryOutput**](QueryOutput.md) |  | 
 **messages** | [**List[Message]**](Message.md) |  | [optional] 
 
+
 ## Example
 
 ```python
 from waylay.services.queries.models.query_response import QueryResponse
 
-# TODO update the JSON string below
-json = "{}"
-# create an instance of QueryResponse from a JSON string
-query_response_instance = QueryResponse.from_json(json)
-# print the JSON string representation of the object
-print QueryResponse.to_json()
+query_response = QueryResponse(
+    links=..., attrs=..., name=..., meta=..., query=..., messages=...
+)
 
-# convert the object into a dict
-query_response_dict = query_response_instance.to_dict()
-# create an instance of QueryResponse from a dict
-query_response_form_dict = query_response.from_dict(query_response_dict)
+# Create from JSON
+query_response = QueryResponse.from_json(
+    '{ "_links": ..., "attrs": ..., "name": ..., "meta": ..., "query": ..., "messages": ... }'
+)
+
+# Export to dictionary
+query_response_dict = query_response.to_dict()
 ```
+
+
+
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 
 

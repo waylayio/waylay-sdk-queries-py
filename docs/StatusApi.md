@@ -18,8 +18,6 @@ Get the version and health status for waylay-query.
 ### Example
 
 ```python
-from pprint import pprint
-
 # Import the waylay-client from the waylay-sdk-core package
 from waylay.sdk.client import WaylayClient
 from waylay.sdk.api.api_exceptions import ApiError
@@ -31,10 +29,8 @@ waylay_client = WaylayClient.from_profile()
 try:
     # Get Version And Health
     # calls `GET /queries/v1`
-    api_response = await waylay_client.queries.status.get(
-    )
-    print("The response of queries.status.get:\n")
-    pprint(api_response)
+    api_response = await waylay_client.queries.status.get()
+    print(f"Response: {api_response}")
 except ApiError as e:
     print("Exception when calling queries.status.get: %s\n" % e)
 ```

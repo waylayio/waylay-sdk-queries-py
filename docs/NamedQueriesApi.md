@@ -22,8 +22,6 @@ Create a new named query.
 ### Example
 
 ```python
-from pprint import pprint
-
 # Import the waylay-client from the waylay-sdk-core package
 from waylay.sdk.client import WaylayClient
 from waylay.sdk.api.api_exceptions import ApiError
@@ -34,15 +32,15 @@ waylay_client = WaylayClient.from_profile()
 # Note that the typed model classes for responses/parameters/... are only available when `waylay-sdk-queries-types` is installed
 from waylay.services.queries.models.query_entity_input import QueryEntityInput
 from waylay.services.queries.models.query_response import QueryResponse
+
 try:
     # Create Query
     # calls `POST /queries/v1/query`
     api_response = await waylay_client.queries.named_queries.create(
         # json data: use a generated model or a json-serializable python data structure (dict, list)
-        json = waylay.services.queries.QueryEntityInput() # QueryEntityInput | 
+        json=waylay.services.queries.QueryEntityInput(),  # QueryEntityInput |
     )
-    print("The response of queries.named_queries.create:\n")
-    pprint(api_response)
+    print(f"Response: {api_response}")
 except ApiError as e:
     print("Exception when calling queries.named_queries.create: %s\n" % e)
 ```
@@ -93,8 +91,6 @@ Get the definition of a named query.
 ### Example
 
 ```python
-from pprint import pprint
-
 # Import the waylay-client from the waylay-sdk-core package
 from waylay.sdk.client import WaylayClient
 from waylay.sdk.api.api_exceptions import ApiError
@@ -104,14 +100,14 @@ waylay_client = WaylayClient.from_profile()
 
 # Note that the typed model classes for responses/parameters/... are only available when `waylay-sdk-queries-types` is installed
 from waylay.services.queries.models.query_response import QueryResponse
+
 try:
     # Get Query
     # calls `GET /queries/v1/query/{query_name}`
     api_response = await waylay_client.queries.named_queries.get(
-        'query_name_example', # query_name | path param "query_name"
+        "query_name_example",  # query_name | path param "query_name"
     )
-    print("The response of queries.named_queries.get:\n")
-    pprint(api_response)
+    print(f"Response: {api_response}")
 except ApiError as e:
     print("Exception when calling queries.named_queries.get: %s\n" % e)
 ```
@@ -162,8 +158,6 @@ List named queries.
 ### Example
 
 ```python
-from pprint import pprint
-
 # Import the waylay-client from the waylay-sdk-core package
 from waylay.sdk.client import WaylayClient
 from waylay.sdk.api.api_exceptions import ApiError
@@ -173,19 +167,19 @@ waylay_client = WaylayClient.from_profile()
 
 # Note that the typed model classes for responses/parameters/... are only available when `waylay-sdk-queries-types` is installed
 from waylay.services.queries.models.queries_list_response import QueriesListResponse
+
 try:
     # List Queries
     # calls `GET /queries/v1/query`
     api_response = await waylay_client.queries.named_queries.list(
         # query parameters:
-        query = {
-            'q': ''
-            'limit': 10
-            'offset': 0
+        query={
+            "q": "",
+            "limit": 10,
+            "offset": 0,
         },
     )
-    print("The response of queries.named_queries.list:\n")
-    pprint(api_response)
+    print(f"Response: {api_response}")
 except ApiError as e:
     print("Exception when calling queries.named_queries.list: %s\n" % e)
 ```
@@ -239,8 +233,6 @@ Remove definition of a named query.
 ### Example
 
 ```python
-from pprint import pprint
-
 # Import the waylay-client from the waylay-sdk-core package
 from waylay.sdk.client import WaylayClient
 from waylay.sdk.api.api_exceptions import ApiError
@@ -250,14 +242,14 @@ waylay_client = WaylayClient.from_profile()
 
 # Note that the typed model classes for responses/parameters/... are only available when `waylay-sdk-queries-types` is installed
 from waylay.services.queries.models.delete_response import DeleteResponse
+
 try:
     # Remove Query
     # calls `DELETE /queries/v1/query/{query_name}`
     api_response = await waylay_client.queries.named_queries.remove(
-        'query_name_example', # query_name | path param "query_name"
+        "query_name_example",  # query_name | path param "query_name"
     )
-    print("The response of queries.named_queries.remove:\n")
-    pprint(api_response)
+    print(f"Response: {api_response}")
 except ApiError as e:
     print("Exception when calling queries.named_queries.remove: %s\n" % e)
 ```
@@ -308,8 +300,6 @@ Create or update a named query definition.
 ### Example
 
 ```python
-from pprint import pprint
-
 # Import the waylay-client from the waylay-sdk-core package
 from waylay.sdk.client import WaylayClient
 from waylay.sdk.api.api_exceptions import ApiError
@@ -320,16 +310,16 @@ waylay_client = WaylayClient.from_profile()
 # Note that the typed model classes for responses/parameters/... are only available when `waylay-sdk-queries-types` is installed
 from waylay.services.queries.models.query_definition import QueryDefinition
 from waylay.services.queries.models.query_response import QueryResponse
+
 try:
     # Update Query
     # calls `PUT /queries/v1/query/{query_name}`
     api_response = await waylay_client.queries.named_queries.update(
-        'query_name_example', # query_name | path param "query_name"
+        "query_name_example",  # query_name | path param "query_name"
         # json data: use a generated model or a json-serializable python data structure (dict, list)
-        json = waylay.services.queries.QueryDefinition() # QueryDefinition | 
+        json=waylay.services.queries.QueryDefinition(),  # QueryDefinition |
     )
-    print("The response of queries.named_queries.update:\n")
-    pprint(api_response)
+    print(f"Response: {api_response}")
 except ApiError as e:
     print("Exception when calling queries.named_queries.update: %s\n" % e)
 ```

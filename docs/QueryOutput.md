@@ -2,15 +2,20 @@
 
 Query definition for a Waylay analytics query.  See also [api docs](https://docs.waylay.io/#/api/query/?id=data-query-json-representation).
 
+**Source:** `waylay.services.queries.models.query_output`
+
+
+
+
 ## Properties
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **resource** | **str** | Default resource for the series in the query. | [optional] 
 **metric** | **str** | Default metric for the series in the query. | [optional] 
-**aggregation** | [**DefaultAggregation**](DefaultAggregation.md) |  | [optional] 
+**aggregation** | [**DefaultAggregation1**](DefaultAggregation1.md) |  | [optional] 
 **interpolation** | [**DefaultInterpolation**](DefaultInterpolation.md) |  | [optional] 
-**freq** | [**GroupingInterval**](GroupingInterval.md) |  | [optional] 
+**freq** | [**GroupingInterval1**](GroupingInterval1.md) |  | [optional] 
 **var_from** | [**TimeWindowFrom**](TimeWindowFrom.md) |  | [optional] 
 **until** | [**TimeWindowUntil**](TimeWindowUntil.md) |  | [optional] 
 **window** | [**Window**](Window.md) |  | [optional] 
@@ -19,23 +24,38 @@ Name | Type | Description | Notes
 **data** | [**List[SeriesSpec]**](SeriesSpec.md) | List of series specifications. When not specified, a single default series specification is assumed(&#x60;[{}]&#x60;, using the default &#x60;metric&#x60;,&#x60;resource&#x60;, ... ). | [optional] 
 **render** | [**Render**](Render.md) |  | [optional] 
 
+
 ## Example
 
 ```python
 from waylay.services.queries.models.query_output import QueryOutput
 
-# TODO update the JSON string below
-json = "{}"
-# create an instance of QueryOutput from a JSON string
-query_output_instance = QueryOutput.from_json(json)
-# print the JSON string representation of the object
-print QueryOutput.to_json()
+query_output = QueryOutput(
+    resource=...,
+    metric=...,
+    aggregation=...,
+    interpolation=...,
+    freq=...,
+    var_from=...,
+    until=...,
+    window=...,
+    periods=...,
+    align=...,
+    data=...,
+    render=...,
+)
 
-# convert the object into a dict
-query_output_dict = query_output_instance.to_dict()
-# create an instance of QueryOutput from a dict
-query_output_form_dict = query_output.from_dict(query_output_dict)
+# Create from JSON
+query_output = QueryOutput.from_json(
+    '{ "resource": ..., "metric": ..., "aggregation": ..., "interpolation": ..., "freq": ..., "from": ..., "until": ..., "window": ..., "periods": ..., "align": ..., "data": ..., "render": ... }'
+)
+
+# Export to dictionary
+query_output_dict = query_output.to_dict()
 ```
+
+
+
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 
 
